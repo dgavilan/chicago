@@ -4,9 +4,12 @@
     ViewBag.Title = "Home Page";
 }
 
-<h2>
-    @Html.ValueFor(x => x.Profile.FullName)
-</h2>
+<div style="padding-top:20px">
+    <span style="font-size:25px;">@Html.ValueFor(x => x.Profile.FullName)</span>
+    @Html.ActionLink("Edit", "EditAccount", "UserProfile")
+</div>
+
+
 
 @Html.LabelFor(x => x.Profile.Score):
 @Html.ValueFor(x => x.Profile.Score)

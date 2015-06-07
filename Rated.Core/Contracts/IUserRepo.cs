@@ -12,5 +12,7 @@ namespace Rated.Core.Contracts
         UserCoreModel Login(string email, string password);
 
         void CreateUser(UserCoreModel user);
+
+        void EditAccount(UserCoreModel user);
     }
 }

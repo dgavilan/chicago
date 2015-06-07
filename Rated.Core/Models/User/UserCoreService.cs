@@ -60,5 +60,10 @@ namespace Rated.Core.Models.User
             Email = "";
             LoggedIn = false;
         }
+
+        public void EditAccount(UserCoreModel user)
+        {
+            _userRepo.EditAccount(user);
+        }
     }
 }

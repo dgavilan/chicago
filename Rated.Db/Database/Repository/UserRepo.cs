@@ -86,6 +86,26 @@ namespace Rated.Infrastructure.Database.Repository
             }
         }
 
+        public void EditAccount(UserCoreModel user)
+        {
+            using (var userContext = _userModelDbContext)
+            {
+                var userToUpdate = (from u in userContext.Users
+                                    where u.Email == user.Email
+                                    select u).SingleOrDefault();
+
+                userToUpdate.Email = user.Email;
+                userToUpdate.FirstName = user.FirstName;
+                userToUpdate.LastName = user.LastName;
+                userToUpdate.Bio = user.Bio;
+                userToUpdate.ModifiedDate = user.ModifiedDate;
+
+                userContext.Entry(userToUpdate).State = EntityState.Modified;
+                userContext.SaveChanges();
+            }
+        }
+
+
         // TODO:
         // 2. Encrypt password
         // 3. Modify profile

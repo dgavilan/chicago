@@ -1,6 +1,7 @@
 ﻿using Rated.Core.Models.User;
 using Rated.Infrastructure.Database.Repository;
 using Rated.Web.Shared;
+using Rated2.Models.UserProfile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,13 @@ namespace Rated2.Controllers
 {
     public class UserProfileController : Controller
     {
+        UserCoreService _userService;
+
+        public UserProfileController()
+        {
+            _userService = new UserCoreService(new UserRepo());
+        }
+
         // GET: UserProfile
         public ActionResult Index()
         {
@@ -20,8 +28,7 @@ namespace Rated2.Controllers
         [HttpPost]
         public ActionResult Login(string email, string userPassword)
         {
-            var userSessionCore = new UserCoreService(new UserRepo());
-            var userCore = userSessionCore.Login(email, userPassword);
+            var userCore = _userService.Login(email, userPassword);
             if (userCore.UserId != Guid.Empty)
             {
                 var userSession = new UserSession();
@@ -46,7 +53,7 @@ namespace Rated2.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateAccount(string email, string userPassword, string firstName, string lastName)
+        public ActionResult CreateAccount(string email, string userPassword, string firstName, string lastName, string bio)
         {
             if (ModelState.IsValid)
             {
@@ -79,6 +86,35 @@ namespace Rated2.Controllers
         {
             ViewBag.UserCreated = false;
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult EditAccount(string email, string firstName, string lastName, string bio)
+        {
+            _userService.EditAccount(new UserCoreModel() { 
+                Bio = bio,
+                Email = email,
+                FirstName = firstName,
+                LastName = lastName,
+                ModifiedDate = DateTime.UtcNow
+            });
+            return View();
+        }
+
+        public ActionResult EditAccount()
+        {
+            var userSession = new UserSession();
+            var user = userSession.GetUserSession();
+            var userView = new ProfileViewModel() {
+                Bio = user.Bio,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserId = user.UserId,
+                UserPassword = ""
+            };
+
+            return View(userView);
         }
     }
 }
