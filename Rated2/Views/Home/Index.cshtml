@@ -1,0 +1,40 @@
+﻿@model Rated2.Models.UserProfileViewModel
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<h2>
+    @Html.ValueFor(x => x.Profile.FullName)
+</h2>
+
+@Html.LabelFor(x => x.Profile.Score):
+@Html.ValueFor(x => x.Profile.Score)
+<br />
+
+@Html.ValueFor(x => x.Profile.Bio) 
+
+<hr />
+
+@Html.ActionLink("+ Start a Project", "Index", "Project", null, new { @class = "btn btn-primary" })
+
+@Html.ActionLink("Pending Projects (5)", "Index", "Project", null, new { @class = "btn btn-primary" })
+
+@Html.ActionLink("Ongoing Projects (3)", "Index", "Project", null, new { @class = "btn btn-primary" })
+
+<hr />
+
+<h4>Completed Projects (7)</h4>
+    
+@foreach (var project in @Model.Projects)
+{
+    <b>@project.Name</b><button class="btn btn-link" onclick="window.location='/project/index'">View</button>
+    <br />
+    <b>Score:</b> @project.Score
+    <br />
+    <i>@project.Description</i>
+    <br />
+    <br />
+}
+
+<a href="#">View All</a>

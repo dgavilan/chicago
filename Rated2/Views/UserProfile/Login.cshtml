@@ -1,0 +1,43 @@
+﻿@model Rated2.Models.UserProfile.ProfileViewModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+@using (Html.BeginForm("Login", "UserProfile", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    
+    <table>
+        <tr>
+            <td>
+                <div class="editor-field">
+                    @Html.LabelFor(x => x.Email)
+                    @Html.TextBoxFor(x => x.Email, new { @class = "form-control", @name = "email" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="editor-field">
+                    @Html.LabelFor(x => x.UserPassword)
+                    @Html.TextBoxFor(x => x.UserPassword, new { @class = "form-control", @name = "userPassword" })
+                    @Html.ValidationMessageFor(m => m.UserPassword, "", new { @class = "text-danger" })
+                </div>
+
+                <br />
+
+                 <input type="submit" value="Login" class="btn btn-primary" />
+            </td>
+            <td width="70px" style="border-right:solid 1px #e9e9e9">&nbsp;</td>
+            <td width="70px">&nbsp;</td>
+            <td>
+                @Html.ActionLink("Create an Account", "createaccount", null, new { @class = "btn btn-primary" })
+            </td>
+        </tr>
+    </table>
+}
+
+

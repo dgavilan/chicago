@@ -1,0 +1,190 @@
+﻿@model Rated2.Models.Project.ProjectViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Start a Project</h2>
+
+<div class="editor-field">
+    @Html.LabelFor(x => x.Name)
+    @Html.TextBoxFor(x => x.Name, new { @class = "form-control"})
+</div>
+
+<div class="editor-field">
+    @Html.LabelFor(x => x.Description)
+    @Html.TextAreaFor(x => x.Description, new { @class = "form-control" })
+</div>
+
+<hr />
+
+<button class="btn btn-primary" id="btnAddItem">+ Add Items</button>
+<button class="btn btn-primary" id="btnAssignReviewer">+ Assign Reviewer</button>
+<button class="btn btn-success" id="btnStartTheProject">Start the Project</button>
+
+<hr />
+
+<h4>Project Items (<span id="spanItemDetailCount">0</span>)</h4>
+
+<table id="tblItems" cellpadding="5" cellspacing="5">
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+
+
+
+
+<div id="modalAddItem" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add Project Items</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <div class="editor-field">
+                       <label>Item name</label>
+                        <br />
+                        <input type="text" class="form-control" id="txtItemName"/>
+
+                        <label>Item description</label>
+                        <br />
+                        <textarea class="form-control" id="txtItemDescription"></textarea>
+
+                        <label>Time to complete</label>
+                        <br />
+                        <input type="text" class="form-control" id="txtItemTimeToComplete" />
+
+                        <label>Details</label>
+                        <br />
+                        <textarea class="form-control" id="txtItemDetails"></textarea>
+                    </div>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnAddToProject">Add to Project</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalAssignReviewer" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Assign Reviewer</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Enter the email address of the person who will evaluate your work.
+                    We will contact this person and notify you when your request has
+                    been accepted.
+
+                    <div class="editor-field">
+                        @Html.LabelFor(x => x.ReviewerEmail)
+                        @Html.TextBoxFor(x => x.ReviewerEmail, new { @class = "form-control" })
+                    </div>
+                    
+                    <br />
+                    <label>Pick your relationship with the reviewer.</label>
+
+                    <div class="editor-field">
+                        <select class="form-control">
+                            <option>--Pick One--</option>
+                            <option>Manager</option>
+                            <option>Supervisor</option>
+                            <option>Supervisor</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <br />
+                    <label>Describe the reviewer's role.</label>
+                    <textarea class="form-control" id="txtItemDetails"></textarea>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Send Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalStartTheProject" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Start the Project</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Congratulations! You are ready to start on this project. Remember, dhanges are not allowed
+                    until you say the project is complete.
+                </p>
+                <p>Good luck!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Start</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var itemDetailCount = 0;
+
+        $("#btnAddItem").click(function () {
+            $("#modalAddItem").modal('show');
+        });
+
+        $("#btnAssignReviewer").click(function () {
+            $("#modalAssignReviewer").modal('show');
+        });
+
+        $("#btnStartTheProject").click(function () {
+            $("#modalStartTheProject").modal('show');
+        });
+
+        $("#btnAddToProject").click(function () {
+            var itemName = $("#txtItemName").val();
+            var itemDescription = $("#txtItemDescription").val();
+            var itemTimeToComplete = $("#txtItemTimeToComplete").val();
+            var itemDetails = $("#txtItemDetails").val();
+
+            itemDetailCount += 1;
+
+            var html = "<tr>"
+                + "<td style='background-color:#f9f9f9;width:5px'>" + itemDetailCount + "</td>"
+                + "<td valign='top'>"
+                + "<h4>" + itemName + "<button class='btn btn-link'>Edit</button>|<button class='btn btn-link'>Delete</button></h4>"
+                + "<span>" + itemTimeToComplete + " to complete</span>"
+                + "<br /><i>" + itemDescription + "</i>"
+                + "<br /> <b>Details:</b> <br />" + itemDetails
+                + "</td>"
+                + "<td nowrap></td>"
+                + "</tr>"
+                + "<tr><td colspan='3' style='height:3px'></td></tr>";
+
+            $("#spanItemDetailCount").html(itemDetailCount);
+
+            $("#tblItems tr:last").after(html);
+
+            $("#modalAddItem").modal('hide');
+        });
+        
+	});
+</script>
