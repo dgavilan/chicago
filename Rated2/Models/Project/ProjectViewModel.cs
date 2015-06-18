@@ -8,11 +8,13 @@ namespace Rated2.Models.Project
 {
     public class ProjectViewModel
     {
+        public Guid ProjectId { get; set; }
+
         [DisplayName("Project Name")]
-        public string Name { get; set; }
+        public string ProjectName { get; set; }
 
         [DisplayName("Project Description")]
-        public string Description { get; set; }
+        public string ProjectDescription { get; set; }
 
         [DisplayName("Reviewer's Email")]
         public string ReviewerEmail { get; set; }

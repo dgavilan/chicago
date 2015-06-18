@@ -15,7 +15,7 @@ namespace Rated2.Controllers
     public class HomeController : Controller
     {
         public ActionResult Index()
-        {
+         {
             var userSession = new UserSession();
             if (!userSession.IsLoggedIn())
             { 

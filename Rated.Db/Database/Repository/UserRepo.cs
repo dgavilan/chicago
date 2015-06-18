@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Rated.Core.Models.User;
-using Rated.Infrastructure.Database.EF;
+using Rated.Infrastructure.Database.EF.User;
 using Rated.Core.Contracts;
 using System.Data.Entity;
 
@@ -12,16 +12,16 @@ namespace Rated.Infrastructure.Database.Repository
 {
     public class UserRepo : IUserRepo
     {
-        UserContext _userModelDbContext;
+        UserContext _userContext;
 
         public UserRepo()
         {
-            _userModelDbContext = new UserContext();
+            _userContext = new UserContext();
         }
 
         public UserCoreModel Login(string email, string password)
         {
-            using (var userContext = _userModelDbContext)
+            using (var userContext = _userContext)
             {
                 var userDb = (from u in userContext.Users
                               where u.Email == email
@@ -77,8 +77,8 @@ namespace Rated.Infrastructure.Database.Repository
                     Password = user.Password
                 };
 
-                _userModelDbContext.Users.Add(userDb);
-                _userModelDbContext.SaveChangesAsync();
+                _userContext.Users.Add(userDb);
+                _userContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -88,7 +88,7 @@ namespace Rated.Infrastructure.Database.Repository
 
         public void EditAccount(UserCoreModel user)
         {
-            using (var userContext = _userModelDbContext)
+            using (var userContext = _userContext)
             {
                 var userToUpdate = (from u in userContext.Users
                                     where u.Email == user.Email

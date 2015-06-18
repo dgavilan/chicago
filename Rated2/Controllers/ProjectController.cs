@@ -12,10 +12,13 @@ namespace Rated2.Controllers
         // GET: Project
         public ActionResult Index()
         {
-            //var project = new ProjectViewModel() { 
-            //    Name = ""
-            //};
+            ViewBag.OpenAddProjectModal = 1;
+            return View();
+        }
 
+        [HttpPost]
+        public ActionResult AddProject(string name, string description)
+        {
             return View();
         }
 

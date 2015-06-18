@@ -10,8 +10,13 @@ namespace Rated.Core.Models.Project
     {
         public Guid ProjectDetailId { get; set; }
         public Guid ProjectId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string ProjectDetailName { get; set; }
+        public string ProjectDetailDescription { get; set; }
+        public string TimeToComplete { get; set; }
+        public string Details { get; set; }
         public decimal Score { get; set; }
+
+        public Guid UserId { get; set; }
+
     }
 }

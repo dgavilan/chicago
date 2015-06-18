@@ -6,15 +6,13 @@
 
 <h2>Start a Project</h2>
 
-<div class="editor-field">
-    @Html.LabelFor(x => x.Name)
-    @Html.TextBoxFor(x => x.Name, new { @class = "form-control"})
-</div>
 
-<div class="editor-field">
-    @Html.LabelFor(x => x.Description)
-    @Html.TextAreaFor(x => x.Description, new { @class = "form-control" })
-</div>
+Project Name:
+<div id="divProjectName"></div>
+
+Project Description:
+<div id="divProjectDescription"></div>
+
 
 <hr />
 
@@ -36,7 +34,39 @@
 </table>
 
 
+<div id="modalAddProject" class="modal fade" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Create a New Project</h4>
+            </div>
+            <div class="modal-body">
+                <p>
 
+
+                    <div class="editor-field">
+                        <table>
+                            <tr>
+                                <td>Name</td>
+                                <td><input type="text" name="ProjectName" id="ProjectName" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td>Description</td>
+                                <td><textarea name="ProjectDescription" id="ProjectDescription" class="form-control"></textarea></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal" onclick="Project.CancelSaveProject()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnSaveProject" onclick="Project.SaveProject()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div id="modalAddItem" class="modal fade">
@@ -49,21 +79,21 @@
             <div class="modal-body">
                 <p>
                     <div class="editor-field">
-                       <label>Item name</label>
+                        <label>Item name</label>
                         <br />
-                        <input type="text" class="form-control" id="txtItemName"/>
+                        <input type="text" class="form-control" id="ProjectDetailName" name="ProjectDetailName" />
 
                         <label>Item description</label>
                         <br />
-                        <textarea class="form-control" id="txtItemDescription"></textarea>
+                        <textarea class="form-control" id="ProjectDetailDescription" name="ProjectDetailDescription"></textarea>
 
                         <label>Time to complete</label>
                         <br />
-                        <input type="text" class="form-control" id="txtItemTimeToComplete" />
+                        <input type="text" class="form-control" id="TimeToComplete" name="TimeToComplete" />
 
-                        <label>Details</label>
+                        @*<label>Details</label>
                         <br />
-                        <textarea class="form-control" id="txtItemDetails"></textarea>
+                        <textarea class="form-control" id="Details" name="Details"></textarea>*@
                     </div>
                 </p>
             </div>
@@ -92,7 +122,7 @@
                         @Html.LabelFor(x => x.ReviewerEmail)
                         @Html.TextBoxFor(x => x.ReviewerEmail, new { @class = "form-control" })
                     </div>
-                    
+
                     <br />
                     <label>Pick your relationship with the reviewer.</label>
 
@@ -141,50 +171,10 @@
     </div>
 </div>
 
-
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        var itemDetailCount = 0;
-
-        $("#btnAddItem").click(function () {
-            $("#modalAddItem").modal('show');
-        });
-
-        $("#btnAssignReviewer").click(function () {
-            $("#modalAssignReviewer").modal('show');
-        });
-
-        $("#btnStartTheProject").click(function () {
-            $("#modalStartTheProject").modal('show');
-        });
-
-        $("#btnAddToProject").click(function () {
-            var itemName = $("#txtItemName").val();
-            var itemDescription = $("#txtItemDescription").val();
-            var itemTimeToComplete = $("#txtItemTimeToComplete").val();
-            var itemDetails = $("#txtItemDetails").val();
-
-            itemDetailCount += 1;
-
-            var html = "<tr>"
-                + "<td style='background-color:#f9f9f9;width:5px'>" + itemDetailCount + "</td>"
-                + "<td valign='top'>"
-                + "<h4>" + itemName + "<button class='btn btn-link'>Edit</button>|<button class='btn btn-link'>Delete</button></h4>"
-                + "<span>" + itemTimeToComplete + " to complete</span>"
-                + "<br /><i>" + itemDescription + "</i>"
-                + "<br /> <b>Details:</b> <br />" + itemDetails
-                + "</td>"
-                + "<td nowrap></td>"
-                + "</tr>"
-                + "<tr><td colspan='3' style='height:3px'></td></tr>";
-
-            $("#spanItemDetailCount").html(itemDetailCount);
-
-            $("#tblItems tr:last").after(html);
-
-            $("#modalAddItem").modal('hide');
-        });
-        
-	});
+<script language="javascript">
+    var openAddProjectModal = @ViewBag.OpenAddProjectModal;
 </script>
+
+<script src="~/Scripts/Rated/project.js"></script>
+
+@Html.HiddenFor(x => x.ProjectId)
