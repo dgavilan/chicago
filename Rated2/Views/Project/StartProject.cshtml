@@ -1,0 +1,180 @@
+﻿@model Rated2.Models.Project.ProjectViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Start a Project</h2>
+
+
+Project Name:
+<div id="divProjectName"></div>
+
+Project Description:
+<div id="divProjectDescription"></div>
+
+
+<hr />
+
+<button class="btn btn-primary" id="btnAddItem">+ Add Items</button>
+<button class="btn btn-primary" id="btnAssignReviewer">+ Assign Reviewer</button>
+<button class="btn btn-success" id="btnStartTheProject">Start the Project</button>
+
+<hr />
+
+<h4>Project Items (<span id="spanItemDetailCount">0</span>)</h4>
+
+<table id="tblItems" cellpadding="5" cellspacing="5">
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
+
+<div id="modalAddProject" class="modal fade" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Create a New Project</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+
+
+                    <div class="editor-field">
+                        <table>
+                            <tr>
+                                <td>Name</td>
+                                <td><input type="text" name="ProjectName" id="ProjectName" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td>Description</td>
+                                <td><textarea name="ProjectDescription" id="ProjectDescription" class="form-control"></textarea></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal" onclick="Project.CancelSaveProject()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnSaveProject" onclick="Project.SaveProject()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="modalAddItem" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add Project Items</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <div class="editor-field">
+                        <label>Item name</label>
+                        <br />
+                        <input type="text" class="form-control" id="ProjectDetailName" name="ProjectDetailName" />
+
+                        <label>Item description</label>
+                        <br />
+                        <textarea class="form-control" id="ProjectDetailDescription" name="ProjectDetailDescription"></textarea>
+
+                        <label>Time to complete</label>
+                        <br />
+                        <input type="text" class="form-control" id="TimeToComplete" name="TimeToComplete" />
+
+                        @*<label>Details</label>
+                        <br />
+                        <textarea class="form-control" id="Details" name="Details"></textarea>*@
+                    </div>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnAddToProject">Add to Project</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalAssignReviewer" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Assign Reviewer</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Enter the email address of the person who will evaluate your work.
+                    We will contact this person and notify you when your request has
+                    been accepted.
+
+                    <div class="editor-field">
+                        @Html.LabelFor(x => x.ReviewerEmail)
+                        @Html.TextBoxFor(x => x.ReviewerEmail, new { @class = "form-control" })
+                    </div>
+
+                    <br />
+                    <label>Pick your relationship with the reviewer.</label>
+
+                    <div class="editor-field">
+                        <select class="form-control">
+                            <option>--Pick One--</option>
+                            <option>Manager</option>
+                            <option>Supervisor</option>
+                            <option>Supervisor</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <br />
+                    <label>Describe the reviewer's role.</label>
+                    <textarea class="form-control" id="txtItemDetails"></textarea>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Send Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalStartTheProject" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Start the Project</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Congratulations! You are ready to start on this project. Remember, dhanges are not allowed
+                    until you say the project is complete.
+                </p>
+                <p>Good luck!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Start</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script language="javascript">
+    var openAddProjectModal = @ViewBag.OpenAddProjectModal;
+</script>
+
+<script src="~/Scripts/Rated/project.js"></script>
+
+@Html.HiddenFor(x => x.ProjectId)

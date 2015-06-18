@@ -19,11 +19,11 @@
 
 <hr />
 
-@Html.ActionLink("+ Start a Project", "Index", "Project", null, new { @class = "btn btn-primary" })
+@Html.ActionLink("+ Start a Project", "StartProject", "Project", null, new { @class = "btn btn-primary" })
 
-@Html.ActionLink("Pending Projects (5)", "Index", "Project", null, new { @class = "btn btn-primary" })
+@Html.ActionLink("Unsent Projects (5)", "Index", "Project", new { projectType = Rated.Core.Shared.Enums.ProjectStatus.UnSent }, new { @class = "btn btn-primary" })
 
-@Html.ActionLink("Ongoing Projects (3)", "Index", "Project", null, new { @class = "btn btn-primary" })
+@Html.ActionLink("Ongoing Projects (3)", "Index", "Project", new { projectType = Rated.Core.Shared.Enums.ProjectStatus.OnGoing }, new { @class = "btn btn-primary" })
 
 <hr />
 

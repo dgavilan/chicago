@@ -9,8 +9,10 @@ namespace Rated.Infrastructure.Database.EF.Project
     [Table("Project")]
     public partial class Project
     {
+        [Key]
         public Guid ProjectId { get; set; }
 
+        [Required]
         public Guid UserId { get; set; }
 
         [Required]
@@ -21,11 +23,16 @@ namespace Rated.Infrastructure.Database.EF.Project
         [StringLength(5000)]
         public string ProjectDescription { get; set; }
 
+        [Required]
         public DateTime CreatedDate { get; set; }
 
+        [Required]
         public DateTime ModifiedDate { get; set; }
 
         public DateTime? DeletedDate { get; set; }
+
+        [Required]
+        public int StatusId { get; set; }
 
         public virtual User User { get; set; }
     }

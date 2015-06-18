@@ -14,5 +14,9 @@ namespace Rated.Core.Models.Project
         public string ProjectDescription { get; set; }
         public decimal Score { get; set; }
         public List<ProjectDetailCoreModel> ProjectDetails { get; set; }
+        public Guid CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public Guid ModifiedBy { get; set; }
+        public DateTime ModifiedDate { get; set; }
     }
 }

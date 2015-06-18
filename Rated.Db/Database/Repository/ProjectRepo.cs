@@ -1,5 +1,6 @@
 ﻿using Rated.Core.Contracts;
 using Rated.Core.Models.Project;
+using Rated.Core.Shared;
 using Rated.Infrastructure.Database.EF.Project;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,8 @@ namespace Rated.Infrastructure.Database.Repository
                 ProjectDescription = project.ProjectDescription,
                 ProjectId = project.ProjectId,
                 ProjectName = project.ProjectName,
-                UserId = project.UserId
+                UserId = project.UserId,
+                StatusId = (int)Enums.ProjectStatus.UnSent
             });
 
             _projectContext.SaveChanges();
@@ -72,6 +74,31 @@ namespace Rated.Infrastructure.Database.Repository
 
             _projectContext.ProjectDetails.Add(projectDetailDb);
             _projectContext.SaveChanges();
+        }
+
+        public List<ProjectCoreModel> GetProjectsByStatus(Guid userId, Enums.ProjectStatus projectStatus)
+        {
+            var projectsDb = (from p in _projectContext.Projects
+                                where p.UserId == userId
+                                && p.StatusId == (int)projectStatus
+                                orderby p.CreatedDate descending
+                                select p).ToList();
+
+            var projects = new List<ProjectCoreModel>();
+
+            foreach (var project in projectsDb)
+            {
+                projects.Add(new ProjectCoreModel() {
+                    ProjectDescription = project.ProjectDescription,
+                    ProjectId = project.ProjectId,
+                    ProjectName = project.ProjectName,
+                    Score = 0,
+                    UserId = project.UserId,
+                    CreatedDate = project.CreatedDate
+                });
+            }
+
+            return projects;
         }
     }
 }

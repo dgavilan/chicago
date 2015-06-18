@@ -191,6 +191,7 @@
     <Content Include="Views\UserProfile\Login.cshtml" />
     <Content Include="Views\UserProfile\CreateAccount.cshtml" />
     <Content Include="Views\UserProfile\EditAccount.cshtml" />
+    <Content Include="Views\Project\StartProject.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
