@@ -3,11 +3,78 @@
 <br />
 
 @foreach (var project in Model)
-{ 
-    <div>
-        <p>@project.ProjectName</p>
-        <p>@project.CreatedDate</p>
-        <p>@project.ProjectDescription</p>
-        <hr />
-    </div>
+{
+    @*<div>
+            <p>
+                <span style="font-size:17px; font-weight:bold">@project.ProjectName</span>
+                <br />
+                @project.CreatedDate
+                <br />
+                Details: @project.ProjectDetailsCount
+            </p>
+
+            <p>@project.ProjectDescription</p>
+
+            <button id="btnEditProject" class="btn btn-success" onclick="window.location='Project/StartProject/@project.ProjectId'">Edit</button>
+
+            <hr />
+        </div>*@
+
+    @*<div class="test">
+        <div>
+            <label>Created On:</label> @project.CreatedDate
+            <br />
+            <label>
+                Modified On:
+            </label> @project.CreatedDate
+            <br />
+            <label>Details:</label> @project.ProjectDetailsCount
+            <br />
+            <label>Status:</label> Unsent
+            <br />
+            <a id="btnEditProject" class="btn btn-success" onclick="window.location='Project/StartProject/@project.ProjectId'">Edit</a>
+
+        </div>
+
+        <p>
+            <span style="font-size:17px; font-weight:bold">@project.ProjectName</span>
+        </p>
+
+        @project.ProjectDescription
+
+    </div>*@
+
+
+    <article>
+        <header>
+            <h3>@project.ProjectName</h3>
+        </header>
+        <p>
+           @project.ProjectDescription
+        </p>
+        
+        <p>
+            Created: @project.CreatedDate <br />
+            Modified: @project.CreatedDate <br />
+            Submitted: @project.CreatedDate <br />
+            Status: @project.ProjectStatus <br />
+            Details: @project.ProjectDetailsCount <br />
+            <a onclick="window.location='Project/Edit/@project.ProjectId'">Edit</a>
+        </p>
+    </article>
+
+    <hr />
 }
+
+
+@*<style>
+    .test div {
+        float: right;
+        margin: 10px;
+        background-color: #d9d9d9;
+        width: 260px;
+        height: 150px;
+        display: inline;
+        padding: 10px;
+    }
+</style>*@

@@ -18,17 +18,21 @@ namespace Rated2.Controllers
             var projectRepo = new ProjectRepo();
             var userSession = new UserSession();
             var userId = userSession.GetUserSession().UserId;
+
             var projectsCore = projectRepo.GetProjectsByStatus(userId, projectType);
 
             var projectsView = new List<ProjectViewModel>();
 
-            foreach(var project in projectsCore)
+            foreach (var project in projectsCore)
             {
-                projectsView.Add(new ProjectViewModel() {
+                projectsView.Add(new ProjectViewModel()
+                {
                     ProjectDescription = project.ProjectDescription,
                     ProjectId = project.ProjectId,
                     ProjectName = project.ProjectName,
-                    CreatedDate = project.CreatedDate
+                    CreatedDate = project.CreatedDate,
+                    ProjectDetailsCount = project.ProjectDetailsCount,
+                    ProjectStatus = project.ProjectStatus
                 });
             }
 
@@ -40,11 +44,62 @@ namespace Rated2.Controllers
         //{
         //    return View();
         //}
-
+        
+        [HttpGet]
         public ActionResult StartProject()
         {
+            var projectView = new ProjectViewModel() { 
+                ProjectDetails = new List<ProjectDetailViewModel>()
+            };
+
             ViewBag.OpenAddProjectModal = 1;
-            return View();
+            return View(projectView);
+        }
+
+        [HttpGet]
+        public ActionResult Edit(Guid id)
+        {
+            var userSession = new UserSession();
+                var user = userSession.GetUserSession();
+
+            var projectRepo = new ProjectRepo();
+            var projectCore = projectRepo.GetProject(user.UserId, id);
+            var projectDetailsCore = projectRepo.GetProjectDetail(user.UserId, id);
+            var detailView = new List<ProjectDetailViewModel>();
+
+            foreach (var detail in projectDetailsCore)
+            {
+                detailView.Add(new ProjectDetailViewModel() { 
+                    CreatedBy = detail.CreatedBy,
+                    CreatedDate = detail.CreatedDate,
+                    DetailCount = 0,
+                    DetailDescription = detail.ProjectDetailDescription,
+                    DetailName = detail.ProjectDetailName,
+                    ModifiedBy = detail.ModifiedBy,
+                    ModifiedDate = detail.ModifiedDate,
+                    ProjectDetailId = detail.ProjectDetailId,
+                    ProjectId = detail.ProjectId,
+                    HoursToComplete = detail.HoursToComplete
+                });
+            }
+
+            var projectView = new ProjectViewModel() {
+                CreatedBy = projectCore.CreatedBy,
+                CreatedDate = projectCore.CreatedDate,
+                ModifiedBy = projectCore.ModifiedBy,
+                ModifiedDate = projectCore.ModifiedDate,
+                ProjectDescription = projectCore.ProjectDescription,
+                ProjectDetailsCount = projectCore.ProjectDetailsCount,
+                ProjectId = projectCore.ProjectId,
+                ProjectDetails = detailView,
+                ProjectName = projectCore.ProjectName,
+                ProjectStatus = projectCore.ProjectStatus,
+                ReviewerEmail = ""
+            };
+
+            ViewBag.OpenAddProjectModal = 0;
+
+            return View("StartProject", projectView);
         }
 
         //// GET: Project/Details/5

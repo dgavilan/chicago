@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web.Helpers;
 using System.Web.Http;
 using System.Web.Http.Results;
 using System.Web.Script.Serialization;
@@ -29,8 +30,61 @@ namespace Rated.Web.Controllers.api
             try
             {
                 var userSession = new UserSession();
+                var timeStamp = DateTime.UtcNow;
+
+                projectDetail.ProjectDetailId = Guid.NewGuid();
                 projectDetail.UserId = userSession.GetUserSession().UserId;
+                projectDetail.CreatedBy = userSession.GetUserSession().UserId;
+                projectDetail.CreatedDate = timeStamp;
+                projectDetail.ModifiedBy = userSession.GetUserSession().UserId;
+                projectDetail.ModifiedDate = timeStamp;
+
                 _projectRepo.AddProjectDetail(projectDetail);
+
+                var javaScriptSerializer = new JavaScriptSerializer();
+
+                return Request.CreateResponse(HttpStatusCode.OK, javaScriptSerializer.Serialize(projectDetail));
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = ex.Message
+                });
+            }
+        }
+
+        [Route("api/ProjectApi/UpdateDetail")]
+        [HttpPut]
+        public HttpResponseMessage UpdateDetail(ProjectDetailCoreModel projectDetail)
+        {
+            try
+            {
+                var userSession = new UserSession();
+                projectDetail.UserId = userSession.GetUserSession().UserId;
+                _projectRepo.UpdateProjectDetail(projectDetail);
+
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = ex.Message
+                });
+            }
+        }
+
+        [Route("api/ProjectApi/Project/{projectId}/Detail/{detailId}")]
+        [HttpDelete]
+        public HttpResponseMessage DeleteDetail(Guid projectId, Guid detailId)
+        {
+            try
+            {
+                var userSession = new UserSession();
+                _projectRepo.DeleteProjectDetail(userSession.GetUserSession().UserId, projectId, detailId);
 
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }

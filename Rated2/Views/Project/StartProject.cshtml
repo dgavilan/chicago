@@ -7,31 +7,114 @@
 <h2>Start a Project</h2>
 
 
-Project Name:
-<div id="divProjectName"></div>
+<h3>
+    <div id="divProjectName">
+        <span style="font-size:25px; font-weight:bold">
+            @Html.DisplayFor(x => x.ProjectName)
+        </span>
+</div>
+</h3>
 
-Project Description:
-<div id="divProjectDescription"></div>
+<div id="divProjectDescription">
+    @Html.DisplayFor(x => x.ProjectDescription)
+</div>
 
 
 <hr />
 
-<button class="btn btn-primary" id="btnAddItem">+ Add Items</button>
+<button class="btn btn-primary" onclick="Project.ShowAddDetail()">+ Add Items</button>
 <button class="btn btn-primary" id="btnAssignReviewer">+ Assign Reviewer</button>
 <button class="btn btn-success" id="btnStartTheProject">Start the Project</button>
 
 <hr />
 
-<h4>Project Items (<span id="spanItemDetailCount">0</span>)</h4>
+<h4>Project Items (<span id="spanItemDetailCount">@Model.ProjectDetails.Count()</span>)</h4>
 
 <table id="tblItems" cellpadding="5" cellspacing="5">
     <tr>
         <td></td>
         <td></td>
-        <td></td>
-        <td></td>
     </tr>
+    @{
+        var rowCount = 1;
+        foreach (var detail in Model.ProjectDetails)
+        {
+            
+            <tr>
+                <td width="73px" align="center" style="background-color:coral">
+                    <span style="font-size:20px; font-weight:normal">@rowCount.</span>
+                </td>
+                <td width="103px" align="center" style="background-color:aquamarine">
+                    <span style="font-size:25px; font-weight:normal">@Convert.ToDouble(detail.HoursToComplete)</span>
+                    <br />
+                    Hours to Complete
+                </td>
+                <td style="background-color:ghostwhite">
+
+                    <ul class="nav nav-pills">
+                        <li>
+                            <a style="color:#333; font-size:19px" onclick="Project.ShowEditDetail('@detail.ProjectDetailId', '@detail.DetailName', '@detail.DetailDescription', '@detail.HoursToComplete')">
+                                <span class="glyphicon glyphicon-edit"></span> Edit
+                            </a>
+                        </li>
+                        <li>
+                            <a style="color:#333; font-size:19px" onclick="Project.DeleteDetail('@detail.ProjectId', '@detail.ProjectDetailId')">
+                                <span class="glyphicon glyphicon-trash"></span> Delete
+                            </a>
+                        </li>
+                    </ul>
+
+                    
+
+                    <div style="padding:10px;">
+                        <p>
+                            <span style="font-size:25px; font-weight:bold">
+                                @detail.DetailName
+                            </span>
+                        </p>
+                        <p>
+                            <span style="font-size:18px">
+                                @detail.DetailDescription
+                            </span>
+                        </p>
+
+                        <span style="color:AppWorkspace">
+                            Modified @detail.ModifiedDate
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="height:3px">&nbsp;</td>
+            </tr>
+            
+            @*<tr id="tr_@detail.ProjectDetailId">
+                <td style='background-color:#f9f9f9;width:5px'>@rowCount.ToString()</td>
+                <td valign='top'>
+                    <span id="span_projectDetailName_@detail.ProjectDetailId" style="font-size:17px; font-weight:bold">@detail.DetailName</span>
+                    <br />
+                    <span id="span_projectDetailDescription_@detail.ProjectDetailId">@detail.DetailDescription</span>
+                    <br />
+                    <span id="span_hoursToComplete_@detail.ProjectDetailId">@Convert.ToDouble(detail.HoursToComplete) hours to complete</span>
+                    <br />
+                    <br />
+                    Created: @detail.CreatedDate
+                    <br />
+                    Modified: @detail.ModifiedDate
+                    <br />
+                    <a onclick="Project.ShowEditDetail('@detail.ProjectDetailId', '@detail.DetailName', '@detail.DetailDescription', '@detail.HoursToComplete')">Edit</a>
+                    |
+                    <a onclick="Project.DeleteDetail('@detail.ProjectId', '@detail.ProjectDetailId')">Delete</a>
+                </td>
+            </tr>
+            <tr><td colspan='3' style='height:3px'></td></tr>*@
+            rowCount++;
+        } // foreach
+
+        <input type="hidden" id="TotalDetailCount" name="TotalDetailCount" value="@rowCount">
+}
 </table>
+
 
 
 <div id="modalAddProject" class="modal fade" data-backdrop="static" data-keyboard="false">
@@ -68,7 +151,6 @@ Project Description:
     </div>
 </div>
 
-
 <div id="modalAddItem" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -89,11 +171,7 @@ Project Description:
 
                         <label>Time to complete</label>
                         <br />
-                        <input type="text" class="form-control" id="TimeToComplete" name="TimeToComplete" />
-
-                        @*<label>Details</label>
-                        <br />
-                        <textarea class="form-control" id="Details" name="Details"></textarea>*@
+                        <input type="text" class="form-control" id="HoursToComplete" name="HoursToComplete" />
                     </div>
                 </p>
             </div>
@@ -178,3 +256,5 @@ Project Description:
 <script src="~/Scripts/Rated/project.js"></script>
 
 @Html.HiddenFor(x => x.ProjectId)
+<input type="hidden" id="DetailItemNumber" name="DetailItemNumber">
+<input type="hidden" id="ProjectDetailId" name="ProjectDetailId">

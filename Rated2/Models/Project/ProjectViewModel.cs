@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rated.Core.Shared;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -20,10 +21,12 @@ namespace Rated2.Models.Project
         public string ReviewerEmail { get; set; }
 
         public DateTime CreatedDate { get; set; }
-        public DateTime CreatedBy { get; set; }
+        public Guid CreatedBy { get; set; }
         public DateTime ModifiedDate { get; set; }
-        public DateTime ModifiedBy { get; set; }
+        public Guid ModifiedBy { get; set; }
+        public int ProjectDetailsCount { get; set; }
+        public Enums.ProjectStatus ProjectStatus { get; set; }
 
-        public List<ProjectItemViewModel> ProjectItems { get; set; }
+        public List<ProjectDetailViewModel> ProjectDetails { get; set; }
     }
 }

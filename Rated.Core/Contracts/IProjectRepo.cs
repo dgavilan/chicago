@@ -10,10 +10,11 @@ namespace Rated.Core.Contracts
 {
     public interface IProjectRepo
     {
-        void AddProject(ProjectCoreModel project);
-
         ProjectCoreModel GetProject(Guid userId, Guid projectId);
 
+        void AddProject(ProjectCoreModel project);
         void AddProjectDetail(ProjectDetailCoreModel projectDetail);
+        void UpdateProjectDetail(ProjectDetailCoreModel projectDetail);
+        void DeleteProjectDetail(Guid guid, Guid projectId, Guid detailId);
     }
 }

@@ -12,11 +12,16 @@ namespace Rated.Core.Models.Project
         public Guid ProjectId { get; set; }
         public string ProjectDetailName { get; set; }
         public string ProjectDetailDescription { get; set; }
-        public string TimeToComplete { get; set; }
+        public decimal HoursToComplete { get; set; }
         public string Details { get; set; }
         public decimal Score { get; set; }
-
         public Guid UserId { get; set; }
+        public int DetailItemNumber { get; set; }
+
+        public Guid CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public Guid ModifiedBy { get; set; }
+        public DateTime ModifiedDate { get; set; }
 
     }
 }

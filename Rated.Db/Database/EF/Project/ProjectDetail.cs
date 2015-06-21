@@ -25,6 +25,9 @@ namespace Rated.Infrastructure.Database.EF.Project
         [StringLength(5000)]
         public string DetailDescription { get; set; }
 
+        [Required]
+        public decimal HoursToComplete { get; set; }
+
         public Guid CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public Guid ModifiedBy { get; set; }

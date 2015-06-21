@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rated.Core.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,10 +14,16 @@ namespace Rated.Core.Models.Project
         public string ProjectName { get; set; }
         public string ProjectDescription { get; set; }
         public decimal Score { get; set; }
+        public int ProjectDetailsCount { get; set; }
+        public Enums.ProjectStatus ProjectStatus { get; set; }
+
         public List<ProjectDetailCoreModel> ProjectDetails { get; set; }
+
         public Guid CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public Guid ModifiedBy { get; set; }
         public DateTime ModifiedDate { get; set; }
+
+
     }
 }
