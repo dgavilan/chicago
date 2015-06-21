@@ -6,17 +6,32 @@
 
 <h2>Start a Project</h2>
 
+<div style="background-color:ghostwhite; padding:15px">
+    <ul class="nav nav-pills">
+        <li>
+            <a style="color:#333; font-size:15px">
+            <span class="glyphicon glyphicon-edit">
+                </span> Edit
+            </a>
+        </li>
+        <li>
+            <a style="color:#333; font-size:15px">
+                <span class="glyphicon glyphicon-trash"></span> Delete
+            </a>
+        </li>
+    </ul>
 
-<h3>
     <div id="divProjectName">
         <span style="font-size:25px; font-weight:bold">
             @Html.DisplayFor(x => x.ProjectName)
         </span>
-</div>
-</h3>
+    </div>
 
-<div id="divProjectDescription">
-    @Html.DisplayFor(x => x.ProjectDescription)
+    <div id="divProjectDescription">
+        <span style="font-size:18px">
+            @Html.DisplayFor(x => x.ProjectDescription)
+        </span>
+    </div>
 </div>
 
 
@@ -53,12 +68,12 @@
 
                     <ul class="nav nav-pills">
                         <li>
-                            <a style="color:#333; font-size:19px" onclick="Project.ShowEditDetail('@detail.ProjectDetailId', '@detail.DetailName', '@detail.DetailDescription', '@detail.HoursToComplete')">
+                            <a style="color:#333; font-size:15px" onclick="Project.ShowEditDetail('@detail.ProjectDetailId', '@detail.DetailName', '@detail.DetailDescription', '@detail.HoursToComplete')">
                                 <span class="glyphicon glyphicon-edit"></span> Edit
                             </a>
                         </li>
                         <li>
-                            <a style="color:#333; font-size:19px" onclick="Project.DeleteDetail('@detail.ProjectId', '@detail.ProjectDetailId')">
+                            <a style="color:#333; font-size:15px" onclick="Project.DeleteDetail('@detail.ProjectId', '@detail.ProjectDetailId')">
                                 <span class="glyphicon glyphicon-trash"></span> Delete
                             </a>
                         </li>
