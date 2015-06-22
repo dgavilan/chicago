@@ -8,10 +8,8 @@ namespace Rated2.Models.Project
 {
     public class ProjectItemViewModel
     {
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
+        public string ProjectDetailName { get; set; }
+        public string ProjectDetailDescription { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime CreatedBy { get; set; }
         public DateTime ModifiedDate { get; set; }

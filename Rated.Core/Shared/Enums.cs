@@ -12,7 +12,21 @@ namespace Rated.Core.Shared
         { 
             Completed = 1,
             OnGoing = 2,
-            UnSent = 3
+            UnSent = 3,
+            WaitingApproverAcceptance = 4
+        }
+
+        public enum ProjectReviewerStatus
+        { 
+            Sent = 1,
+            Accepted = 2,
+            Declined = 3
+        }
+
+        public enum UserStatus
+        { 
+            Complete = 1,
+            PendingAcceptance = 2
         }
     }
 }

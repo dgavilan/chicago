@@ -39,12 +39,6 @@ namespace Rated2.Controllers
             return View(projectsView);
         }
 
-        //[HttpPost]
-        //public ActionResult AddProject(string name, string description)
-        //{
-        //    return View();
-        //}
-        
         [HttpGet]
         public ActionResult StartProject()
         {
@@ -79,7 +73,14 @@ namespace Rated2.Controllers
                     ModifiedDate = detail.ModifiedDate,
                     ProjectDetailId = detail.ProjectDetailId,
                     ProjectId = detail.ProjectId,
-                    HoursToComplete = detail.HoursToComplete
+                    HoursToComplete = detail.HoursToComplete,
+                    ReviewerFirstName = detail.ReviewerFirstName,
+                    ReviewerLastName = detail.ReviewerLastName,
+                    ReviewerEmail = detail.ReviewerEmail,
+                    ReviewerStatusId = detail.ReviewerStatusId,
+                    ReviewerFullName = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.Sent) 
+                        ? detail.ReviewerEmail
+                        : detail.ReviewerFirstName + " " + detail.ReviewerLastName
                 });
             }
 

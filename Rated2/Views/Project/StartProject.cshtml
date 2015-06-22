@@ -1,5 +1,7 @@
 ﻿@model Rated2.Models.Project.ProjectViewModel
 
+@using Rated.Core.Shared;
+
 @{
     ViewBag.Title = "Index";
 }
@@ -10,7 +12,7 @@
     <ul class="nav nav-pills">
         <li>
             <a style="color:#333; font-size:15px">
-            <span class="glyphicon glyphicon-edit">
+                <span class="glyphicon glyphicon-edit">
                 </span> Edit
             </a>
         </li>
@@ -54,7 +56,7 @@
         var rowCount = 1;
         foreach (var detail in Model.ProjectDetails)
         {
-            
+
             <tr>
                 <td width="73px" align="center" style="background-color:coral">
                     <span style="font-size:20px; font-weight:normal">@rowCount.</span>
@@ -79,8 +81,6 @@
                         </li>
                     </ul>
 
-                    
-
                     <div style="padding:10px;">
                         <p>
                             <span style="font-size:25px; font-weight:bold">
@@ -98,36 +98,59 @@
                         </span>
                     </div>
                 </td>
+                <td nowrap valign="top" style="background-color:#c9c9c9">
+                    <div style="padding:25px;">
+
+                        @if (detail.ReviewerStatusId != (int)Enums.ProjectReviewerStatus.Accepted)
+                        {
+                            <p>
+                                Waiting for Approver:
+                                <br />
+                                @detail.ReviewerFullName
+                                <br />
+                                <br />
+
+                                <button class="btn btn-danger">Remove Approver</button>
+                            </p>
+                        }
+                        else
+                        {
+                            <p>
+                                Approver: @detail.ReviewerFullName
+                            </p>
+                        }
+                    </div>
+                </td>
             </tr>
             <tr>
                 <td colspan="3" style="height:3px">&nbsp;</td>
             </tr>
-            
+
             @*<tr id="tr_@detail.ProjectDetailId">
-                <td style='background-color:#f9f9f9;width:5px'>@rowCount.ToString()</td>
-                <td valign='top'>
-                    <span id="span_projectDetailName_@detail.ProjectDetailId" style="font-size:17px; font-weight:bold">@detail.DetailName</span>
-                    <br />
-                    <span id="span_projectDetailDescription_@detail.ProjectDetailId">@detail.DetailDescription</span>
-                    <br />
-                    <span id="span_hoursToComplete_@detail.ProjectDetailId">@Convert.ToDouble(detail.HoursToComplete) hours to complete</span>
-                    <br />
-                    <br />
-                    Created: @detail.CreatedDate
-                    <br />
-                    Modified: @detail.ModifiedDate
-                    <br />
-                    <a onclick="Project.ShowEditDetail('@detail.ProjectDetailId', '@detail.DetailName', '@detail.DetailDescription', '@detail.HoursToComplete')">Edit</a>
-                    |
-                    <a onclick="Project.DeleteDetail('@detail.ProjectId', '@detail.ProjectDetailId')">Delete</a>
-                </td>
-            </tr>
-            <tr><td colspan='3' style='height:3px'></td></tr>*@
+                    <td style='background-color:#f9f9f9;width:5px'>@rowCount.ToString()</td>
+                    <td valign='top'>
+                        <span id="span_projectDetailName_@detail.ProjectDetailId" style="font-size:17px; font-weight:bold">@detail.DetailName</span>
+                        <br />
+                        <span id="span_projectDetailDescription_@detail.ProjectDetailId">@detail.DetailDescription</span>
+                        <br />
+                        <span id="span_hoursToComplete_@detail.ProjectDetailId">@Convert.ToDouble(detail.HoursToComplete) hours to complete</span>
+                        <br />
+                        <br />
+                        Created: @detail.CreatedDate
+                        <br />
+                        Modified: @detail.ModifiedDate
+                        <br />
+                        <a onclick="Project.ShowEditDetail('@detail.ProjectDetailId', '@detail.DetailName', '@detail.DetailDescription', '@detail.HoursToComplete')">Edit</a>
+                        |
+                        <a onclick="Project.DeleteDetail('@detail.ProjectId', '@detail.ProjectDetailId')">Delete</a>
+                    </td>
+                </tr>
+                <tr><td colspan='3' style='height:3px'></td></tr>*@
             rowCount++;
         } // foreach
 
         <input type="hidden" id="TotalDetailCount" name="TotalDetailCount" value="@rowCount">
-}
+    }
 </table>
 
 
@@ -236,7 +259,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Send Request</button>
+                <button type="button" class="btn btn-primary" onclick="Project.AssignReviewer()">Assign Reviewer</button>
             </div>
         </div>
     </div>

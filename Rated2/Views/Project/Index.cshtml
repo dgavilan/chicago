@@ -4,77 +4,32 @@
 
 @foreach (var project in Model)
 {
-    @*<div>
+    <div style="background-color:ghostwhite; padding:15px">
+        <article>
+            <ul class="nav nav-pills">
+                <li>
+                    <a style="color:#333; font-size:15px" onclick="window.location='Project/Edit/@project.ProjectId'">
+                        <span class="glyphicon glyphicon-edit">
+                        </span> Edit
+                    </a>
+                </li>
+            </ul>
+
+            <header>
+                <span style="font-size:25px; font-weight:bold">
+                    @project.ProjectName
+                </span>
+            </header>
             <p>
-                <span style="font-size:17px; font-weight:bold">@project.ProjectName</span>
-                <br />
-                @project.CreatedDate
-                <br />
-                Details: @project.ProjectDetailsCount
+                @project.ProjectDescription
             </p>
 
-            <p>@project.ProjectDescription</p>
-
-            <button id="btnEditProject" class="btn btn-success" onclick="window.location='Project/StartProject/@project.ProjectId'">Edit</button>
-
-            <hr />
-        </div>*@
-
-    @*<div class="test">
-        <div>
-            <label>Created On:</label> @project.CreatedDate
-            <br />
-            <label>
-                Modified On:
-            </label> @project.CreatedDate
-            <br />
-            <label>Details:</label> @project.ProjectDetailsCount
-            <br />
-            <label>Status:</label> Unsent
-            <br />
-            <a id="btnEditProject" class="btn btn-success" onclick="window.location='Project/StartProject/@project.ProjectId'">Edit</a>
-
-        </div>
-
-        <p>
-            <span style="font-size:17px; font-weight:bold">@project.ProjectName</span>
-        </p>
-
-        @project.ProjectDescription
-
-    </div>*@
-
-
-    <article>
-        <header>
-            <h3>@project.ProjectName</h3>
-        </header>
-        <p>
-           @project.ProjectDescription
-        </p>
-        
-        <p>
-            Created: @project.CreatedDate <br />
-            Modified: @project.CreatedDate <br />
-            Submitted: @project.CreatedDate <br />
-            Status: @project.ProjectStatus <br />
-            Details: @project.ProjectDetailsCount <br />
-            <a onclick="window.location='Project/Edit/@project.ProjectId'">Edit</a>
-        </p>
-    </article>
-
-    <hr />
+            <p>
+                Modified @project.CreatedDate <br />
+                Details: @project.ProjectDetailsCount <br />
+            </p>
+        </article>
+    </div>
+    
+    <div>&nbsp;</div>
 }
-
-
-@*<style>
-    .test div {
-        float: right;
-        margin: 10px;
-        background-color: #d9d9d9;
-        width: 260px;
-        height: 150px;
-        display: inline;
-        padding: 10px;
-    }
-</style>*@

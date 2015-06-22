@@ -16,5 +16,6 @@ namespace Rated.Core.Contracts
         void AddProjectDetail(ProjectDetailCoreModel projectDetail);
         void UpdateProjectDetail(ProjectDetailCoreModel projectDetail);
         void DeleteProjectDetail(Guid guid, Guid projectId, Guid detailId);
+        void AddProjectReviewer(ProjectDetailCoreModel projectDetail);
     }
 }

@@ -25,19 +25,3 @@
 
 @Html.ActionLink("Ongoing Projects (3)", "Index", "Project", new { projectType = Rated.Core.Shared.Enums.ProjectStatus.OnGoing }, new { @class = "btn btn-primary" })
 
-<hr />
-
-<h4>Completed Projects (7)</h4>
-    
-@foreach (var project in @Model.Projects)
-{
-    <b>@project.Name</b><button class="btn btn-link" onclick="window.location='/project/index'">View</button>
-    <br />
-    <b>Score:</b> @project.Score
-    <br />
-    <i>@project.Description</i>
-    <br />
-    <br />
-}
-
-<a href="#">View All</a>

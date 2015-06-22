@@ -117,6 +117,21 @@
         $("#ProjectDetailDescription").val("");
         $("#HoursToComplete").val("");
     },
+
+    AssignReviewer: function () {
+        var data = $(":input").serializeArray();
+        var jqxhr = $.ajax({
+            url: "/api/ProjectApi/Project/Reviewer",
+            type: "POST",
+            data: data,
+        });
+
+        jqxhr.done(function () {
+            alert("Reviewer assigned");
+        })
+        jqxhr.fail(function (jqXHR, textStatus, errorThrown) { handleErrors(jqXHR) })
+        jqxhr.always(function () { });
+    },
 };
 
 function handleErrors(jqXHR) {

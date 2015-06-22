@@ -5,6 +5,7 @@ using Rated.Infrastructure.Database.EF.Project;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -107,10 +108,18 @@ namespace Rated.Infrastructure.Database.Repository
         public List<ProjectDetailCoreModel> GetProjectDetail(Guid userId, Guid projectId)
         {
             var projectDetailsDb = (from pd in _projectContext.ProjectDetails
+                                    join pr in _projectContext.ProjectReviewers on pd.ProjectDetailId equals pr.ProjectDetailId
+                                    join u in _projectContext.Users on pr.UserId equals u.UserId
                                     where pd.UserId == userId
                                         && pd.ProjectId == projectId
                                     orderby pd.DetailNumber ascending
-                                    select pd).ToList();
+                                    select new { 
+                                        pd, 
+                                        ReviewerFirstName = u.FirstName,
+                                        ReviewerLastName = u.LastName,
+                                        ReviewerEmail = u.Email,
+                                        ReviewerStatusId = pr.StatusId,
+                                    }).ToList();
 
             var projectDetails = new List<ProjectDetailCoreModel>();
 
@@ -118,16 +127,19 @@ namespace Rated.Infrastructure.Database.Repository
             {
                 projectDetails.Add(new ProjectDetailCoreModel()
                 {
-                    CreatedBy = detail.CreatedBy,
-                    CreatedDate = detail.CreatedDate,
-                    //DetailCount = 0,
-                    ProjectDetailDescription = detail.DetailDescription,
-                    ProjectDetailName = detail.DetailName,
-                    ModifiedBy = detail.ModifiedBy,
-                    ModifiedDate = detail.ModifiedDate,
-                    ProjectDetailId = detail.ProjectDetailId,
-                    ProjectId = detail.ProjectId,
-                    HoursToComplete = detail.HoursToComplete
+                    CreatedBy = detail.pd.CreatedBy,
+                    CreatedDate = detail.pd.CreatedDate,
+                    ProjectDetailDescription = detail.pd.DetailDescription,
+                    ProjectDetailName = detail.pd.DetailName,
+                    ModifiedBy = detail.pd.ModifiedBy,
+                    ModifiedDate = detail.pd.ModifiedDate,
+                    ProjectDetailId = detail.pd.ProjectDetailId,
+                    ProjectId = detail.pd.ProjectId,
+                    HoursToComplete = detail.pd.HoursToComplete,
+                    ReviewerFirstName = detail.ReviewerFirstName,
+                    ReviewerLastName = detail.ReviewerLastName,
+                    ReviewerEmail = detail.ReviewerEmail,
+                    ReviewerStatusId = detail.ReviewerStatusId,
                 });
             }
 
@@ -164,5 +176,114 @@ namespace Rated.Infrastructure.Database.Repository
             _projectContext.Entry(projectDetailDb).State = EntityState.Deleted;
             _projectContext.SaveChanges();
         }
+
+        public void AddProjectReviewer(ProjectDetailCoreModel projectDetail)
+        {
+            try
+            {
+                // 1. insert record in user table if user id doesn't exist
+
+                var projectReviewer = (from u in _projectContext.Users
+                                       where u.Email == projectDetail.ReviewerEmail
+                                       select u).SingleOrDefault();
+
+                var reviewerId = Guid.Empty;
+                var timeStamp = DateTime.UtcNow;
+
+                if (projectReviewer == null)
+                {
+                    reviewerId = Guid.NewGuid();
+                    _projectContext.Users.Add(new User()
+                    {
+                        Bio = "",
+                        CreatedDate = timeStamp,
+                        Email = projectDetail.ReviewerEmail,
+                        FirstName = "",
+                        IsActive = false,
+                        LastLoginDate = Convert.ToDateTime("1/1/1990"),
+                        LastName = "",
+                        ModifiedDate = timeStamp,
+                        Password = "",
+                        UserId = reviewerId,
+                        StatusId = (int)Enums.UserStatus.PendingAcceptance
+                    });
+
+                    _projectContext.SaveChanges();
+                }
+                else
+                {
+                    reviewerId = projectReviewer.UserId;
+                }
+
+                // 2. insert record in ProjectReviewer table
+
+                if (projectDetail.ProjectDetailId == Guid.Empty)
+                {
+                    // NOTE: Add reviewer to all details
+                    var detailsDb = (from d in _projectContext.ProjectDetails
+                                     where d.ProjectId == projectDetail.ProjectId
+                                     select d).ToList();
+                    foreach (var detail in detailsDb)
+                    {
+                        _projectContext.ProjectReviewers.Add(new ProjectReviewer()
+                        {
+                            ProjectReviewerId = Guid.NewGuid(),
+                            CreatedBy = projectDetail.UserId,
+                            CreatedDate = timeStamp,
+                            ProjectDetailId = detail.ProjectDetailId,
+                            ProjectId = projectDetail.ProjectId,
+                            UserId = reviewerId,
+                            StatusId = (int)Enums.ProjectReviewerStatus.Sent
+                        });
+                    }
+                }
+                else
+                {
+                    // NOTE: Only assign reviewer to 1 detail
+                    _projectContext.ProjectReviewers.Add(new ProjectReviewer()
+                    {
+                        ProjectReviewerId = Guid.NewGuid(),
+                        CreatedBy = projectDetail.UserId,
+                        CreatedDate = timeStamp,
+                        ProjectDetailId = projectDetail.ProjectDetailId,
+                        ProjectId = projectDetail.ProjectId,
+                        UserId = reviewerId,
+                        StatusId = (int)Enums.ProjectReviewerStatus.Sent
+                    });
+                }
+
+                // 3. Update project status
+                
+                var projectDb = (from p in _projectContext.Projects
+                                     where p.ProjectId == projectDetail.ProjectId
+                                     select p).SingleOrDefault();
+
+                projectDb.StatusId = (int)Enums.ProjectStatus.WaitingApproverAcceptance;
+                _projectContext.Entry(projectDb).State = EntityState.Modified;
+
+                _projectContext.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                var errors = new StringBuilder();
+                foreach (var eve in ex.EntityValidationErrors)
+                {
+                    //Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                    //    eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        errors.Append(String.Format("{0} - Error:{1}", ve.PropertyName, ve.ErrorMessage));
+                    }
+                }
+
+                throw new Exception(errors.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
+        }
+
     }
 }

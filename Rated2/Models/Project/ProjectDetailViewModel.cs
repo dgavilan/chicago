@@ -15,6 +15,11 @@ namespace Rated2.Models.Project
         public string DetailName { get; set; }
         public decimal HoursToComplete { get; set; }
         public string DetailDescription { get; set; }
+        public string ReviewerFirstName { get; set; }
+        public string ReviewerLastName { get; set; }
+        public string ReviewerEmail { get; set; }
+        public int ReviewerStatusId { get; set; }
+        public string ReviewerFullName { get; set; }
 
         public Guid CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

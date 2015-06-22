@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\EF\Project\ProjectReviewer.cs" />
     <Compile Include="Database\EF\Project\ProjectDetail.cs" />
     <Compile Include="Database\EF\Project\Project.cs" />
     <Compile Include="Database\EF\Project\ProjectContext.cs" />
