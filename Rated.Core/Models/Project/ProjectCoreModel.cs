@@ -11,6 +11,8 @@ namespace Rated.Core.Models.Project
     {
         public Guid ProjectId { get; set; }
         public Guid UserId { get; set; }
+        public string OwnerFirstName { get; set; }
+        public string OwnerLastName { get; set; }
         public string ProjectName { get; set; }
         public string ProjectDescription { get; set; }
         public decimal Score { get; set; }

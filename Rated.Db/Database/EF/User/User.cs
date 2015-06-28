@@ -38,5 +38,6 @@ namespace Rated.Infrastructure.Database.EF.User
         public string Bio { get; set; }
 
         public DateTime LastLoginDate { get; set; }
+        public int StatusId { get; set; }
     }
 }

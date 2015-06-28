@@ -1,4 +1,5 @@
 ﻿using Rated.Core.Models.User;
+using Rated.Core.Shared;
 using Rated.Infrastructure.Database.Repository;
 using Rated.Web.Shared;
 using Rated2.Models.UserProfile;
@@ -69,7 +70,10 @@ namespace Rated2.Controllers
                     LastName = lastName,
                     ModifiedDate = timeStamp,
                     UserId = Guid.NewGuid(),
-                    Password = userPassword
+                    Password = userPassword,
+                    Bio = bio,
+                    LastLoginDate = Convert.ToDateTime("1/1/1990"),
+                    StatusId = Enums.UserStatus.Complete,
                 });
 
                 ViewBag.UserCreated = true;

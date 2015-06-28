@@ -1,0 +1,45 @@
+﻿@model Rated2.Models.Project.ProjectViewModel
+
+<div id="modalAssignReviewer" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Assign Reviewer</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Enter the email address of the person who will evaluate your work.
+                    We will contact this person and notify you when your request has
+                    been accepted.
+
+                    <div class="editor-field">
+                        @Html.LabelFor(x => x.ReviewerEmail)
+                        @Html.TextBoxFor(x => x.ReviewerEmail, new { @class = "form-control" })
+                    </div>
+
+                    <br />
+                    <label>Pick your relationship with the reviewer.</label>
+
+                    <div class="editor-field">
+                        <select class="form-control">
+                            <option>--Pick One--</option>
+                            <option>Manager</option>
+                            <option>Supervisor</option>
+                            <option>Supervisor</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <br />
+                    <label>Describe the reviewer's role.</label>
+                    <textarea class="form-control" id="txtItemDetails"></textarea>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="Project.AssignReviewer()">Assign Reviewer</button>
+            </div>
+        </div>
+    </div>
+</div>

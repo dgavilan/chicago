@@ -1,35 +1,71 @@
 ﻿@model List<Rated2.Models.Project.ProjectViewModel>
+@using Rated.Core.Shared
 
-<br />
+<h2>Projects</h2>
 
-@foreach (var project in Model)
-{
-    <div style="background-color:ghostwhite; padding:15px">
-        <article>
-            <ul class="nav nav-pills">
-                <li>
-                    <a style="color:#333; font-size:15px" onclick="window.location='Project/Edit/@project.ProjectId'">
-                        <span class="glyphicon glyphicon-edit">
-                        </span> Edit
-                    </a>
-                </li>
-            </ul>
+@*@foreach (var project in Model)
+    {
+        <div style="background-color:ghostwhite; padding:15px">
+            <article>
+                @switch (project.ProjectStatus)
+                {
+                    case Enums.ProjectStatus.Review:
+                        <div class="alert alert-info">
+                            <strong>@project.OwnerFirstName @project.OwnerLastName</strong> has requested you to review his project.
 
-            <header>
-                <span style="font-size:25px; font-weight:bold">
-                    @project.ProjectName
-                </span>
-            </header>
-            <p>
-                @project.ProjectDescription
-            </p>
+                            <button class="btn btn-default">Accept</button>
+                            <button class="btn btn-default">Decline</button>
+                        </div>
+                        break;
+                    case Enums.ProjectStatus.Draft:
+                    case Enums.ProjectStatus.WaitingApproverAcceptance:
+                    <ul class="nav nav-pills">
+                        <li>
+                            <a style="color:#333; font-size:15px" onclick="window.location='Project/Edit/@project.ProjectId'">
+                                <span class="glyphicon glyphicon-edit">
+                                </span> Edit
+                            </a>
+                        </li>
+                    </ul>
+                        break;
+                }
 
-            <p>
-                Modified @project.CreatedDate <br />
-                Details: @project.ProjectDetailsCount <br />
-            </p>
-        </article>
-    </div>
-    
-    <div>&nbsp;</div>
-}
+
+                <header>
+                    <span style="font-size:25px; font-weight:bold">
+                        @project.ProjectName
+                    </span>
+                </header>
+                <p>
+                    @project.ProjectDescription
+                </p>
+
+                <p>
+                    Modified @project.CreatedDate <br />
+                    Details: @project.ProjectDetailsCount <br />
+                </p>
+            </article>
+            </div>
+
+        <div>&nbsp;</div>
+    }*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

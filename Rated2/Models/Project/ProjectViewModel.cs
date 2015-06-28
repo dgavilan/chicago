@@ -26,6 +26,8 @@ namespace Rated2.Models.Project
         public Guid ModifiedBy { get; set; }
         public int ProjectDetailsCount { get; set; }
         public Enums.ProjectStatus ProjectStatus { get; set; }
+        public string OwnerFirstName { get; set; }
+        public string OwnerLastName { get; set; }
 
         public List<ProjectDetailViewModel> ProjectDetails { get; set; }
     }

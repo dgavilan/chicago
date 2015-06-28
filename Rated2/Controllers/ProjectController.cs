@@ -12,31 +12,59 @@ namespace Rated2.Controllers
 {
     public class ProjectController : Controller
     {
-        // GET: Project
-        public ActionResult Index(Enums.ProjectStatus projectType)
+        public ActionResult Index()
         {
-            var projectRepo = new ProjectRepo();
-            var userSession = new UserSession();
-            var userId = userSession.GetUserSession().UserId;
+            return View();
+        }
 
-            var projectsCore = projectRepo.GetProjectsByStatus(userId, projectType);
+        // GET: Project
+        //public ActionResult Index(Enums.ProjectStatus projectType)
+        //{
+        //    var projectRepo = new ProjectRepo();
+        //    var userSession = new UserSession();
+        //    var userId = userSession.GetUserSession().UserId;
 
-            var projectsView = new List<ProjectViewModel>();
+        //    var projectsCore = projectRepo.GetProjectsByStatus(userId, projectType);
 
-            foreach (var project in projectsCore)
-            {
-                projectsView.Add(new ProjectViewModel()
-                {
-                    ProjectDescription = project.ProjectDescription,
-                    ProjectId = project.ProjectId,
-                    ProjectName = project.ProjectName,
-                    CreatedDate = project.CreatedDate,
-                    ProjectDetailsCount = project.ProjectDetailsCount,
-                    ProjectStatus = project.ProjectStatus
-                });
-            }
+        //    var projectsView = new List<ProjectViewModel>();
 
-            return View(projectsView);
+        //    foreach (var project in projectsCore)
+        //    {
+        //        projectsView.Add(new ProjectViewModel()
+        //        {
+        //            ProjectDescription = project.ProjectDescription,
+        //            ProjectId = project.ProjectId,
+        //            ProjectName = project.ProjectName,
+        //            CreatedDate = project.CreatedDate,
+        //            ProjectDetailsCount = project.ProjectDetailsCount,
+        //            ProjectStatus = project.ProjectStatus,
+        //            OwnerFirstName = project.OwnerFirstName,
+        //            OwnerLastName = project.OwnerLastName,
+
+        //        });
+        //    }
+
+        //    return View(projectsView);
+        //}
+
+        public ActionResult Draft()
+        {
+            return View(GetProjectsByStatus(Enums.ProjectStatus.Draft));
+        }
+
+        public ActionResult Pending()
+        {
+            return View(GetProjectsByStatus(Enums.ProjectStatus.WaitingApproverAcceptance));
+        }
+
+        public ActionResult InProgress()
+        {
+            return View();
+        }
+
+        public ActionResult Completed()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -80,7 +108,8 @@ namespace Rated2.Controllers
                     ReviewerStatusId = detail.ReviewerStatusId,
                     ReviewerFullName = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.Sent) 
                         ? detail.ReviewerEmail
-                        : detail.ReviewerFirstName + " " + detail.ReviewerLastName
+                        : detail.ReviewerFirstName + " " + detail.ReviewerLastName,
+                    HasReviewer = detail.HasReviewer,
                 });
             }
 
@@ -100,79 +129,39 @@ namespace Rated2.Controllers
 
             ViewBag.OpenAddProjectModal = 0;
 
-            return View("StartProject", projectView);
+            return View("Edit", projectView);
         }
 
-        //// GET: Project/Details/5
-        //public ActionResult Details(int id)
-        //{
-        //    return View();
-        //}
+        private List<ProjectViewModel> GetProjectsByStatus(Enums.ProjectStatus projectStatus)
+        {
+            var projectRepo = new ProjectRepo();
+            var userSession = new UserSession();
+            var userId = userSession.GetUserSession().UserId;
 
-        //// GET: Project/Create
-        //public ActionResult Create()
-        //{
-        //    return View();
-        //}
+            var projectsCore = projectRepo.GetProjectsByStatus(userId, projectStatus);
 
-        //// POST: Project/Create
-        //[HttpPost]
-        //public ActionResult Create(FormCollection collection)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add insert logic here
+            var projectsView = new List<ProjectViewModel>();
 
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+            foreach (var project in projectsCore)
+            {
+                projectsView.Add(new ProjectViewModel()
+                {
+                    ProjectDescription = project.ProjectDescription,
+                    ProjectId = project.ProjectId,
+                    ProjectName = project.ProjectName,
+                    CreatedDate = project.CreatedDate,
+                    ModifiedDate = project.ModifiedDate,
+                    ProjectDetailsCount = project.ProjectDetailsCount,
+                    ProjectStatus = project.ProjectStatus,
+                    OwnerFirstName = project.OwnerFirstName,
+                    OwnerLastName = project.OwnerLastName,
 
-        //// GET: Project/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
+                });
+            }
 
-        //// POST: Project/Edit/5
-        //[HttpPost]
-        //public ActionResult Edit(int id, FormCollection collection)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add update logic here
+            return projectsView;
+        }
 
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: Project/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: Project/Delete/5
-        //[HttpPost]
-        //public ActionResult Delete(int id, FormCollection collection)
-        //{
-        //    try
-        //    {
-        //        // TODO: Add delete logic here
-
-        //        return RedirectToAction("Index");
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+        
     }
 }

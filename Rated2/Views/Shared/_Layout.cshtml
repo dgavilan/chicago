@@ -7,8 +7,27 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        .menu-selected {
+            background-color: #303030;
+            color: #fff !important;
+            font-size: larger;
+        }
+    </style>
 </head>
 <body>
+    @{
+        var userSession = new Rated.Web.Shared.UserSession();
+        var userFullName = "";
+
+        if (userSession.IsLoggedIn())
+        {
+            var user = userSession.GetUserSession();
+            userFullName = user.FirstName + " " + user.LastName;
+        }
+    }
+
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -17,24 +36,124 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Chicago", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Rated", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    <li>@Html.ActionLink("Logout", "Logout", "UserProfile")</li>
-                </ul>
+                @{
+                    var topMenuProjectActive = "";
+                    var topMenuReviewActive = "";
+                    var topMenuHomeActive = "";
+
+                    if (userSession.IsLoggedIn())
+                    {
+                        if (Request.Url.AbsoluteUri.IndexOf("/Project") > 0)
+                        {
+                            topMenuProjectActive = "menu-selected";
+                        }
+                        else if (Request.Url.AbsoluteUri.IndexOf("/Review") > 0)
+                        {
+                            topMenuReviewActive = "menu-selected";
+                        }
+                        else
+                        {
+                            topMenuHomeActive = "menu-selected";
+                        }
+                        <ul class="nav navbar-nav">
+                            <li>
+                                @Html.ActionLink("Home", "Index", "Home", null, new { @class = @topMenuHomeActive })
+                            </li>
+                            <li>
+                                @Html.ActionLink("Projects", "Index", "Project", null, new { @class = @topMenuProjectActive })
+                            </li>
+                            <li>
+                                @Html.ActionLink("Reviews", "Index", "Review", null, new { @class = @topMenuReviewActive })
+                            </li>
+                            
+                        </ul>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="/UserProfile/EditAccount"><span class="glyphicon glyphicon-user"></span> @userFullName</a></li>
+                            <li>
+                                @Html.ActionLink("Logout", "Logout", "UserProfile")
+                            </li>
+                        </ul>
+                    }
+                }
             </div>
         </div>
     </div>
+
     <div class="container body-content">
+
+        <br />
+
+        <ul class="nav nav-pills">
+            @{
+                var reviewPendingActive = "";
+                var reviewInProgressActive = "";
+                var reviewCompletedActive = "";
+
+                if (Request.Url.AbsoluteUri.IndexOf("/Review/Pending") > 0)
+                {
+                    reviewPendingActive = "active";
+                }
+                else if (Request.Url.AbsoluteUri.IndexOf("/Review/InProgress") > 0)
+                {
+                    reviewInProgressActive = "active";
+                }
+                else if (Request.Url.AbsoluteUri.IndexOf("/Review/Completed") > 0)
+                {
+                    reviewCompletedActive = "active";
+                }
+
+                var projectDraftActive = "";
+                var projectPendingActive = "";
+                var projectInProgressActive = "";
+                var projectCompletedActive = "";
+
+                if (Request.Url.AbsoluteUri.IndexOf("/Project/Draft") > 0
+                    || Request.Url.AbsoluteUri.IndexOf("?ProjectStatusId=3") > 0)
+                {
+                    projectDraftActive = "active";
+                }
+                else if (Request.Url.AbsoluteUri.IndexOf("/Project/Pending") > 0
+                    || Request.Url.AbsoluteUri.IndexOf("?ProjectStatusId=4") > 0)
+                {
+                    projectPendingActive = "active";
+                }
+                else if (Request.Url.AbsoluteUri.IndexOf("/Project/InProgress") > 0)
+                {
+                    projectInProgressActive = "active";
+                }
+                else if (Request.Url.AbsoluteUri.IndexOf("/Project/Completed") > 0)
+                {
+                    projectCompletedActive = "active";
+                }
+            }
+
+            @if (Request.Url.AbsoluteUri.IndexOf("/Review") > 0)
+            {
+                <li class="@reviewPendingActive">@Html.ActionLink("Pending Review Requests", "Pending", "Review")</li>
+                <li class="@reviewInProgressActive">@Html.ActionLink("Reviews in Progress", "InProgress", "Review")</li>
+                <li class="@reviewCompletedActive">@Html.ActionLink("Completed Reviews", "Completed", "Review")</li>
+            }
+
+            @if (Request.Url.AbsoluteUri.IndexOf("/Project") > 0)
+            {
+                <li class="@projectDraftActive">@Html.ActionLink("Drafts", "Draft", "Project")</li>
+                <li class="@projectPendingActive">@Html.ActionLink("Pending Requests", "Pending", "Project")</li>
+                <li class="@projectInProgressActive">@Html.ActionLink("In Progress", "InProgress", "Project")</li>
+                <li class="@projectCompletedActive">@Html.ActionLink("Completed Projects", "Completed", "Project")</li>
+            }
+        </ul>
+
         @RenderBody()
-        <hr />
+
+        @*<hr />
+
         <footer>
             <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+        </footer>*@
     </div>
 
     @Scripts.Render("~/bundles/jquery")

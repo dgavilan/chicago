@@ -49,6 +49,7 @@
     <Compile Include="Models\User\UserCoreService.cs" />
     <Compile Include="Models\User\UserCoreModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\EnumHelper.cs" />
     <Compile Include="Shared\Enums.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

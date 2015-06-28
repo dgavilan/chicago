@@ -22,6 +22,7 @@ namespace Rated.Core.Models.Project
         public string ReviewerEmail { get; set; }
         public int ReviewerStatusId { get; set; }
         public int DetailItemNumber { get; set; }
+        public bool HasReviewer { get; set; }
 
         public Guid CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

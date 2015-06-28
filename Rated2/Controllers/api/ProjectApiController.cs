@@ -23,6 +23,33 @@ namespace Rated.Web.Controllers.api
             _projectRepo = new ProjectRepo();
         }
 
+        [Route("api/ProjectApi/Project/{projectId}/StartTheProject")]
+        [HttpPut]
+        public HttpResponseMessage StartTheProject(Guid projectId)
+        {
+            try
+            {
+                var userSession = new UserSession();
+                var timeStamp = DateTime.UtcNow;
+
+                //projectDetail.UserId = userSession.GetUserSession().UserId;
+
+                // 1. insert record in ProjectReviewer table
+                // 2. insert record in user table if user id doesn't exist
+                _projectRepo.StartTheProject(userSession.GetUserSession().UserId, projectId);
+
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = ex.Message
+                });
+            }
+        }
+
         [Route("api/ProjectApi/Project/Reviewer")]
         [HttpPost]
         public HttpResponseMessage AddReviewer(ProjectDetailCoreModel projectDetail)

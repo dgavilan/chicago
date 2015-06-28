@@ -34,7 +34,7 @@ namespace Rated.Infrastructure.Database.Repository
                 ProjectId = project.ProjectId,
                 ProjectName = project.ProjectName,
                 UserId = project.UserId,
-                StatusId = (int)Enums.ProjectStatus.UnSent,
+                StatusId = (int)Enums.ProjectStatus.Draft,
             });
 
             _projectContext.SaveChanges();
@@ -52,7 +52,10 @@ namespace Rated.Infrastructure.Database.Repository
                 ProjectDescription = projectDb.ProjectDescription,
                 ProjectId = projectDb.ProjectId,
                 ProjectName = projectDb.ProjectName,
-                UserId = projectDb.UserId
+                UserId = projectDb.UserId,
+                ProjectStatus = (Enums.ProjectStatus)projectDb.StatusId,
+                CreatedDate = projectDb.CreatedDate,
+                ModifiedDate = projectDb.ModifiedDate
             };
         }
 
@@ -80,10 +83,11 @@ namespace Rated.Infrastructure.Database.Repository
         public List<ProjectCoreModel> GetProjectsByStatus(Guid userId, Enums.ProjectStatus projectStatus)
         {
             var projectsDb = (from p in _projectContext.Projects
+                              join u in _projectContext.Users on p.UserId equals u.UserId
                               where p.UserId == userId
-                              && p.StatusId == (int)projectStatus
+                                && p.StatusId == (int)projectStatus
                               orderby p.CreatedDate descending
-                              select p).ToList();
+                              select new { p, OwnerFirstName = u.FirstName, OwnerLastName = u.LastName }).ToList();
 
             var projects = new List<ProjectCoreModel>();
 
@@ -91,14 +95,17 @@ namespace Rated.Infrastructure.Database.Repository
             {
                 projects.Add(new ProjectCoreModel()
                 {
-                    ProjectDescription = project.ProjectDescription,
-                    ProjectId = project.ProjectId,
-                    ProjectName = project.ProjectName,
+                    ProjectDescription = project.p.ProjectDescription,
+                    ProjectId = project.p.ProjectId,
+                    ProjectName = project.p.ProjectName,
                     Score = 0,
-                    UserId = project.UserId,
-                    CreatedDate = project.CreatedDate,
-                    ProjectDetailsCount = project.ProjectDetails.Count(),
-                    ProjectStatus = (Enums.ProjectStatus)project.StatusId
+                    UserId = project.p.UserId,
+                    OwnerFirstName = project.OwnerFirstName,
+                    OwnerLastName = project.OwnerLastName,
+                    CreatedDate = project.p.CreatedDate,
+                    ModifiedDate = project.p.ModifiedDate,
+                    ProjectDetailsCount = project.p.ProjectDetails.Count(),
+                    ProjectStatus = (Enums.ProjectStatus)project.p.StatusId
                 });
             }
 
@@ -109,7 +116,11 @@ namespace Rated.Infrastructure.Database.Repository
         {
             var projectDetailsDb = (from pd in _projectContext.ProjectDetails
                                     join pr in _projectContext.ProjectReviewers on pd.ProjectDetailId equals pr.ProjectDetailId
+                                        into pdpr
+                                        from pr in pdpr.DefaultIfEmpty()
                                     join u in _projectContext.Users on pr.UserId equals u.UserId
+                                        into pru
+                                        from u in pru.DefaultIfEmpty()
                                     where pd.UserId == userId
                                         && pd.ProjectId == projectId
                                     orderby pd.DetailNumber ascending
@@ -118,7 +129,9 @@ namespace Rated.Infrastructure.Database.Repository
                                         ReviewerFirstName = u.FirstName,
                                         ReviewerLastName = u.LastName,
                                         ReviewerEmail = u.Email,
-                                        ReviewerStatusId = pr.StatusId,
+                                        ReviewerStatusId = (pr != null) 
+                                            ? pr.StatusId 
+                                            : (int)Enums.ProjectReviewerStatus.NeedsReviewer,
                                     }).ToList();
 
             var projectDetails = new List<ProjectDetailCoreModel>();
@@ -140,6 +153,7 @@ namespace Rated.Infrastructure.Database.Repository
                     ReviewerLastName = detail.ReviewerLastName,
                     ReviewerEmail = detail.ReviewerEmail,
                     ReviewerStatusId = detail.ReviewerStatusId,
+                    HasReviewer = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.Accepted) ? false : true,
                 });
             }
 
@@ -252,15 +266,6 @@ namespace Rated.Infrastructure.Database.Repository
                     });
                 }
 
-                // 3. Update project status
-                
-                var projectDb = (from p in _projectContext.Projects
-                                     where p.ProjectId == projectDetail.ProjectId
-                                     select p).SingleOrDefault();
-
-                projectDb.StatusId = (int)Enums.ProjectStatus.WaitingApproverAcceptance;
-                _projectContext.Entry(projectDb).State = EntityState.Modified;
-
                 _projectContext.SaveChanges();
             }
             catch (DbEntityValidationException ex)
@@ -283,6 +288,20 @@ namespace Rated.Infrastructure.Database.Repository
                 throw;
             }
             
+        }
+
+        public void StartTheProject(Guid userId, Guid projectId)
+        {
+            var projectDb = (from p in _projectContext.Projects
+                             where p.UserId == userId 
+                             && p.ProjectId == projectId
+                             select p).SingleOrDefault();
+
+            projectDb.StatusId = (int)Enums.ProjectStatus.WaitingApproverAcceptance;
+            projectDb.ModifiedDate = DateTime.UtcNow;
+
+            _projectContext.Entry(projectDb).State = EntityState.Modified;
+            _projectContext.SaveChanges();
         }
 
     }

@@ -7,6 +7,8 @@ using Rated.Core.Models.User;
 using Rated.Infrastructure.Database.EF.User;
 using Rated.Core.Contracts;
 using System.Data.Entity;
+using Rated.Core.Shared;
+using System.Data.Entity.Validation;
 
 namespace Rated.Infrastructure.Database.Repository
 {
@@ -64,7 +66,6 @@ namespace Rated.Infrastructure.Database.Repository
         {
             try
             {
-
                 var userDb = new User()
                 {
                     CreatedDate = user.CreatedDate,
@@ -74,11 +75,27 @@ namespace Rated.Infrastructure.Database.Repository
                     LastName = user.LastName,
                     ModifiedDate = user.ModifiedDate,
                     UserId = user.UserId,
-                    Password = user.Password
+                    Password = user.Password,
+                    Bio = user.Bio,
+                    LastLoginDate = user.LastLoginDate,
+                    StatusId = (int)user.StatusId,
                 };
 
                 _userContext.Users.Add(userDb);
-                _userContext.SaveChangesAsync();
+                _userContext.SaveChanges();
+            }
+            catch (DbEntityValidationException ex)
+            {
+                var errors = new StringBuilder();
+                foreach (var eve in ex.EntityValidationErrors)
+                {
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        errors.Append(String.Format("{0} - Error:{1}", ve.PropertyName, ve.ErrorMessage));
+                    }
+                }
+
+                throw new Exception(errors.ToString());
             }
             catch (Exception ex)
             {

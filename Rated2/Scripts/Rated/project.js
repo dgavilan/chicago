@@ -132,6 +132,26 @@
         jqxhr.fail(function (jqXHR, textStatus, errorThrown) { handleErrors(jqXHR) })
         jqxhr.always(function () { });
     },
+
+    AssignDetailReviewer: function (projectDetailId) {
+        $("#ProjectDetailId").val(projectDetailId);
+        $("#modalAssignReviewer").modal('show');
+    },
+
+    StartTheProject: function (projectId) {
+        //var data = $(":input").serializeArray();
+        var jqxhr = $.ajax({
+            url: "/api/ProjectApi/Project/"+ projectId +"/StartTheProject",
+            type: "PUT",
+            //data: data,
+        });
+
+        jqxhr.done(function () {
+            alert("Reviewer assigned");
+        })
+        jqxhr.fail(function (jqXHR, textStatus, errorThrown) { handleErrors(jqXHR) })
+        jqxhr.always(function () { });
+    },
 };
 
 function handleErrors(jqXHR) {
@@ -142,16 +162,20 @@ $(document).ready(function () {
 
     var itemDetailCount = 0;
 
-    if(openAddProjectModal){
-        $("#modalAddProject").modal('show');
-    }
+    //if(openAddProjectModal){
+    //    $("#modalAddProject").modal('show');
+    //}
 
     $("#btnAssignReviewer").click(function () {
         $("#modalAssignReviewer").modal('show');
     });
 
-    $("#btnStartTheProject").click(function () {
+    $("#btnOpenStartProjectModal").click(function () {
         $("#modalStartTheProject").modal('show');
+    });
+
+    $("#btnStartProject").click(function () {
+        Project.StartTheProject($("#ProjectId").val());
     });
 
     $("#btnAddToProject").click(function () {
@@ -197,6 +221,10 @@ $(document).ready(function () {
         }
        
         $("#modalAddItem").modal('hide');
+    });
+
+    $("#btnOpenEditProject").click(function () {
+        $("#modalEditProject").modal("show");
     });
         
 });

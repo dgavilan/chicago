@@ -1,0 +1,33 @@
+﻿<style>
+.modal-wide .modal-dialog {
+  width: 85%; /* or whatever you wish */
+}
+</style>
+
+<div id="modalEditProject" class="modal fade modal-wide" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content" width="1000px">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Create a New Project</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Project Name:
+                    <input type="text" name="ProjectName" id="ProjectName" class="form-control" />
+
+                    Description:
+                    <textarea name="ProjectDescription" id="ProjectDescription" class="form-control"></textarea>
+
+
+                    
+
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnSaveProject">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

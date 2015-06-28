@@ -1,0 +1,33 @@
+﻿<div id="modalAddProject" class="modal fade" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Create a New Project</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+
+
+                    <div class="editor-field">
+                        <table>
+                            <tr>
+                                <td>Name</td>
+                                <td><input type="text" name="ProjectName" id="ProjectName" class="form-control" /></td>
+                            </tr>
+                            <tr>
+                                <td>Description</td>
+                                <td><textarea name="ProjectDescription" id="ProjectDescription" class="form-control"></textarea></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link" data-dismiss="modal" onclick="Project.CancelSaveProject()">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btnSaveProject" onclick="Project.SaveProject()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
