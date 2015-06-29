@@ -36,7 +36,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Rated", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Chicago", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 @{
@@ -124,7 +124,8 @@
                 {
                     projectPendingActive = "active";
                 }
-                else if (Request.Url.AbsoluteUri.IndexOf("/Project/InProgress") > 0)
+                else if (Request.Url.AbsoluteUri.IndexOf("/Project/InProgress") > 0
+                    || Request.Url.AbsoluteUri.IndexOf("?ProjectStatusId=101") > 0)
                 {
                     projectInProgressActive = "active";
                 }

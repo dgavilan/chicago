@@ -213,6 +213,7 @@
     <Content Include="Views\Review\Edit.cshtml" />
     <Content Include="Views\Review\_Project.cshtml" />
     <Content Include="Views\Project\Edit.cshtml" />
+    <Content Include="Views\Project\_ModalCompleteDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

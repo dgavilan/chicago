@@ -97,7 +97,8 @@ namespace Rated.Infrastructure.Database.Repository
                 ProjectDetailId = projectDetail.ProjectDetailId,
                 ProjectId = projectDetail.ProjectId,
                 UserId = projectDetail.UserId,
-                HoursToComplete = projectDetail.HoursToComplete
+                HoursToComplete = projectDetail.HoursToComplete,
+                StatusId = projectDetail.StatusId,
             };
 
             _projectContext.ProjectDetails.Add(projectDetailDb);
@@ -245,6 +246,7 @@ namespace Rated.Infrastructure.Database.Repository
                     ReviewerEmail = detail.ReviewerEmail,
                     ReviewerStatusId = detail.ReviewerStatusId,
                     HasReviewer = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.Accepted) ? false : true,
+                    StatusId = detail.pd.StatusId,
                 });
             }
 
@@ -293,6 +295,7 @@ namespace Rated.Infrastructure.Database.Repository
                     ReviewerEmail = detail.ReviewerEmail,
                     ReviewerStatusId = detail.ReviewerStatusId,
                     HasReviewer = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.Accepted) ? false : true,
+                    StatusId = detail.pd.StatusId,
                 });
             }
 
@@ -471,6 +474,41 @@ namespace Rated.Infrastructure.Database.Repository
             _projectContext.Entry(projectReviewerDb).State = EntityState.Modified;
 
             _projectContext.SaveChanges();
+        }
+
+        public void UpdateProjectDetailStatus(Guid userId, Guid projectDetailId, Enums.ProjectDetailStatus detailStatus)
+        {
+            var detailDb = (from d in _projectContext.ProjectDetails
+                             where d.ProjectDetailId == projectDetailId
+                             select d).SingleOrDefault();
+
+            detailDb.StatusId = (int)detailStatus;
+            detailDb.ModifiedDate = DateTime.UtcNow;
+            detailDb.ModifiedBy = userId;
+
+            _projectContext.Entry(detailDb).State = EntityState.Modified;
+            _projectContext.SaveChanges();
+        }
+
+        public void MarkProjectAsComplete(Guid userId, Guid projectId)
+        {
+            var hasTasksInReview = (from d in _projectContext.ProjectDetails
+                                    where d.ProjectId == projectId
+                                    && d.StatusId == (int)Enums.ProjectDetailStatus.InReview
+                                    select d.ProjectDetailId).Any();
+
+            if (!hasTasksInReview)
+            { 
+                var projectDb = (from p in _projectContext.Projects
+                                     where p.ProjectId == projectId
+                                     select p).SingleOrDefault();
+
+                projectDb.StatusId = (int)Enums.ProjectStatus.OwnerHasCompletedAllTasks;
+                projectDb.ModifiedDate = DateTime.UtcNow;
+
+                _projectContext.Entry(projectDb).State = EntityState.Modified;
+                _projectContext.SaveChanges();
+            }
         }
 
     }

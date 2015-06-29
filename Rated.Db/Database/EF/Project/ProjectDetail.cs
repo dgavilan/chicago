@@ -33,6 +33,9 @@ namespace Rated.Infrastructure.Database.EF.Project
         public Guid ModifiedBy { get; set; }
         public DateTime ModifiedDate { get; set; }
 
+        public int StatusId { get; set; }
+
+
         public virtual Project Project { get; set; }
         public virtual User User { get; set; }
     }

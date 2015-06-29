@@ -170,6 +170,30 @@
         jqxhr.always(function () { });
 
     },
+
+    ConfirmProjectDetailComplete: function (projectDetailId) {
+        var projectDetailId = $("#ProjectDetailId").val(projectDetailId);
+        $("#modalProjectDetail").modal("show");
+    },
+    MarkProjectDetailAsComplete: function () {
+        var projectId = $("#ProjectId").val();
+        var projectDetailId = $("#ProjectDetailId").val();
+        alert(projectDetailId);
+        //var data = $(":input").serializeArray();
+
+        var jqxhr = $.ajax({
+            url: "/api/ProjectApi/Project/" + projectId + "/ProjectDetail/" + projectDetailId + "/Complete",
+            type: "PUT",
+            //data: data,
+        });
+
+        jqxhr.done(function () {
+            alert("Task marked as complete");
+            $("#modalProjectDetail").modal("hide");
+        })
+        jqxhr.fail(function (jqXHR, textStatus, errorThrown) { handleErrors(jqXHR) })
+        jqxhr.always(function () { });
+    },
 };
 
 function handleErrors(jqXHR) {
@@ -183,6 +207,10 @@ $(document).ready(function () {
     //if(openAddProjectModal){
     //    $("#modalAddProject").modal('show');
     //}
+
+    $("#btnConfirmCompleteTask").click(function () {
+
+    });
 
     $("#btnReviewerAcceptsRequest").click(function () {
         var projectId = $("#ProjectId").val();

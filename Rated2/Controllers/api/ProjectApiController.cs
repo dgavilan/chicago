@@ -209,5 +209,34 @@ namespace Rated.Web.Controllers.api
                 });
             }
         }
+
+        [Route("api/ProjectApi/Project/{projectId}/ProjectDetail/{projectDetailId}/Complete")]
+        [HttpPut]
+        public HttpResponseMessage MarkProjectDetailAsComplete(Guid projectId, Guid projectDetailId)
+        {
+            try
+            {
+                var userSession = new UserSession();
+                var timeStamp = DateTime.UtcNow;
+
+                _projectRepo.UpdateProjectDetailStatus(
+                    userSession.GetUserSession().UserId, 
+                    projectDetailId,
+                    Core.Shared.Enums.ProjectDetailStatus.OwnerHasCompletedTask);
+
+                _projectRepo.MarkProjectAsComplete(userSession.GetUserSession().UserId, projectId);
+
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = ex.Message
+                });
+            }
+        }
+
     }
 }

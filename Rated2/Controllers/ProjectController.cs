@@ -62,7 +62,8 @@ namespace Rated2.Controllers
 
         public ActionResult InProgress()
         {
-            return View();
+            var projectHelper = new ProjectHelper();
+            return View(projectHelper.GetProjectsByStatus(Enums.ProjectStatus.InProgressWaitingForOwnerToFinishProject));
         }
 
         public ActionResult Completed()
@@ -132,10 +133,14 @@ namespace Rated2.Controllers
                     ReviewerLastName = detail.ReviewerLastName,
                     ReviewerEmail = detail.ReviewerEmail,
                     ReviewerStatusId = detail.ReviewerStatusId,
+                    ReviewerStatus = (Enums.ProjectReviewerStatus)detail.ReviewerStatusId,
                     ReviewerFullName = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.Sent)
                         ? detail.ReviewerEmail
                         : detail.ReviewerFirstName + " " + detail.ReviewerLastName,
                     HasReviewer = detail.HasReviewer,
+                    StatusId = detail.StatusId,
+                    Status = (Enums.ProjectDetailStatus)detail.StatusId,
+
                 });
             }
 
