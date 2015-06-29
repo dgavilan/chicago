@@ -1,5 +1,6 @@
 ﻿using Rated.Core.Models.Project;
 using Rated.Core.Models.User;
+using Rated.Core.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,8 @@ namespace Rated.Core.Contracts
         void StartTheProject(Guid guid, Guid projectId);
 
         void ReviewerAccepted(Guid projectId, Guid reviewerUserId);
+
+        //List<ProjectCoreModel> GetProjectsPendingReviewerAcceptance(Guid reviewerUserId);
+        List<ProjectCoreModel> GetProjectsForReviewerByStatus(Guid reviewerUserId, Enums.ProjectStatus projectStatusId);
     }
 }

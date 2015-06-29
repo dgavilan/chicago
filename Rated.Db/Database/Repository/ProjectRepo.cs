@@ -43,19 +43,24 @@ namespace Rated.Infrastructure.Database.Repository
         public ProjectCoreModel GetProjectByProjectId(Guid projectId)
         {
             var projectDb = (from p in _projectContext.Projects
-                             join pr in _projectContext.ProjectReviewers on p.ProjectId equals pr.ProjectId
-                             where pr.ProjectId == projectId
-                             select p).SingleOrDefault();
+
+                             //join pr in _projectContext.ProjectReviewers on p.ProjectId equals pr.ProjectId
+
+                             join u in _projectContext.Users on p.UserId equals u.UserId
+                             where p.ProjectId == projectId
+                             select new { p, u }).SingleOrDefault();
 
             return new ProjectCoreModel()
             {
-                ProjectDescription = projectDb.ProjectDescription,
-                ProjectId = projectDb.ProjectId,
-                ProjectName = projectDb.ProjectName,
-                UserId = projectDb.UserId,
-                ProjectStatus = (Enums.ProjectStatus)projectDb.StatusId,
-                CreatedDate = projectDb.CreatedDate,
-                ModifiedDate = projectDb.ModifiedDate
+                ProjectDescription = projectDb.p.ProjectDescription,
+                ProjectId = projectDb.p.ProjectId,
+                ProjectName = projectDb.p.ProjectName,
+                UserId = projectDb.p.UserId,
+                ProjectStatus = (Enums.ProjectStatus)projectDb.p.StatusId,
+                CreatedDate = projectDb.p.CreatedDate,
+                ModifiedDate = projectDb.p.ModifiedDate,
+                OwnerFirstName = projectDb.u.FirstName,
+                OwnerLastName = projectDb.u.LastName,
             };
         }
 
@@ -99,15 +104,15 @@ namespace Rated.Infrastructure.Database.Repository
             _projectContext.SaveChanges();
         }
 
-        public List<ProjectCoreModel> GetProjectWaitingForAcceptance(Guid reviewerUserId)
+        public List<ProjectCoreModel> GetProjectsForReviewerByStatus(Guid reviewerUserId, Enums.ProjectStatus projectStatusId)
         {
             var projectsDb = (from p in _projectContext.Projects
                               join u in _projectContext.Users on p.UserId equals u.UserId
                               join pr in _projectContext.ProjectReviewers on p.ProjectId equals pr.ProjectId
                               where pr.UserId == reviewerUserId
-                                && p.StatusId == (int)Enums.ProjectStatus.WaitingApproverAcceptance
+                                && p.StatusId == (int)projectStatusId
                               orderby p.CreatedDate descending
-                              select new { p, OwnerFirstName = u.FirstName, OwnerLastName = u.LastName }).ToList();
+                              select new { p, OwnerFirstName = u.FirstName, OwnerLastName = u.LastName }).Distinct().ToList();
 
             var projects = new List<ProjectCoreModel>();
 
@@ -131,6 +136,39 @@ namespace Rated.Infrastructure.Database.Repository
 
             return projects;
         }
+
+        //public List<ProjectCoreModel> GetProjectsPendingReviewerAcceptance(Guid reviewerUserId)
+        //{
+        //    var projectsDb = (from p in _projectContext.Projects
+        //                      join u in _projectContext.Users on p.UserId equals u.UserId
+        //                      join pr in _projectContext.ProjectReviewers on p.ProjectId equals pr.ProjectId
+        //                      where pr.UserId == reviewerUserId
+        //                        && p.StatusId == (int)Enums.ProjectStatus.WaitingApproverAcceptance
+        //                      orderby p.CreatedDate descending
+        //                      select new { p, OwnerFirstName = u.FirstName, OwnerLastName = u.LastName }).ToList();
+
+        //    var projects = new List<ProjectCoreModel>();
+
+        //    foreach (var project in projectsDb)
+        //    {
+        //        projects.Add(new ProjectCoreModel()
+        //        {
+        //            ProjectDescription = project.p.ProjectDescription,
+        //            ProjectId = project.p.ProjectId,
+        //            ProjectName = project.p.ProjectName,
+        //            Score = 0,
+        //            UserId = project.p.UserId,
+        //            OwnerFirstName = project.OwnerFirstName,
+        //            OwnerLastName = project.OwnerLastName,
+        //            CreatedDate = project.p.CreatedDate,
+        //            ModifiedDate = project.p.ModifiedDate,
+        //            ProjectDetailsCount = project.p.ProjectDetails.Count(),
+        //            ProjectStatus = (Enums.ProjectStatus)project.p.StatusId
+        //        });
+        //    }
+
+        //    return projects;
+        //}
 
         public List<ProjectCoreModel> GetProjectsByStatus(Guid userId, Enums.ProjectStatus projectStatus)
         {
@@ -417,7 +455,7 @@ namespace Rated.Infrastructure.Database.Repository
                              where p.ProjectId == projectId
                              select p).SingleOrDefault();
 
-            projectDb.StatusId = (int)Enums.ProjectStatus.InProgress;
+            projectDb.StatusId = (int)Enums.ProjectStatus.InProgressWaitingForOwnerToFinishProject;
             //projectDb.ModifiedBy = reviewerUserId;
             projectDb.ModifiedDate = timeStamp;
             _projectContext.Entry(projectDb).State = EntityState.Modified;

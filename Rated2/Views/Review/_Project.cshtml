@@ -1,0 +1,46 @@
+﻿@model List<Rated2.Models.Project.ProjectViewModel>
+
+<br />
+
+@using Rated.Core.Shared
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th width="70px"></th>
+            <th width="55%">Project</th>
+            <th>Owner</th>
+            <th>Modified</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+
+    @foreach (var project in Model)
+    {
+        var statusId = (int)project.ProjectStatus;
+        <tr>
+            <td>
+                <button class="btn btn-link" onclick="window.location='/Review/Edit/@project.ProjectId?psid=@project.ProjectStatus'">
+                    <span class="glyphicon glyphicon-list"></span>
+                    View
+                </button>
+            </td>
+            <td>
+                <b>@project.ProjectName</b>
+                <br />
+                @project.ProjectDescription
+            </td>
+            <td>
+                @project.OwnerFirstName @project.OwnerLastName
+            </td>
+            <td width="100px">
+                @project.ModifiedDate
+            </td>
+            <td>
+                @Rated.Core.Shared.EnumHelper.GetDescription(project.ProjectStatus)
+            </td>
+        </tr>
+    }
+</table>
+
+<script src="~/Scripts/Rated/project.js"></script>

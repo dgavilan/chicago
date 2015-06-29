@@ -1,7 +1,3 @@
-﻿
-@{
-    ViewBag.Title = "InProgress";
-}
+﻿@model List<Rated2.Models.Project.ProjectViewModel>
 
-<h2>InProgress</h2>
-
+@Html.Partial("_Project", @Model)

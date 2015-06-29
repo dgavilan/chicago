@@ -21,13 +21,20 @@ namespace Rated.Web.Controllers
 
         public ActionResult Pending()
         {
+            //var projectHelper = new ProjectHelper();
+            //return View(projectHelper.GetProjectsPendingReviewerAcceptance());
+            var userSession = new UserSession();
+            var reviewerUserId = userSession.GetUserSession().UserId;
             var projectHelper = new ProjectHelper();
-            return View(projectHelper.GetProjectWaitingForAcceptance());
+            return View(projectHelper.GetProjectsForReviewerByStatus(reviewerUserId, Enums.ProjectStatus.WaitingApproverAcceptance));
         }
 
         public ActionResult InProgress()
         {
-            return View();
+            var userSession = new UserSession();
+            var reviewerUserId = userSession.GetUserSession().UserId;
+            var projectHelper = new ProjectHelper();
+            return View(projectHelper.GetProjectsForReviewerByStatus(reviewerUserId, Enums.ProjectStatus.InProgressWaitingForOwnerToFinishProject));
         }
 
         public ActionResult Completed()
@@ -89,7 +96,9 @@ namespace Rated.Web.Controllers
                 ProjectDetails = detailView,
                 ProjectName = projectCore.ProjectName,
                 ProjectStatus = projectCore.ProjectStatus,
-                ReviewerEmail = ""
+                ReviewerEmail = "",
+                OwnerFirstName = projectCore.OwnerFirstName,
+                OwnerLastName = projectCore.OwnerLastName,
             };
 
             return projectView;

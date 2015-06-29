@@ -11,16 +11,20 @@ namespace Rated.Core.Shared
     {
         public enum ProjectStatus
         {
-            [Description("Completed Project")]
+            [Description("Project is Done. Project Owner and Reviewer have Completed their tasks.")]
             Completed = 100,
-            [Description("In Progress")]
-            InProgress = 101,
+            [Description("In Progress. Waiting for Project Owner to Finish Project.")]
+            InProgressWaitingForOwnerToFinishProject = 101,
             [Description("Draft")]
             Draft = 102,
-            [Description("Waiting for Approver to Accept Review Request")]
+            [Description("Waiting for Reviewer to Accept Review Request")]
             WaitingApproverAcceptance = 103,
             [Description("In Review")]
-            Review = 104
+            Review = 104,
+            [Description("In Progress. Project Owner Finished Project.")]
+            InProgressOwnerFinishedProject = 105,
+            [Description("In Progress. Waiting for Reviewer to Finish Review.")]
+            InProgressWaitingForReviewerToFinishReview = 106
         }
 
         public enum ProjectReviewerStatus
