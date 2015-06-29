@@ -10,7 +10,7 @@
 
     <style>
         .menu-selected {
-            background-color: #303030;
+            background-color: #6e6d6d;
             color: #fff !important;
             font-size: larger;
         }
@@ -46,13 +46,14 @@
 
                     if (userSession.IsLoggedIn())
                     {
-                        if (Request.Url.AbsoluteUri.IndexOf("/Project") > 0)
-                        {
-                            topMenuProjectActive = "menu-selected";
-                        }
-                        else if (Request.Url.AbsoluteUri.IndexOf("/Review") > 0)
+                        if (Request.Url.AbsoluteUri.IndexOf("/Review") > 0
+                            || Request.Url.AbsoluteUri.IndexOf("/ViewReview") > 0)
                         {
                             topMenuReviewActive = "menu-selected";
+                        }
+                        else if (Request.Url.AbsoluteUri.IndexOf("/Project") > 0)
+                        {
+                            topMenuProjectActive = "menu-selected";
                         }
                         else
                         {
@@ -68,7 +69,7 @@
                             <li>
                                 @Html.ActionLink("Reviews", "Index", "Review", null, new { @class = @topMenuReviewActive })
                             </li>
-                            
+
                         </ul>
 
                         <ul class="nav navbar-nav navbar-right">
@@ -93,7 +94,8 @@
                 var reviewInProgressActive = "";
                 var reviewCompletedActive = "";
 
-                if (Request.Url.AbsoluteUri.IndexOf("/Review/Pending") > 0)
+                if (Request.Url.AbsoluteUri.IndexOf("/Review/Pending") > 0
+                    || Request.Url.AbsoluteUri.IndexOf("/ViewReview") > 0)
                 {
                     reviewPendingActive = "active";
                 }
@@ -112,12 +114,12 @@
                 var projectCompletedActive = "";
 
                 if (Request.Url.AbsoluteUri.IndexOf("/Project/Draft") > 0
-                    || Request.Url.AbsoluteUri.IndexOf("?ProjectStatusId=3") > 0)
+                    || Request.Url.AbsoluteUri.IndexOf("?ProjectStatusId=102") > 0)
                 {
                     projectDraftActive = "active";
                 }
                 else if (Request.Url.AbsoluteUri.IndexOf("/Project/Pending") > 0
-                    || Request.Url.AbsoluteUri.IndexOf("?ProjectStatusId=4") > 0)
+                    || Request.Url.AbsoluteUri.IndexOf("?ProjectStatusId=103") > 0)
                 {
                     projectPendingActive = "active";
                 }
@@ -131,14 +133,14 @@
                 }
             }
 
-            @if (Request.Url.AbsoluteUri.IndexOf("/Review") > 0)
+            @if (Request.Url.AbsoluteUri.IndexOf("/Review") > 0
+                || Request.Url.AbsoluteUri.IndexOf("/ViewReview") > 0)
             {
-                <li class="@reviewPendingActive">@Html.ActionLink("Pending Review Requests", "Pending", "Review")</li>
-                <li class="@reviewInProgressActive">@Html.ActionLink("Reviews in Progress", "InProgress", "Review")</li>
+                <li class="@reviewPendingActive">@Html.ActionLink("Pending Requests", "Pending", "Review")</li>
+                <li class="@reviewInProgressActive">@Html.ActionLink("In Progress", "InProgress", "Review")</li>
                 <li class="@reviewCompletedActive">@Html.ActionLink("Completed Reviews", "Completed", "Review")</li>
             }
-
-            @if (Request.Url.AbsoluteUri.IndexOf("/Project") > 0)
+            else if (Request.Url.AbsoluteUri.IndexOf("/Project") > 0)
             {
                 <li class="@projectDraftActive">@Html.ActionLink("Drafts", "Draft", "Project")</li>
                 <li class="@projectPendingActive">@Html.ActionLink("Pending Requests", "Pending", "Project")</li>
@@ -151,9 +153,9 @@
 
         @*<hr />
 
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>*@
+            <footer>
+                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            </footer>*@
     </div>
 
     @Scripts.Render("~/bundles/jquery")

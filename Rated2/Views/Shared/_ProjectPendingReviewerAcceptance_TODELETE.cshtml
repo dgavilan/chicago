@@ -1,7 +1,4 @@
 ﻿@model List<Rated2.Models.Project.ProjectViewModel>
-
-<br />
-
 @using Rated.Core.Shared
 
 <table class="table table-striped">
@@ -12,7 +9,7 @@
             <th>Status</th>
         </tr>
     </thead>
-
+    
     @foreach (var project in Model)
     {
         var statusId = (int)project.ProjectStatus;
@@ -23,11 +20,7 @@
                     View Details
                 </a>
 
-                <br />
-                <a onclick="window.location='/Review/Edit/@project.ProjectId'">
-                    <span class="glyphicon glyphicon-list"></span>
-                    View Tasks
-                </a>
+                
 
                 <br />
                 <b>@project.ProjectName</b>
@@ -43,5 +36,3 @@
         </tr>
     }
 </table>
-
-<script src="~/Scripts/Rated/project.js"></script>

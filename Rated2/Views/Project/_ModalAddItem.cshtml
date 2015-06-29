@@ -3,10 +3,25 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Add Project Items</h4>
+                <h4 class="modal-title">Add a Task to this Project</h4>
             </div>
             <div class="modal-body">
-                <p>
+                <div class="form-group">
+                    <label for="inputdefault">Task Name</label>
+                    <input type="text" class="form-control" id="ProjectDetailName" name="ProjectDetailName" placeholder="Name this task">
+                </div>
+
+                <div class="form-group">
+                    <label for="inputdefault">Task Description</label>
+                    <textarea id="ProjectDetailDescription" name="ProjectDetailDescription" class="form-control" rows="5" placeholder="Describe this task"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="inputdefault">Time to Complete (in hours)</label>
+                    <input type="text" class="form-control" id="HoursToComplete" name="HoursToComplete" placeholder="How long will this task take?">
+                </div>
+
+                @*<p>
                     <div class="editor-field">
                         <label>Item name</label>
                         <br />
@@ -20,7 +35,7 @@
                         <br />
                         <input type="text" class="form-control" id="HoursToComplete" name="HoursToComplete" />
                     </div>
-                </p>
+                </p>*@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>

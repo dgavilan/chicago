@@ -15,6 +15,8 @@
             $("#divProjectDescription").html(jsonData.ProjectDescription);
             $("#ProjectId").val(jsonData.ProjectId);
 
+            window.location = "Project/Edit/" + jsonData.ProjectId + "/?ProjectStatusId=102";
+
             $("#modalAddProject").modal('hide');
         })
         jqxhr.fail(function (jqXHR, textStatus, errorThrown) { handleErrors(jqXHR) })
@@ -147,10 +149,26 @@
         });
 
         jqxhr.done(function () {
-            alert("Reviewer assigned");
+            alert("Project started");
+            $("#modalAddProject").modal('hide');
         })
         jqxhr.fail(function (jqXHR, textStatus, errorThrown) { handleErrors(jqXHR) })
         jqxhr.always(function () { });
+    },
+
+    ReviwerAcceptsProject: function (projectId) {
+        var jqxhr = $.ajax({
+            url: "/api/ProjectApi/Project/" + projectId + "/ReviewerAccepted",
+            type: "PUT",
+            //data: data,
+        });
+
+        jqxhr.done(function () {
+            $("#modalConfirmReviewerAccept").modal("show");
+        })
+        jqxhr.fail(function (jqXHR, textStatus, errorThrown) { handleErrors(jqXHR) })
+        jqxhr.always(function () { });
+
     },
 };
 
@@ -165,6 +183,15 @@ $(document).ready(function () {
     //if(openAddProjectModal){
     //    $("#modalAddProject").modal('show');
     //}
+
+    $("#btnReviewerAcceptsRequest").click(function () {
+        var projectId = $("#ProjectId").val();
+        Project.ReviwerAcceptsProject(projectId)
+    });
+
+    $("#btnOpenModalStartProject").click(function () {
+        $("#modalAddProject").modal('show');
+    });
 
     $("#btnAssignReviewer").click(function () {
         $("#modalAssignReviewer").modal('show');

@@ -73,7 +73,7 @@ namespace Rated2.Controllers
                     Password = userPassword,
                     Bio = bio,
                     LastLoginDate = Convert.ToDateTime("1/1/1990"),
-                    StatusId = Enums.UserStatus.Complete,
+                    StatusId = Enums.UserStatus.ReviewerAccepted,
                 });
 
                 ViewBag.UserCreated = true;

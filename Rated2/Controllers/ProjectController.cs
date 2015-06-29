@@ -1,4 +1,5 @@
-﻿using Rated.Core.Shared;
+﻿using Rated.Core.Models.Project;
+using Rated.Core.Shared;
 using Rated.Infrastructure.Database.Repository;
 using Rated.Web.Shared;
 using Rated2.Models.Project;
@@ -49,12 +50,14 @@ namespace Rated2.Controllers
 
         public ActionResult Draft()
         {
-            return View(GetProjectsByStatus(Enums.ProjectStatus.Draft));
+            var projectHelper = new ProjectHelper();
+            return View(projectHelper.GetProjectsByStatus(Enums.ProjectStatus.Draft));
         }
 
         public ActionResult Pending()
         {
-            return View(GetProjectsByStatus(Enums.ProjectStatus.WaitingApproverAcceptance));
+            var projectHelper = new ProjectHelper();
+            return View(projectHelper.GetProjectsByStatus(Enums.ProjectStatus.WaitingApproverAcceptance));
         }
 
         public ActionResult InProgress()
@@ -70,7 +73,8 @@ namespace Rated2.Controllers
         [HttpGet]
         public ActionResult StartProject()
         {
-            var projectView = new ProjectViewModel() { 
+            var projectView = new ProjectViewModel()
+            {
                 ProjectDetails = new List<ProjectDetailViewModel>()
             };
 
@@ -82,16 +86,38 @@ namespace Rated2.Controllers
         public ActionResult Edit(Guid id)
         {
             var userSession = new UserSession();
-                var user = userSession.GetUserSession();
-
+            var user = userSession.GetUserSession();
             var projectRepo = new ProjectRepo();
             var projectCore = projectRepo.GetProject(user.UserId, id);
             var projectDetailsCore = projectRepo.GetProjectDetail(user.UserId, id);
+            var projectView = MapToProjectView(projectCore, projectDetailsCore);
+
+            ViewBag.OpenAddProjectModal = 0;
+
+            return View("Edit", projectView);
+        }
+
+        //[HttpGet]
+        //public ActionResult ViewReview(Guid id)
+        //{
+        //    var userSession = new UserSession();
+        //    var user = userSession.GetUserSession();
+        //    var projectRepo = new ProjectRepo();
+        //    var projectCore = projectRepo.GetProjectByProjectId(id);
+        //    var projectDetailsCore = projectRepo.GetProjectDetailByProjectId(id);
+        //    var projectView = MapToProjectView(projectCore, projectDetailsCore);
+
+        //    return View("Edit", projectView);
+        //}
+
+        private object MapToProjectView(ProjectCoreModel projectCore, List<ProjectDetailCoreModel> projectDetailsCore)
+        {
             var detailView = new List<ProjectDetailViewModel>();
 
             foreach (var detail in projectDetailsCore)
             {
-                detailView.Add(new ProjectDetailViewModel() { 
+                detailView.Add(new ProjectDetailViewModel()
+                {
                     CreatedBy = detail.CreatedBy,
                     CreatedDate = detail.CreatedDate,
                     DetailCount = 0,
@@ -106,14 +132,15 @@ namespace Rated2.Controllers
                     ReviewerLastName = detail.ReviewerLastName,
                     ReviewerEmail = detail.ReviewerEmail,
                     ReviewerStatusId = detail.ReviewerStatusId,
-                    ReviewerFullName = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.Sent) 
+                    ReviewerFullName = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.Sent)
                         ? detail.ReviewerEmail
                         : detail.ReviewerFirstName + " " + detail.ReviewerLastName,
                     HasReviewer = detail.HasReviewer,
                 });
             }
 
-            var projectView = new ProjectViewModel() {
+            var projectView = new ProjectViewModel()
+            {
                 CreatedBy = projectCore.CreatedBy,
                 CreatedDate = projectCore.CreatedDate,
                 ModifiedBy = projectCore.ModifiedBy,
@@ -127,41 +154,8 @@ namespace Rated2.Controllers
                 ReviewerEmail = ""
             };
 
-            ViewBag.OpenAddProjectModal = 0;
-
-            return View("Edit", projectView);
+            return projectView;
         }
 
-        private List<ProjectViewModel> GetProjectsByStatus(Enums.ProjectStatus projectStatus)
-        {
-            var projectRepo = new ProjectRepo();
-            var userSession = new UserSession();
-            var userId = userSession.GetUserSession().UserId;
-
-            var projectsCore = projectRepo.GetProjectsByStatus(userId, projectStatus);
-
-            var projectsView = new List<ProjectViewModel>();
-
-            foreach (var project in projectsCore)
-            {
-                projectsView.Add(new ProjectViewModel()
-                {
-                    ProjectDescription = project.ProjectDescription,
-                    ProjectId = project.ProjectId,
-                    ProjectName = project.ProjectName,
-                    CreatedDate = project.CreatedDate,
-                    ModifiedDate = project.ModifiedDate,
-                    ProjectDetailsCount = project.ProjectDetailsCount,
-                    ProjectStatus = project.ProjectStatus,
-                    OwnerFirstName = project.OwnerFirstName,
-                    OwnerLastName = project.OwnerLastName,
-
-                });
-            }
-
-            return projectsView;
-        }
-
-        
     }
 }

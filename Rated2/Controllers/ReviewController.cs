@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Rated.Core.Models.Project;
+using Rated.Core.Shared;
+using Rated.Infrastructure.Database.Repository;
+using Rated.Web.Shared;
+using Rated2.Models.Project;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -16,7 +21,8 @@ namespace Rated.Web.Controllers
 
         public ActionResult Pending()
         {
-            return View();
+            var projectHelper = new ProjectHelper();
+            return View(projectHelper.GetProjectWaitingForAcceptance());
         }
 
         public ActionResult InProgress()
@@ -28,5 +34,66 @@ namespace Rated.Web.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public ActionResult Edit(Guid id)
+        {
+            var userSession = new UserSession();
+            var user = userSession.GetUserSession();
+            var projectRepo = new ProjectRepo();
+            var projectCore = projectRepo.GetProjectByProjectId(id);
+            var projectDetailsCore = projectRepo.GetProjectDetailByProjectId(id);
+            var projectView = MapToProjectView(projectCore, projectDetailsCore);
+
+            return View("Edit", projectView);
+        }
+
+        private object MapToProjectView(ProjectCoreModel projectCore, List<ProjectDetailCoreModel> projectDetailsCore)
+        {
+            var detailView = new List<ProjectDetailViewModel>();
+
+            foreach (var detail in projectDetailsCore)
+            {
+                detailView.Add(new ProjectDetailViewModel()
+                {
+                    CreatedBy = detail.CreatedBy,
+                    CreatedDate = detail.CreatedDate,
+                    DetailCount = 0,
+                    DetailDescription = detail.ProjectDetailDescription,
+                    DetailName = detail.ProjectDetailName,
+                    ModifiedBy = detail.ModifiedBy,
+                    ModifiedDate = detail.ModifiedDate,
+                    ProjectDetailId = detail.ProjectDetailId,
+                    ProjectId = detail.ProjectId,
+                    HoursToComplete = detail.HoursToComplete,
+                    ReviewerFirstName = detail.ReviewerFirstName,
+                    ReviewerLastName = detail.ReviewerLastName,
+                    ReviewerEmail = detail.ReviewerEmail,
+                    ReviewerStatusId = detail.ReviewerStatusId,
+                    ReviewerFullName = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.Sent)
+                        ? detail.ReviewerEmail
+                        : detail.ReviewerFirstName + " " + detail.ReviewerLastName,
+                    HasReviewer = detail.HasReviewer,
+                });
+            }
+
+            var projectView = new ProjectViewModel()
+            {
+                CreatedBy = projectCore.CreatedBy,
+                CreatedDate = projectCore.CreatedDate,
+                ModifiedBy = projectCore.ModifiedBy,
+                ModifiedDate = projectCore.ModifiedDate,
+                ProjectDescription = projectCore.ProjectDescription,
+                ProjectDetailsCount = projectCore.ProjectDetailsCount,
+                ProjectId = projectCore.ProjectId,
+                ProjectDetails = detailView,
+                ProjectName = projectCore.ProjectName,
+                ProjectStatus = projectCore.ProjectStatus,
+                ReviewerEmail = ""
+            };
+
+            return projectView;
+        }
+
     }
 }

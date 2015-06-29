@@ -1,0 +1,202 @@
+﻿@model Rated2.Models.Project.ProjectViewModel
+@using Rated.Core.Shared;
+
+<h2>
+    @if (Model.ProjectStatus == Enums.ProjectStatus.WaitingApproverAcceptance)
+    {
+        <span>Waiting for you to Accept</span>
+    }
+    else
+    {
+        <span>In Review</span>
+    }
+</h2>
+
+
+<div class="alert alert-info">
+    <b>Project Status:</b> @Rated.Core.Shared.EnumHelper.GetDescription(Model.ProjectStatus)
+    &nbsp;&nbsp;
+    <button class="btn btn-success" id="btnReviewerAcceptsRequest">
+        <span class="glyphicon glyphicon-ok-sign"></span>
+        &nbsp;&nbsp;
+        Accept Review Request
+    </button>
+</div>
+
+@*@switch (Model.ProjectStatus)
+    {
+        case Enums.ProjectStatus.Draft:
+            <a id="btnOpenStartProjectModal">
+                <span class="glyphicon glyphicon-arrow-right"></span> Start the Project
+            </a>
+            break;
+        case Enums.ProjectStatus.WaitingApproverAcceptance:
+            if (!inReviewMode)
+            {
+                <a>
+                    <span class="glyphicon glyphicon-trash"></span> Cancel the Project
+                </a>
+            }
+            break;
+    }*@
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th width="90%">Project</th>
+            <th width="90px">Modified</th>
+            @*<th>Status</th>*@
+        </tr>
+    </thead>
+    <tr>
+        <td>
+            @if (Model.ProjectStatus == Enums.ProjectStatus.Draft)
+            {
+                <a>
+                    <span class="glyphicon glyphicon-edit">
+                    </span> Edit
+                </a>
+                <span>&nbsp; | &nbsp;</span>
+                <a>
+                    <span class="glyphicon glyphicon-trash"></span> Delete
+                </a>
+            }
+
+            <div id="divProjectName">
+                <b>@Html.DisplayFor(x => x.ProjectName)</b>
+            </div>
+
+            <div id="divProjectDescription">
+                @Html.DisplayFor(x => x.ProjectDescription)
+
+            </div>
+        </td>
+        <td>
+            @Html.DisplayFor(x => x.ModifiedDate)
+        </td>
+    </tr>
+</table>
+
+<hr />
+
+@*@if (Model.ProjectStatus == Enums.ProjectStatus.Draft)
+    {
+        <h4>
+            Project Tasks (<span id="spanItemDetailCount">@Model.ProjectDetails.Count()</span>)
+            <br />
+            <a onclick="Project.ShowAddDetail()">
+                <span class="glyphicon glyphicon-plus"></span> Add Task
+            </a>
+            <span>&nbsp;|&nbsp;</span>
+            <a id="btnAssignReviewer">
+                <span class=" glyphicon glyphicon-plus">
+                </span> Assign One Reviewer to all Tasks
+            </a>
+        </h4>
+    }*@
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th width="60%">Detail</th>
+            <th>Hours</th>
+            <th>Modified</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    @{
+        var lineItemNo = 1;
+        foreach (var detail in Model.ProjectDetails)
+        {
+            <tr>
+                <td>
+                    @lineItemNo
+                </td>
+                <td>
+                    @*@if (Model.ProjectStatus == Enums.ProjectStatus.Draft)
+                        {
+                            <a onclick="Project.ShowEditDetail('@detail.ProjectDetailId', '@detail.DetailName', '@detail.DetailDescription', '@detail.HoursToComplete')">
+                                <span class="glyphicon glyphicon-edit"></span> Edit
+                            </a>
+                            <span>&nbsp; | &nbsp;</span>
+                            <a onclick="Project.DeleteDetail('@detail.ProjectId', '@detail.ProjectDetailId')">
+                                <span class="glyphicon glyphicon-trash"></span> Delete
+                            </a>
+                            <br />
+                        }*@
+                    <b>@detail.DetailName</b>
+                    <br />
+                    @detail.DetailDescription
+                </td>
+                <td>
+                    @Convert.ToDouble(detail.HoursToComplete)
+                </td>
+                <td width="100px">
+                    @detail.ModifiedDate
+                </td>
+                <td>
+                    @switch (detail.ReviewerStatusId)
+                    {
+                        case (int)Enums.ProjectReviewerStatus.Accepted:
+                            <p>
+                                Approver: @detail.ReviewerFullName
+                            </p>
+                            break;
+
+                        case (int)Enums.ProjectReviewerStatus.Sent:
+                            <p>
+                                Waiting for Approver
+                                <br />
+                                @detail.ReviewerFullName
+                                <br />
+                                @*@if (Model.ProjectStatus == Enums.ProjectStatus.Draft)
+                                {
+                                    <a>
+                                        <span class="glyphicon glyphicon-remove"></span> Remove Reviewer
+                                    </a>
+                                }*@
+
+                            </p>
+                            break;
+
+                            @*
+                                            case (int)Enums.ProjectReviewerStatus.NeedsReviewer:
+                                    <p>
+                                        No Reviewer
+                                        <br />
+                                        <a onclick="Project.AssignDetailReviewer('@detail.ProjectDetailId')">
+                                            <span class="glyphicon glyphicon-plus"></span> Assign Reviewer
+                                        </a>
+                                    </p>
+                                        break;
+
+
+
+                                case (int)Enums.ProjectReviewerStatus.Declined:
+                                    break;*@
+                    }
+                </td>
+
+            </tr>
+                    lineItemNo++;
+        }
+    }
+</table>
+<input type="hidden" id="TotalDetailCount" name="TotalDetailCount" value="@lineItemNo">
+
+@*<script language="javascript">
+        var openAddProjectModal = @ViewBag.OpenAddProjectModal;
+    </script>*@
+
+<script src="~/Scripts/Rated/project.js"></script>
+
+@Html.Partial("_ModalConfirmReviewerAccept")
+@*@Html.Partial("_ModalAddProject")
+    @Html.Partial("_ModalAddItem")
+    @Html.Partial("_ModalStartProject")
+    @Html.Partial("_ModalAssignReviewer", @Model)*@
+
+@Html.HiddenFor(x => x.ProjectId)
+<input type="hidden" id="DetailItemNumber" name="DetailItemNumber">
+<input type="hidden" id="ProjectDetailId" name="ProjectDetailId">

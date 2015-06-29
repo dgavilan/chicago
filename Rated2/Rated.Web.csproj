@@ -148,6 +148,7 @@
     <Compile Include="Models\UserProfileViewModel.cs" />
     <Compile Include="Models\UserProfile\LoginViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\ProjectHelper.cs" />
     <Compile Include="Shared\UserSession.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -202,12 +203,15 @@
     <Content Include="Views\Project\Pending.cshtml" />
     <Content Include="Views\Project\InProgress.cshtml" />
     <Content Include="Views\Project\Completed.cshtml" />
-    <Content Include="Views\Project\_Project.cshtml" />
+    <Content Include="Views\Shared\_Project.cshtml" />
     <Content Include="Views\Project\_EditProject.cshtml" />
     <Content Include="Views\Project\_ModalAddProject.cshtml" />
     <Content Include="Views\Project\_ModalStartProject.cshtml" />
     <Content Include="Views\Project\_ModalAssignReviewer.cshtml" />
     <Content Include="Views\Project\_ModalAddItem.cshtml" />
+    <Content Include="Views\Shared\_ProjectPendingReviewerAcceptance_TODELETE.cshtml" />
+    <Content Include="Views\Review\_ModalConfirmReviewerAccept.cshtml" />
+    <Content Include="Views\Review\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

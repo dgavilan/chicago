@@ -12,35 +12,35 @@ namespace Rated.Core.Shared
         public enum ProjectStatus
         {
             [Description("Completed Project")]
-            Completed = 1,
+            Completed = 100,
             [Description("In Progress")]
-            InProgress = 2,
+            InProgress = 101,
             [Description("Draft")]
-            Draft = 3,
+            Draft = 102,
             [Description("Waiting for Approver to Accept Review Request")]
-            WaitingApproverAcceptance = 4,
+            WaitingApproverAcceptance = 103,
             [Description("In Review")]
-            Review = 5
+            Review = 104
         }
 
         public enum ProjectReviewerStatus
         {
             [Description("Needs Reviewer")]
-            NeedsReviewer = 1,
+            NeedsReviewer = 200,
             [Description("Sent Review Request to Reviewer")]
-            Sent = 2,
+            Sent = 201,
             [Description("Reviewer Accepted Review Request")]
-            Accepted = 3,
+            Accepted = 202,
             [Description("Reviewer Declined Review Request")]
-            Declined = 4
+            Declined = 203
         }
 
         public enum UserStatus
         {
             [Description("Reviewer Accepted Review Request")]
-            Complete = 1,
+            ReviewerAccepted = 300,
             [Description("Waiting for Reviewer to Accept Review Request")]
-            PendingAcceptance = 2
+            PendingReviewerAcceptance = 301
         }
     }
 }
