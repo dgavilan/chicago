@@ -140,6 +140,7 @@ namespace Rated2.Controllers
                     HasReviewer = detail.HasReviewer,
                     StatusId = detail.StatusId,
                     Status = (Enums.ProjectDetailStatus)detail.StatusId,
+                    ReviewInstructions = detail.ReviewInstructions,
 
                 });
             }

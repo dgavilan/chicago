@@ -100,13 +100,14 @@
         $("#modalAddItem").modal("show");
     },
 
-    ShowEditDetail: function (projectDetailId, detailName, detailDescription, hoursToComplete) {
+    ShowEditDetail: function (projectDetailId, detailName, detailDescription, hoursToComplete, reviewInstructions) {
         Project.ClearDetailModal();
 
         $("#ProjectDetailId").val(projectDetailId);
         $("#ProjectDetailName").val(detailName);
         $("#ProjectDetailDescription").val(detailDescription);
         $("#HoursToComplete").val(hoursToComplete);
+        $("#ReviewInstructions").val(reviewInstructions);
 
         
         $("#btnAddToProject").text("Save");
@@ -118,6 +119,7 @@
         $("#ProjectDetailName").val("");
         $("#ProjectDetailDescription").val("");
         $("#HoursToComplete").val("");
+        $("#ReviewInstructions").val("");
     },
 
     AssignReviewer: function () {
@@ -194,6 +196,20 @@
         jqxhr.fail(function (jqXHR, textStatus, errorThrown) { handleErrors(jqXHR) })
         jqxhr.always(function () { });
     },
+    ShowReviewInstructions: function (projectDetailId) {
+        var jqxhr = $.ajax({
+            url: "/api/ProjectApi/ProjectDetail/" + projectDetailId,
+            type: "GET",
+        });
+
+        jqxhr.done(function (data) {
+            $("#modalReviewInstructionsText").html(data.ReviewInstructions);
+        })
+        jqxhr.fail(function (jqXHR, textStatus, errorThrown) { handleErrors(jqXHR) })
+        jqxhr.always(function () { });
+
+        $("#modalReviewInstructions").modal("show");
+    },
 };
 
 function handleErrors(jqXHR) {
@@ -241,35 +257,10 @@ $(document).ready(function () {
         var itemTimeToComplete = $("#HoursToComplete").val();
 
         if (projectDetailId === "") {
-            var totalDetailCount = $("#TotalDetailCount").val();
-            var nextDetailNumber = +totalDetailCount + 1;
-            $("#DetailItemNumber").val(nextDetailNumber);
-
-            var newDetail = Project.AddDetail();
-
-            itemDetailCount += 1;
-
-            //var html = "<tr id='tr_" + projectDetailId + "'>"
-            //    + "<td style='background-color:#f9f9f9;width:5px'>" + itemDetailCount + "</td>"
-            //    + "<td valign='top'>"
-            //    + "<span id='span_projectDetailName_" + projectDetailId + "' style='font-size:17px; font-weight:bold'>" + itemName + "</span>"
-            //    + "<br />"
-            //    + "<span id='span_projectDetailDescription_" + projectDetailId + "'>" + itemDescription + "</span>"
-            //    + "<br />"
-            //    + "<span id='span_hoursToComplete_" + projectDetailId + "'>" + itemTimeToComplete + " hours to complete</span>"
-            //    + "<br />"
-            //    + "<br />"
-            //    //+ "Created: " + newDetail.CreatedDate
-            //    + "</td>"
-            //    + "</tr>"
-            //    + "<tr><td colspan='3' style='height:3px'></td></tr>";
-
-            //$("#spanItemDetailCount").html(itemDetailCount);
-            //$("#tblItems tr:last").after(html);
+            Project.AddDetail();
         }
         else {
             Project.UpdateDetail();
-
             $("#span_projectDetailName_" + projectDetailId).html(itemName);
             $("#span_projectDetailDescription_" + projectDetailId).html(itemDescription);
             $("#span_hoursToComplete_" + projectDetailId).html(itemTimeToComplete + " hours to complete");

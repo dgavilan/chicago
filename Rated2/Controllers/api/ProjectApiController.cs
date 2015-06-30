@@ -1,7 +1,9 @@
 ﻿using Rated.Core.Contracts;
 using Rated.Core.Models.Project;
+using Rated.Core.Shared;
 using Rated.Infrastructure.Database.Repository;
 using Rated.Web.Shared;
+using Rated2.Models.Project;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -119,6 +121,7 @@ namespace Rated.Web.Controllers.api
                 projectDetail.CreatedDate = timeStamp;
                 projectDetail.ModifiedBy = userSession.GetUserSession().UserId;
                 projectDetail.ModifiedDate = timeStamp;
+                projectDetail.StatusId = (int)Enums.ProjectDetailStatus.Draft;
 
                 _projectRepo.AddProjectDetail(projectDetail);
 
@@ -224,9 +227,31 @@ namespace Rated.Web.Controllers.api
                     projectDetailId,
                     Core.Shared.Enums.ProjectDetailStatus.OwnerHasCompletedTask);
 
-                _projectRepo.MarkProjectAsComplete(userSession.GetUserSession().UserId, projectId);
+                _projectRepo.ProjectCompletedByOwner(userSession.GetUserSession().UserId, projectId);
 
                 return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = ex.Message
+                });
+            }
+        }
+
+        [Route("api/ProjectApi/ProjectDetail/{projectDetailId}")]
+        [HttpGet]
+        public HttpResponseMessage GetProjectDetailById(Guid projectDetailId)
+        {
+            try
+            {
+                var projectDetailCore = _projectRepo.GetProjectDetailById(projectDetailId);
+                var projectHelper = new ProjectHelper();
+                var detailView = projectHelper.BuildProjectDetailView(projectDetailCore);
+
+                return Request.CreateResponse(HttpStatusCode.OK, detailView);
             }
             catch (Exception ex)
             {

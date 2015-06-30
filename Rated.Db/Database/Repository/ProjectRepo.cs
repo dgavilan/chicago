@@ -99,6 +99,7 @@ namespace Rated.Infrastructure.Database.Repository
                 UserId = projectDetail.UserId,
                 HoursToComplete = projectDetail.HoursToComplete,
                 StatusId = projectDetail.StatusId,
+                ReviewInstructions = projectDetail.ReviewInstructions,
             };
 
             _projectContext.ProjectDetails.Add(projectDetailDb);
@@ -137,6 +138,46 @@ namespace Rated.Infrastructure.Database.Repository
 
             return projects;
         }
+
+        public List<ProjectCoreModel> GetReviewerProjectsInProgress(Guid reviewerUserId)
+        {
+            var pendingStatuses = new int[] { 
+                (int)Enums.ProjectStatus.InProgressWaitingForOwnerToFinishProject, 
+                (int)Enums.ProjectStatus.InProgressProjectCompletedByOwner,
+                (int)Enums.ProjectStatus.InProgressWaitingForReviewerToFinishReview
+            };
+
+            var projectsDb = (from p in _projectContext.Projects
+                              join u in _projectContext.Users on p.UserId equals u.UserId
+                              join pr in _projectContext.ProjectReviewers on p.ProjectId equals pr.ProjectId
+                              where pr.UserId == reviewerUserId
+                                && pendingStatuses.Contains((int)p.StatusId)
+                              orderby p.CreatedDate descending
+                              select new { p, OwnerFirstName = u.FirstName, OwnerLastName = u.LastName }).Distinct().ToList();
+
+            var projects = new List<ProjectCoreModel>();
+
+            foreach (var project in projectsDb)
+            {
+                projects.Add(new ProjectCoreModel()
+                {
+                    ProjectDescription = project.p.ProjectDescription,
+                    ProjectId = project.p.ProjectId,
+                    ProjectName = project.p.ProjectName,
+                    Score = 0,
+                    UserId = project.p.UserId,
+                    OwnerFirstName = project.OwnerFirstName,
+                    OwnerLastName = project.OwnerLastName,
+                    CreatedDate = project.p.CreatedDate,
+                    ModifiedDate = project.p.ModifiedDate,
+                    ProjectDetailsCount = project.p.ProjectDetails.Count(),
+                    ProjectStatus = (Enums.ProjectStatus)project.p.StatusId
+                });
+            }
+
+            return projects;
+        }
+
 
         //public List<ProjectCoreModel> GetProjectsPendingReviewerAcceptance(Guid reviewerUserId)
         //{
@@ -247,13 +288,14 @@ namespace Rated.Infrastructure.Database.Repository
                     ReviewerStatusId = detail.ReviewerStatusId,
                     HasReviewer = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.Accepted) ? false : true,
                     StatusId = detail.pd.StatusId,
+                    ReviewInstructions = detail.pd.ReviewInstructions,
                 });
             }
 
             return projectDetails;
         }
 
-        public List<ProjectDetailCoreModel> GetProjectDetailByProjectId(Guid projectId)
+        public List<ProjectDetailCoreModel> GetProjectDetailsByProjectId(Guid projectId)
         {
             var projectDetailsDb = (from pd in _projectContext.ProjectDetails
                                     join pr in _projectContext.ProjectReviewers on pd.ProjectDetailId equals pr.ProjectDetailId
@@ -296,10 +338,38 @@ namespace Rated.Infrastructure.Database.Repository
                     ReviewerStatusId = detail.ReviewerStatusId,
                     HasReviewer = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.Accepted) ? false : true,
                     StatusId = detail.pd.StatusId,
+                    ReviewInstructions = detail.pd.ReviewInstructions,
                 });
             }
 
             return projectDetails;
+        }
+
+        public List<ProjectDetailCoreModel> MapProjectDetailsToCore(List<ProjectDetail> projectDetailsDb)
+        {
+            var projectDetails = new List<ProjectDetailCoreModel>();
+            foreach (var detail in projectDetailsDb)
+            {
+                projectDetails.Add(MapProjectDetailToCore(detail));
+            }
+            return projectDetails;
+        }
+
+        private ProjectDetailCoreModel MapProjectDetailToCore(ProjectDetail detail)
+        {
+            return new ProjectDetailCoreModel() {
+                CreatedBy = detail.CreatedBy,
+                CreatedDate = detail.CreatedDate,
+                ProjectDetailDescription = detail.DetailDescription,
+                ProjectDetailName = detail.DetailName,
+                ModifiedBy = detail.ModifiedBy,
+                ModifiedDate = detail.ModifiedDate,
+                ProjectDetailId = detail.ProjectDetailId,
+                ProjectId = detail.ProjectId,
+                HoursToComplete = detail.HoursToComplete,
+                StatusId = detail.StatusId,
+                ReviewInstructions = detail.ReviewInstructions,
+            };
         }
 
         public void UpdateProjectDetail(ProjectDetailCoreModel projectDetail)
@@ -316,6 +386,7 @@ namespace Rated.Infrastructure.Database.Repository
             projectDetailDb.ModifiedBy = projectDetail.UserId;
             projectDetailDb.ModifiedDate = timeStamp;
             projectDetailDb.HoursToComplete = projectDetail.HoursToComplete;
+            projectDetailDb.ReviewInstructions = projectDetail.ReviewInstructions;
 
             _projectContext.Entry(projectDetailDb).State = EntityState.Modified;
             _projectContext.SaveChanges();
@@ -490,7 +561,7 @@ namespace Rated.Infrastructure.Database.Repository
             _projectContext.SaveChanges();
         }
 
-        public void MarkProjectAsComplete(Guid userId, Guid projectId)
+        public void ProjectCompletedByOwner(Guid userId, Guid projectId)
         {
             var hasTasksInReview = (from d in _projectContext.ProjectDetails
                                     where d.ProjectId == projectId
@@ -503,12 +574,21 @@ namespace Rated.Infrastructure.Database.Repository
                                      where p.ProjectId == projectId
                                      select p).SingleOrDefault();
 
-                projectDb.StatusId = (int)Enums.ProjectStatus.OwnerHasCompletedAllTasks;
+                projectDb.StatusId = (int)Enums.ProjectStatus.InProgressProjectCompletedByOwner;
                 projectDb.ModifiedDate = DateTime.UtcNow;
 
                 _projectContext.Entry(projectDb).State = EntityState.Modified;
                 _projectContext.SaveChanges();
             }
+        }
+
+        public ProjectDetailCoreModel GetProjectDetailById(Guid projectDetailId)
+        { 
+            var projectDetailDb = (from pd in _projectContext.ProjectDetails
+                                       where pd.ProjectDetailId == projectDetailId
+                                       select pd).SingleOrDefault();
+
+            return MapProjectDetailToCore(projectDetailDb);
         }
 
     }

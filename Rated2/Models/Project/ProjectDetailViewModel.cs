@@ -24,6 +24,7 @@ namespace Rated2.Models.Project
         public bool HasReviewer { get; set; }
         public int StatusId { get; set; }
         public Enums.ProjectDetailStatus Status { get; set; }
+        public string ReviewInstructions { get; set; }
 
         public Guid CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

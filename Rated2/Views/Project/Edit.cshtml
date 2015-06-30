@@ -120,7 +120,7 @@
                 <td>
                     @if (Model.ProjectStatus == Enums.ProjectStatus.Draft)
                     {
-                        <button class="btn btn-link" onclick="Project.ShowEditDetail('@detail.ProjectDetailId', '@detail.DetailName', '@detail.DetailDescription', '@detail.HoursToComplete')">
+                        <button class="btn btn-link" onclick="Project.ShowEditDetail('@detail.ProjectDetailId', '@detail.DetailName', '@detail.DetailDescription', '@detail.HoursToComplete', '@detail.ReviewInstructions')">
                             <span class="glyphicon glyphicon-edit"></span> Edit
                         </button>
                     }
@@ -174,7 +174,7 @@
                             break;
                         default:
                         @Rated.Core.Shared.EnumHelper.GetDescription(detail.Status);
-                                                                                       break;
+                                                                                   break;
                     }
                 </td>
                 <td>

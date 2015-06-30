@@ -26,6 +26,9 @@ namespace Rated.Core.Contracts
         List<ProjectCoreModel> GetProjectsForReviewerByStatus(Guid reviewerUserId, Enums.ProjectStatus projectStatusId);
 
         void UpdateProjectDetailStatus(Guid guid, Guid projectDetailId, Enums.ProjectDetailStatus detailStatus);
-        void MarkProjectAsComplete(Guid userId, Guid projectId);
+        void ProjectCompletedByOwner(Guid userId, Guid projectId);
+        List<ProjectCoreModel> GetReviewerProjectsInProgress(Guid reviewerUserId);
+
+        ProjectDetailCoreModel GetProjectDetailById(Guid projectDetailId);
     }
 }

@@ -28,7 +28,14 @@ namespace Rated.Web.Shared
             IProjectRepo projectRepo = new ProjectRepo();
             var projectsCore = projectRepo.GetProjectsForReviewerByStatus(reviewerUserId, projectStatusId);
             var projectsView = BuildProjectView(projectsCore);
+            return projectsView;
+        }
 
+        public List<ProjectViewModel> GetReviewerProjectsInProgress(Guid reviewerUserId)
+        {
+            IProjectRepo projectRepo = new ProjectRepo();
+            var projectsCore = projectRepo.GetReviewerProjectsInProgress(reviewerUserId);
+            var projectsView = BuildProjectView(projectsCore);
             return projectsView;
         }
 
@@ -43,7 +50,7 @@ namespace Rated.Web.Shared
             return projectsView;
         }
 
-        private List<ProjectViewModel> BuildProjectView(List<ProjectCoreModel> projectsCore)
+        public List<ProjectViewModel> BuildProjectView(List<ProjectCoreModel> projectsCore)
         {
             var projectsView = new List<ProjectViewModel>();
 
@@ -66,5 +73,30 @@ namespace Rated.Web.Shared
             return projectsView;
         }
 
+        public ProjectDetailViewModel BuildProjectDetailView(ProjectDetailCoreModel projectDetailCore)
+        {
+            return new ProjectDetailViewModel(){
+                CreatedBy = projectDetailCore.CreatedBy,
+                CreatedDate = projectDetailCore.CreatedDate,
+                //DetailCount
+                DetailDescription = projectDetailCore.ProjectDetailDescription,
+                DetailName = projectDetailCore.ProjectDetailName,
+                //HasReviewer
+                HoursToComplete = projectDetailCore.HoursToComplete,
+                ModifiedBy = projectDetailCore.ModifiedBy,
+                ModifiedDate = projectDetailCore.ModifiedDate,
+                ProjectDetailId = projectDetailCore.ProjectDetailId,
+                ProjectId = projectDetailCore.ProjectId,
+                ReviewerEmail = projectDetailCore.ReviewerEmail,
+                ReviewerFirstName = projectDetailCore.ReviewerFirstName,
+                //ReviewerFullName
+                ReviewerLastName = projectDetailCore.ReviewerLastName,
+                ReviewerStatus = (Enums.ProjectReviewerStatus)projectDetailCore.ReviewerStatusId,
+                ReviewerStatusId = projectDetailCore.ReviewerStatusId,
+                ReviewInstructions = projectDetailCore.ReviewInstructions,
+                Status = (Enums.ProjectDetailStatus)projectDetailCore.StatusId,
+                StatusId = projectDetailCore.StatusId,
+            };
+        }
     }
 }

@@ -22,11 +22,9 @@ namespace Rated.Core.Shared
             [Description("In Review")]
             Review = 104,
             [Description("In Progress. Project Owner Finished Project.")]
-            InProgressOwnerFinishedProject = 105,
+            InProgressProjectCompletedByOwner = 105,
             [Description("In Progress. Waiting for Reviewer to Finish Review.")]
             InProgressWaitingForReviewerToFinishReview = 106,
-            [Description("Owner has completed all tasks.")]
-            OwnerHasCompletedAllTasks = 107
         }
 
         public enum ProjectReviewerStatus

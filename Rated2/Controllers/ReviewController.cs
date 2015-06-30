@@ -34,7 +34,7 @@ namespace Rated.Web.Controllers
             var userSession = new UserSession();
             var reviewerUserId = userSession.GetUserSession().UserId;
             var projectHelper = new ProjectHelper();
-            return View(projectHelper.GetProjectsForReviewerByStatus(reviewerUserId, Enums.ProjectStatus.InProgressWaitingForOwnerToFinishProject));
+            return View(projectHelper.GetReviewerProjectsInProgress(reviewerUserId));
         }
 
         public ActionResult Completed()
@@ -49,7 +49,7 @@ namespace Rated.Web.Controllers
             var user = userSession.GetUserSession();
             var projectRepo = new ProjectRepo();
             var projectCore = projectRepo.GetProjectByProjectId(id);
-            var projectDetailsCore = projectRepo.GetProjectDetailByProjectId(id);
+            var projectDetailsCore = projectRepo.GetProjectDetailsByProjectId(id);
             var projectView = MapToProjectView(projectCore, projectDetailsCore);
 
             return View("Edit", projectView);
@@ -81,6 +81,9 @@ namespace Rated.Web.Controllers
                         ? detail.ReviewerEmail
                         : detail.ReviewerFirstName + " " + detail.ReviewerLastName,
                     HasReviewer = detail.HasReviewer,
+                    Status = (Enums.ProjectDetailStatus)detail.StatusId,
+                    StatusId = detail.StatusId,
+                    ReviewInstructions = detail.ReviewInstructions,
                 });
             }
 

@@ -17,8 +17,6 @@
 
     @if (Model.ProjectStatus == Enums.ProjectStatus.WaitingApproverAcceptance)
     {
-        <span>&nbsp;&nbsp;</span>
-
         <button class="btn btn-success" id="btnReviewerAcceptsRequest">
             <span class="glyphicon glyphicon-ok-sign"></span>
             Accept
@@ -31,9 +29,16 @@
             Decline
         </button>
     }
-    else if (Model.ProjectStatus == Enums.ProjectStatus.InProgressOwnerFinishedProject)
+    else if (Model.ProjectStatus == Enums.ProjectStatus.InProgressProjectCompletedByOwner)
     {
-        <button class="btn btn-success" id="btnReviewerRatesProject">
+        <button class="btn btn-success" id="btnReviewerAcceptsRequest">
+            <span class="glyphicon glyphicon-ok-sign"></span>
+            Start Review
+        </button>
+        
+        <span>&nbsp;&nbsp;</span>
+        
+        <button class="btn btn-danger" id="btnReviewerRatesProject">
             <span class="glyphicon glyphicon-ok-sign"></span>
             Decline
         </button>
@@ -89,9 +94,10 @@
     <thead>
         <tr>
             <th width="25px">Task</th>
-            <th width="60%">Detail</th>
+            <th width="45%">Detail</th>
             <th>Hours</th>
             <th>Modified</th>
+            <th>Reviewer</th>
             <th>Status</th>
         </tr>
     </thead>
@@ -105,6 +111,12 @@
                 </td>
                 <td>
                     <b>@detail.DetailName</b>
+                    &nbsp;
+                    <a href="#" onclick="Project.ShowReviewInstructions('@detail.ProjectDetailId')">
+                        <span class="glyphicon glyphicon-file"></span>
+                        Review Instructions
+                    </a>
+
                     <br />
                     @detail.DetailDescription
                 </td>
@@ -124,20 +136,22 @@
                             break;
 
                         case (int)Enums.ProjectReviewerStatus.Sent:
-                        <p>
-                            Waiting for Approver
-                            <br />
-                            @detail.ReviewerFullName
-                        </p>
+                            <p>
+                                Waiting for Approver
+                                <br />
+                                @detail.ReviewerFullName
+                            </p>
                             break;
                         default:
-                        @Rated.Core.Shared.EnumHelper.GetDescription(Model.ProjectStatus)
+                            @Rated.Core.Shared.EnumHelper.GetDescription(Model.ProjectStatus)
                             break;
                     }
                 </td>
-
+                <td>
+                    @Rated.Core.Shared.EnumHelper.GetDescription(@detail.Status)
+                </td>
             </tr>
-                    lineItemNo++;
+            lineItemNo++;
         }
     }
 </table>
@@ -145,6 +159,7 @@
 <script src="~/Scripts/Rated/project.js"></script>
 
 @Html.Partial("_ModalConfirmReviewerAccept")
+@Html.Partial("_ModalReviewInstructions")
 
 @Html.HiddenFor(x => x.ProjectId)
 <input type="hidden" id="DetailItemNumber" name="DetailItemNumber">
