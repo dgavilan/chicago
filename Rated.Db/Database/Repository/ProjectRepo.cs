@@ -591,5 +591,23 @@ namespace Rated.Infrastructure.Database.Repository
             return MapProjectDetailToCore(projectDetailDb);
         }
 
+        public ProjectCount GetProjectCounts(Guid userId)
+        {
+            var pendingStatuses = new int[] { 
+                (int)Enums.ProjectStatus.InProgressWaitingForOwnerToFinishProject, 
+                (int)Enums.ProjectStatus.InProgressProjectCompletedByOwner,
+                (int)Enums.ProjectStatus.InProgressWaitingForReviewerToFinishReview
+            };
+
+            var projectsDb = (from p in _projectContext.Projects
+                                  where p.UserId == userId
+                                  select p).ToList();
+
+            return new ProjectCount() {
+                ProjectDraft = projectsDb.Where(x => x.StatusId == (int)Enums.ProjectStatus.Draft).Count(),
+                ProjectInProgress = projectsDb.Where(x => pendingStatuses.Contains(x.StatusId)).Count(),
+            };
+        }
+
     }
 }

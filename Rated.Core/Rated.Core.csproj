@@ -42,6 +42,7 @@
     <Compile Include="Contracts\IProjectRepo.cs" />
     <Compile Include="Contracts\IUserRepo.cs" />
     <Compile Include="Infrastructure\ProfileRepo.cs" />
+    <Compile Include="Models\Project\ProjectCount.cs" />
     <Compile Include="Models\Project\ProjectReviewer.cs" />
     <Compile Include="Models\Project\ProjectDetailCoreModel.cs" />
     <Compile Include="Models\User\ProfileCoreModel.cs" />

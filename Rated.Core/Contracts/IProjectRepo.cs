@@ -30,5 +30,6 @@ namespace Rated.Core.Contracts
         List<ProjectCoreModel> GetReviewerProjectsInProgress(Guid reviewerUserId);
 
         ProjectDetailCoreModel GetProjectDetailById(Guid projectDetailId);
+        ProjectCount GetProjectCounts(Guid userId);
     }
 }

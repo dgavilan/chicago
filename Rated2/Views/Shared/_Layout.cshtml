@@ -20,12 +20,21 @@
     @{
         var userSession = new Rated.Web.Shared.UserSession();
         var userFullName = "";
+        var projectCountDraft = 0;
+        var projectCountInProgress = 0;
 
         if (userSession.IsLoggedIn())
         {
             var user = userSession.GetUserSession();
             userFullName = user.FirstName + " " + user.LastName;
+
+            Rated.Core.Contracts.IProjectRepo projectRepo = new Rated.Infrastructure.Database.Repository.ProjectRepo();
+            var projectCount = projectRepo.GetProjectCounts(user.UserId);
+            projectCountDraft = projectCount.ProjectDraft;
+            projectCountInProgress = projectCount.ProjectInProgress;
         }
+
+
     }
 
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -145,10 +154,17 @@
             }
             else if (Request.Url.AbsoluteUri.IndexOf("/Project") > 0)
             {
-                <li class="@projectDraftActive">@Html.ActionLink("Drafts", "Draft", "Project")</li>
+                //<li class="@projectDraftActive">@Html.ActionLink("Drafts", "Draft", "Project")</li>
+                <li class="@reviewPendingActive"><a href="#" onclick="window.location = '/Project/Draft'">Drafts<span id="navReviewPendingCount" class="badge">@projectCountDraft</span></a></li>
+
                 <li class="@projectPendingActive">@Html.ActionLink("Pending Requests", "Pending", "Project")</li>
-                <li class="@projectInProgressActive">@Html.ActionLink("In Progress", "InProgress", "Project")</li>
+
+                @*<li class="@projectInProgressActive">@Html.ActionLink("In Progress", "InProgress", "Project")</li>*@
+                <li class="@reviewPendingActive"><a href="#" onclick="window.location = '/Project/InProgress'">In Progress<span id="navReviewPendingCount" class="badge">@projectCountInProgress</span></a></li>
+
                 <li class="@projectCompletedActive">@Html.ActionLink("Completed Projects", "Completed", "Project")</li>
+
+
             }
         </ul>
 
