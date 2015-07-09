@@ -18,14 +18,27 @@ namespace Rated.Core.Models.Project
         public decimal Score { get; set; }
         public int ProjectDetailsCount { get; set; }
         public Enums.ProjectStatus ProjectStatus { get; set; }
-
         public List<ProjectDetailCoreModel> ProjectDetails { get; set; }
-
         public Guid CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public Guid ModifiedBy { get; set; }
         public DateTime ModifiedDate { get; set; }
 
+        public void MoveToNextStatus()
+        {
+            switch (this.ProjectStatus)
+            {
+                case Enums.ProjectStatus.New:
+                    this.ProjectStatus = Enums.ProjectStatus.Draft;
+                    break;
+                case Enums.ProjectStatus.Draft:
+                    this.ProjectStatus = Enums.ProjectStatus.InProgress;
+                    break;
+                case Enums.ProjectStatus.InProgress:
+                    this.ProjectStatus = Enums.ProjectStatus.Done;
+                    break;
+            }
+        }
 
     }
 }

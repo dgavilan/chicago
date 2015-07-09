@@ -94,7 +94,7 @@ namespace Rated.Web.Shared
                 ReviewerStatus = (Enums.ProjectReviewerStatus)projectDetailCore.ReviewerStatusId,
                 ReviewerStatusId = projectDetailCore.ReviewerStatusId,
                 ReviewInstructions = projectDetailCore.ReviewInstructions,
-                Status = (Enums.ProjectDetailStatus)projectDetailCore.StatusId,
+                DetailStatus = (Enums.ProjectDetailStatus)projectDetailCore.StatusId,
                 StatusId = projectDetailCore.StatusId,
             };
         }

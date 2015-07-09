@@ -22,6 +22,8 @@
         var userFullName = "";
         var projectCountDraft = 0;
         var projectCountInProgress = 0;
+        var projectCountPending = 0;
+        var projectCountComplete = 0;
 
         if (userSession.IsLoggedIn())
         {
@@ -32,6 +34,8 @@
             var projectCount = projectRepo.GetProjectCounts(user.UserId);
             projectCountDraft = projectCount.ProjectDraft;
             projectCountInProgress = projectCount.ProjectInProgress;
+            projectCountPending = projectCount.ProjectPending;
+            projectCountComplete = projectCount.ProjectComplete;
         }
 
 
@@ -119,22 +123,21 @@
                 }
 
                 var projectDraftActive = "";
-                var projectPendingActive = "";
+                //var projectPendingActive = "";
                 var projectInProgressActive = "";
                 var projectCompletedActive = "";
 
-                if (Request.Url.AbsoluteUri.IndexOf("/Project/Draft") > 0
-                    || Request.Url.AbsoluteUri.IndexOf("?ProjectStatusId=102") > 0)
+                if (Request.Url.AbsoluteUri.IndexOf("/Project/Draft") > 0)
                 {
                     projectDraftActive = "active";
                 }
-                else if (Request.Url.AbsoluteUri.IndexOf("/Project/Pending") > 0
-                    || Request.Url.AbsoluteUri.IndexOf("?ProjectStatusId=103") > 0)
-                {
-                    projectPendingActive = "active";
-                }
+                //else if (Request.Url.AbsoluteUri.IndexOf("/Project/Pending") > 0
+                //    || Request.Url.AbsoluteUri.IndexOf("?ProjectStatusId=103") > 0)
+                //{
+                //    projectPendingActive = "active";
+                //}
                 else if (Request.Url.AbsoluteUri.IndexOf("/Project/InProgress") > 0
-                    || Request.Url.AbsoluteUri.IndexOf("?ProjectStatusId=101") > 0)
+                    || Request.Url.AbsoluteUri.IndexOf("?ProjectStatusId=102") > 0)
                 {
                     projectInProgressActive = "active";
                 }
@@ -148,21 +151,23 @@
                 || Request.Url.AbsoluteUri.IndexOf("/ViewReview") > 0)
             {
                 @*<li class="@reviewPendingActive">@Html.ActionLink("Pending Requests", "Pending", "Review")</li>*@
-                <li class="@reviewPendingActive"><a href="#" onclick="window.location = '/Review/Pending'">Pending Requests<span id="navReviewPendingCount" class="badge">1</span></a></li>
+                <li class="@reviewPendingActive"><a href="#" onclick="window.location = '/Review/Pending'">Pending Requests<span class="badge">1</span></a></li>
                 <li class="@reviewInProgressActive">@Html.ActionLink("In Progress", "InProgress", "Review")</li>
                 <li class="@reviewCompletedActive">@Html.ActionLink("Completed Reviews", "Completed", "Review")</li>
             }
             else if (Request.Url.AbsoluteUri.IndexOf("/Project") > 0)
             {
                 //<li class="@projectDraftActive">@Html.ActionLink("Drafts", "Draft", "Project")</li>
-                <li class="@reviewPendingActive"><a href="#" onclick="window.location = '/Project/Draft'">Drafts<span id="navReviewPendingCount" class="badge">@projectCountDraft</span></a></li>
+                <li class="@projectDraftActive"><a href="#" onclick="window.location = '/Project/Draft'">Drafts<span class="badge">@projectCountDraft</span></a></li>
 
-                <li class="@projectPendingActive">@Html.ActionLink("Pending Requests", "Pending", "Project")</li>
+                //<li class="@projectPendingActive">@Html.ActionLink("Pending Requests", "Pending", "Project")</li>
+                //<li class="@projectPendingActive"><a href="#" onclick="window.location = '/Project/Pending'">Pending<span class="badge">@projectCountPending</span></a></li>
 
-                @*<li class="@projectInProgressActive">@Html.ActionLink("In Progress", "InProgress", "Project")</li>*@
-                <li class="@reviewPendingActive"><a href="#" onclick="window.location = '/Project/InProgress'">In Progress<span id="navReviewPendingCount" class="badge">@projectCountInProgress</span></a></li>
+                //<li class="@projectInProgressActive">@Html.ActionLink("In Progress", "InProgress", "Project")</li>
+                <li class="@projectInProgressActive"><a href="#" onclick="window.location = '/Project/InProgress'">In Progress<span class="badge">@projectCountInProgress</span></a></li>
 
-                <li class="@projectCompletedActive">@Html.ActionLink("Completed Projects", "Completed", "Project")</li>
+                //<li class="@projectCompletedActive">@Html.ActionLink("Completed Projects", "Completed", "Project")</li>
+                <li class="@projectCompletedActive"><a href="#" onclick="window.location = '/Project/Completed'">Complete<span class="badge">@projectCountComplete</span></a></li>
 
 
             }

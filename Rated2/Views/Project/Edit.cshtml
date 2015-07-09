@@ -7,7 +7,7 @@
         <span>Edit Project</span>
     }
 
-    @if (Model.ProjectStatus == Enums.ProjectStatus.WaitingApproverAcceptance)
+    @if (Model.ProjectStatus == Enums.ProjectStatus.ReviewerPendingAcceptance)
     {
         <span>Waiting for Reviewer</span>
     }
@@ -26,7 +26,7 @@
                 Start Project
             </button>
             break;
-        case Enums.ProjectStatus.WaitingApproverAcceptance:
+        case Enums.ProjectStatus.ReviewerPendingAcceptance:
         <button class="btn btn-danger">
             <span class="glyphicon glyphicon-trash"></span>
             Cancel Project
@@ -104,10 +104,11 @@
         <tr>
             <th width="70px"></th>
             <th></th>
-            <th width="40%">Detail</th>
+            <th width="30%">Detail</th>
             <th>Hours</th>
             <th>Modified</th>
             <th>Status</th>
+            <th width="200px">Reviewer</th>
             <th width="70px"></th>
         </tr>
     </thead>
@@ -140,51 +141,57 @@
                     @detail.ModifiedDate
                 </td>
                 <td>
-                    @switch (detail.ReviewerStatusId)
+                    @Rated.Core.Shared.EnumHelper.GetDescription(detail.DetailStatus)
+                </td>
+                <td>
+                    @switch (detail.DetailStatus)
                     {
-                        case (int)Enums.ProjectReviewerStatus.Accepted:
+                        case Enums.ProjectDetailStatus.ReviewerPendingAcceptance:
+                            <button class="btn btn-default">
+                                <span class="glyphicon glyphicon-remove"></span>
+                                Remove Pending Reviewer: <br /> @detail.ReviewerFullName
+                            </button>
+                            break;
+                    }
+
+                    @*@switch (detail.ReviewerStatusId)
+                    {
+                        case (int)Enums.ProjectReviewerStatus.OwnerIsWorkingOnTask:
                             <p>
                                 Approver: @detail.ReviewerFullName
                             </p>
                             break;
-                        case (int)Enums.ProjectReviewerStatus.Sent:
+                        case (int)Enums.ProjectReviewerStatus.WaitingForReviewerToAccept:
                         <p>
-                            Waiting for Approver
+                            @Rated.Core.Shared.EnumHelper.GetDescription((Enums.ProjectReviewerStatus)detail.ReviewerStatusId)
                             <br />
-                            @detail.ReviewerFullName
+                            Approver: @detail.ReviewerFullName
                             <br />
-                            @if (Model.ProjectStatus == Enums.ProjectStatus.Draft)
-                            {
-                                <button class="btn btn-link">
-                                    <span class="glyphicon glyphicon-remove"></span> Remove Reviewer
-                                </button>
-                            }
+                            <a href="#" class="btn btn-link">
+                                <span class="glyphicon glyphicon-remove"></span>
+                                Remove Approver
+                            </a>
                         </p>
                             break;
-                        case (int)Enums.ProjectReviewerStatus.NeedsReviewer:
-                        <p>
-                            No Reviewer
-                            <br />
-                            <button class="btn btn-link" onclick="Project.AssignDetailReviewer('@detail.ProjectDetailId')">
-                                <span class="glyphicon glyphicon-plus"></span> Assign Reviewer
-                            </button>
-                        </p>
+                        case (int)Enums.ProjectReviewerStatus.NewTaskNeedsReviewer:
+                        <button class="btn btn-btn" onclick="Project.AssignDetailReviewer('@detail.ProjectDetailId')">
+                            <span class="glyphicon glyphicon-plus"></span> Assign Reviewer
+                        </button>
                             break;
-                        case (int)Enums.ProjectReviewerStatus.Declined:
+                        case (int)Enums.ProjectReviewerStatus.ReviewerDeclinedNeedsReviewer:
                             break;
-                        default:
-                        @Rated.Core.Shared.EnumHelper.GetDescription(detail.Status);
-                                                                                   break;
-                    }
+                    }*@
+
                 </td>
+
                 <td>
-                    @if (detail.Status == Enums.ProjectDetailStatus.Draft)
+                    @if (detail.DetailStatus == Enums.ProjectDetailStatus.Draft)
                     {
                         <button class="btn btn-link" onclick="Project.DeleteDetail('@detail.ProjectId', '@detail.ProjectDetailId')">
                             <span class="glyphicon glyphicon-trash"></span> Delete
                         </button>
                     }
-                    else if (detail.Status == Enums.ProjectDetailStatus.InReview)
+                    else if (detail.DetailStatus == Enums.ProjectDetailStatus.InReview)
                     {
                         <button class="btn btn-success" style="width:160px" onclick="Project.ConfirmProjectDetailComplete('@detail.ProjectDetailId')">
                             <span class="glyphicon glyphicon-ok-sign"></span> Task is Complete
@@ -218,5 +225,6 @@
 @Html.Partial("_ModalAssignReviewer", @Model)
 
 @Html.HiddenFor(x => x.ProjectId)
+@Html.HiddenFor(x => x.ProjectStatus)
 <input type="hidden" id="DetailItemNumber" name="DetailItemNumber">
 <input type="hidden" id="ProjectDetailId" name="ProjectDetailId">

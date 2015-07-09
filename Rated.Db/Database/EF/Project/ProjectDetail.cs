@@ -13,6 +13,7 @@ namespace Rated.Infrastructure.Database.EF.Project
         public Guid ProjectDetailId { get; set; }
         public Guid ProjectId { get; set; }
         public Guid UserId { get; set; }
+        public Guid ReviewerUserId { get; set; }
 
         [Required]
         public int DetailNumber { get; set; }

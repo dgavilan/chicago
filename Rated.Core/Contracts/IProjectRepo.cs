@@ -18,9 +18,8 @@ namespace Rated.Core.Contracts
         void UpdateProjectDetail(ProjectDetailCoreModel projectDetail);
         void DeleteProjectDetail(Guid guid, Guid projectId, Guid detailId);
         void AddProjectReviewer(ProjectDetailCoreModel projectDetail);
-        void StartTheProject(Guid guid, Guid projectId);
+        void StartTheProject(Guid guid, ProjectCoreModel projectCore);
 
-        void ReviewerAccepted(Guid projectId, Guid reviewerUserId);
 
         //List<ProjectCoreModel> GetProjectsPendingReviewerAcceptance(Guid reviewerUserId);
         List<ProjectCoreModel> GetProjectsForReviewerByStatus(Guid reviewerUserId, Enums.ProjectStatus projectStatusId);
@@ -31,5 +30,8 @@ namespace Rated.Core.Contracts
 
         ProjectDetailCoreModel GetProjectDetailById(Guid projectDetailId);
         ProjectCount GetProjectCounts(Guid userId);
+
+        void ReviewerAccepted(ProjectCoreModel projectCore);
+        void MoveToNextProjectStatus(ProjectCoreModel projectCore);
     }
 }

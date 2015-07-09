@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Rated.Core.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,13 +24,57 @@ namespace Rated.Core.Models.Project
         public int ReviewerStatusId { get; set; }
         public int DetailItemNumber { get; set; }
         public bool HasReviewer { get; set; }
-        public int StatusId { get; set; }
-        public string ReviewInstructions { get; set; }
+        
+        //public int StatusId { get; set; }
+        private int statusId;
+        public int StatusId
+        {
+            get { return statusId; }
+            set
+            {
+                statusId = value;
+                DetailStatus = (Enums.ProjectDetailStatus)statusId;
+            }
+        }
 
+        public Enums.ProjectDetailStatus DetailStatus { get; set; }
+        public string ReviewInstructions { get; set; }
         public Guid CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public Guid ModifiedBy { get; set; }
         public DateTime ModifiedDate { get; set; }
 
+        public void MoveToNextStatus()
+        {
+            // TODO: set detailstatus to whatever is the statusId.
+            if (this.DetailStatus == 0)
+            { 
+            
+            }
+
+            switch (this.DetailStatus)
+            {
+                case Enums.ProjectDetailStatus.New:
+                    this.DetailStatus = Enums.ProjectDetailStatus.Draft;
+                    this.StatusId = (int)Enums.ProjectDetailStatus.Draft;
+                    break;
+                case Enums.ProjectDetailStatus.Draft:
+                    this.DetailStatus = Enums.ProjectDetailStatus.ReviewerPendingAcceptance;
+                    this.StatusId = (int)Enums.ProjectDetailStatus.ReviewerPendingAcceptance;
+                    break;
+                case Enums.ProjectDetailStatus.ReviewerPendingAcceptance:
+                    this.DetailStatus = Enums.ProjectDetailStatus.OwnerInProgressWorkingOnProject;
+                    this.StatusId = (int)Enums.ProjectDetailStatus.OwnerInProgressWorkingOnProject;
+                    break;
+                case Enums.ProjectDetailStatus.OwnerInProgressWorkingOnProject:
+                    this.DetailStatus = Enums.ProjectDetailStatus.InReview;
+                    this.StatusId = (int)Enums.ProjectDetailStatus.InReview;
+                    break;
+                case Enums.ProjectDetailStatus.InReview:
+                    this.DetailStatus = Enums.ProjectDetailStatus.Done;
+                    this.StatusId = (int)Enums.ProjectDetailStatus.Done;
+                    break;
+            }
+        }
     }
 }

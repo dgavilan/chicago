@@ -11,32 +11,64 @@ namespace Rated.Core.Shared
     {
         public enum ProjectStatus
         {
-            [Description("Project is Done. Project Owner and Reviewer have Completed their tasks.")]
-            Completed = 100,
-            [Description("In Progress. Waiting for Project Owner to Finish Project.")]
-            InProgressWaitingForOwnerToFinishProject = 101,
+            //[Description("New")]
+            //New = 107,
+
+            //[Description("Draft")]
+            //OwnerDraft = 102,
+
+            //[Description("Waiting for Reviewer to Accept Review Request")]
+            //ReviewerPendingAcceptance = 103,
+            
+            //[Description("In Progress. Waiting for Project Owner to Finish Project.")]
+            //OwnerInProgressWorkingOnProject = 101,
+
+            //[Description("In Progress. Waiting for Reviewer to Finish Review.")]
+            //ReviewerInProgressReviewingProject = 106,
+            
+            //[Description("Project is Done. Project Owner and Reviewer have Completed their tasks.")]
+            //Complete = 100,
+
+            [Description("New")]
+            New = 100,
+
             [Description("Draft")]
-            Draft = 102,
+            Draft = 101,
+
+            [Description("In Progress")]
+            InProgress = 102,
+
+            [Description("Done")]
+            Done = 103,
+
+
+
             [Description("Waiting for Reviewer to Accept Review Request")]
-            WaitingApproverAcceptance = 103,
-            [Description("In Review")]
-            Review = 104,
-            [Description("In Progress. Project Owner Finished Project.")]
-            InProgressProjectCompletedByOwner = 105,
+            ReviewerPendingAcceptance = 1103,
+
+            [Description("In Progress. Waiting for Project Owner to Finish Project.")]
+            OwnerInProgressWorkingOnProject = 1101,
+
             [Description("In Progress. Waiting for Reviewer to Finish Review.")]
-            InProgressWaitingForReviewerToFinishReview = 106,
+            ReviewerInProgressReviewingProject = 1106,
+
+            [Description("Project is Done. Project Owner and Reviewer have Completed their tasks.")]
+            Complete = 1100,
         }
 
         public enum ProjectReviewerStatus
         {
             [Description("Needs Reviewer")]
-            NeedsReviewer = 200,
-            [Description("Sent Review Request to Reviewer")]
-            Sent = 201,
+            NewTaskNeedsReviewer = 200,
+
+            [Description("Waiting for Reviewer to Accept Request")]
+            WaitingForReviewerToAccept = 201,
+
             [Description("Reviewer Accepted Review Request")]
-            Accepted = 202,
+            OwnerIsWorkingOnTask = 202,
+            
             [Description("Reviewer Declined Review Request")]
-            Declined = 203
+            ReviewerDeclinedNeedsReviewer = 203
         }
 
         public enum UserStatus
@@ -48,13 +80,25 @@ namespace Rated.Core.Shared
         }
 
         public enum ProjectDetailStatus
-        { 
+        {
+            [Description("New")]
+            New = 404,
+
             [Description("Draft")]
             Draft = 400,
+
+            [Description("Pending reviewer acceptance")]
+            ReviewerPendingAcceptance = 403,
+
+            [Description("In Progress. Waiting for Project Owner to Finish Project.")]
+            OwnerInProgressWorkingOnProject = 405,
+
             [Description("Owner is working on task. Reviewer is waiting until task is complete.")]
             InReview = 401,
+
             [Description("Owner has completed task")]
-            OwnerHasCompletedTask = 402,
+            Done = 402,
+       
         }
     }
 }

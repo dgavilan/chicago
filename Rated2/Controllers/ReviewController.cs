@@ -26,7 +26,7 @@ namespace Rated.Web.Controllers
             var userSession = new UserSession();
             var reviewerUserId = userSession.GetUserSession().UserId;
             var projectHelper = new ProjectHelper();
-            return View(projectHelper.GetProjectsForReviewerByStatus(reviewerUserId, Enums.ProjectStatus.WaitingApproverAcceptance));
+            return View(projectHelper.GetProjectsForReviewerByStatus(reviewerUserId, Enums.ProjectStatus.ReviewerPendingAcceptance));
         }
 
         public ActionResult InProgress()
@@ -77,11 +77,11 @@ namespace Rated.Web.Controllers
                     ReviewerLastName = detail.ReviewerLastName,
                     ReviewerEmail = detail.ReviewerEmail,
                     ReviewerStatusId = detail.ReviewerStatusId,
-                    ReviewerFullName = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.Sent)
+                    ReviewerFullName = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.WaitingForReviewerToAccept)
                         ? detail.ReviewerEmail
                         : detail.ReviewerFirstName + " " + detail.ReviewerLastName,
                     HasReviewer = detail.HasReviewer,
-                    Status = (Enums.ProjectDetailStatus)detail.StatusId,
+                    DetailStatus = (Enums.ProjectDetailStatus)detail.StatusId,
                     StatusId = detail.StatusId,
                     ReviewInstructions = detail.ReviewInstructions,
                 });

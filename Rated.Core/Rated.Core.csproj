@@ -45,6 +45,7 @@
     <Compile Include="Models\Project\ProjectCount.cs" />
     <Compile Include="Models\Project\ProjectReviewer.cs" />
     <Compile Include="Models\Project\ProjectDetailCoreModel.cs" />
+    <Compile Include="Models\Project\Service\ProjectStatus.cs" />
     <Compile Include="Models\User\ProfileCoreModel.cs" />
     <Compile Include="Models\Project\ProjectCoreModel.cs" />
     <Compile Include="Models\User\UserCoreService.cs" />

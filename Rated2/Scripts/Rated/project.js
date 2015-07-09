@@ -143,11 +143,12 @@
     },
 
     StartTheProject: function (projectId) {
-        //var data = $(":input").serializeArray();
+        var data = $(":input").serializeArray();
         var jqxhr = $.ajax({
-            url: "/api/ProjectApi/Project/"+ projectId +"/StartTheProject",
+            //url: "/api/ProjectApi/Project/" + projectId + "/StartTheProject",
+            url: "/api/ProjectApi/Project/StartTheProject",
             type: "PUT",
-            //data: data,
+            data: data,
         });
 
         jqxhr.done(function () {
@@ -159,10 +160,12 @@
     },
 
     ReviwerAcceptsProject: function (projectId) {
+        var data = $(":input").serializeArray();
         var jqxhr = $.ajax({
-            url: "/api/ProjectApi/Project/" + projectId + "/ReviewerAccepted",
+            //url: "/api/ProjectApi/Project/" + projectId + "/ReviewerAccepted",
+            url: "/api/ProjectApi/Project/ReviewerAccepted",
             type: "PUT",
-            //data: data,
+            data: data,
         });
 
         jqxhr.done(function () {
@@ -209,6 +212,24 @@
         jqxhr.always(function () { });
 
         $("#modalReviewInstructions").modal("show");
+    },
+
+    ReviewerAcceptsProjectDetail: function (projectDetailId) {
+        var jqxhr = $.ajax({
+            url: "/api/ProjectApi/ProjectDetail/" + projectDetailId + "/ReviewerAcceptsProjectDetail",
+            type: "PUT",
+        });
+
+        jqxhr.done(function () {
+            alert("Reviewer accepted successfully.");
+            window.location.reload(true);
+        })
+        jqxhr.fail(function (jqXHR, textStatus, errorThrown) { handleErrors(jqXHR) })
+        jqxhr.always(function () { });
+    },
+
+    ReviewerDeclinesProjectDetail: function (projectDetailId) {
+
     },
 };
 

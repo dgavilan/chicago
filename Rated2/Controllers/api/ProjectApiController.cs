@@ -25,20 +25,27 @@ namespace Rated.Web.Controllers.api
             _projectRepo = new ProjectRepo();
         }
 
-        [Route("api/ProjectApi/Project/{projectId}/ReviewerAccepted")]
+        [Route("api/ProjectApi/Project/ReviewerAccepted")]
         [HttpPut]
-        public HttpResponseMessage ReviewerAccepted(Guid projectId)
+        public HttpResponseMessage ReviewerAccepted(ProjectCoreModel projectCore)
+        //[Route("api/ProjectApi/Project/{projectId}/ReviewerAccepted")]
+        //[HttpPut]
+        //public HttpResponseMessage ReviewerAccepted(Guid projectId)
         {
             try
             {
                 var userSession = new UserSession();
                 var timeStamp = DateTime.UtcNow;
 
+                projectCore.UserId = userSession.GetUserSession().UserId;
+                projectCore.MoveToNextStatus();
+
                 //projectDetail.UserId = userSession.GetUserSession().UserId;
 
                 // 1. insert record in ProjectReviewer table
                 // 2. insert record in user table if user id doesn't exist
-                _projectRepo.ReviewerAccepted(projectId, userSession.GetUserSession().UserId);
+                //_projectRepo.ReviewerAccepted(projectId, userSession.GetUserSession().UserId);
+                _projectRepo.ReviewerAccepted(projectCore);
 
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
@@ -52,20 +59,24 @@ namespace Rated.Web.Controllers.api
             }
         }
 
-        [Route("api/ProjectApi/Project/{projectId}/StartTheProject")]
+        //[Route("api/ProjectApi/Project/{projectId}/StartTheProject")]
+        [Route("api/ProjectApi/Project/StartTheProject")]
         [HttpPut]
-        public HttpResponseMessage StartTheProject(Guid projectId)
+        //public HttpResponseMessage StartTheProject(Guid projectId)
+        public HttpResponseMessage StartTheProject(ProjectCoreModel projectCore)
         {
             try
             {
                 var userSession = new UserSession();
                 var timeStamp = DateTime.UtcNow;
 
-                //projectDetail.UserId = userSession.GetUserSession().UserId;
+                //projectCore.UserId = userSession.GetUserSession().UserId;
+                //projectCore.MoveToNextStatus();
+                _projectRepo.MoveToNextProjectStatus(projectCore);
 
-                // 1. insert record in ProjectReviewer table
-                // 2. insert record in user table if user id doesn't exist
-                _projectRepo.StartTheProject(userSession.GetUserSession().UserId, projectId);
+                // TODO: 1. Keep project status the same (pending)
+                //       2. Move detail status to next
+                
 
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
@@ -121,7 +132,8 @@ namespace Rated.Web.Controllers.api
                 projectDetail.CreatedDate = timeStamp;
                 projectDetail.ModifiedBy = userSession.GetUserSession().UserId;
                 projectDetail.ModifiedDate = timeStamp;
-                projectDetail.StatusId = (int)Enums.ProjectDetailStatus.Draft;
+                projectDetail.DetailStatus = Enums.ProjectDetailStatus.New;
+                projectDetail.MoveToNextStatus();
 
                 _projectRepo.AddProjectDetail(projectDetail);
 
@@ -192,12 +204,13 @@ namespace Rated.Web.Controllers.api
                 var user = userSession.GetUserSession();
                 var newProjectId = Guid.NewGuid();
 
+                // Save project
                 project.ProjectId = newProjectId;
                 project.UserId = user.UserId;
-
+                project.ProjectStatus = Enums.ProjectStatus.New;
+                project.MoveToNextStatus();
                 _projectRepo.AddProject(project);
 
-                // TODO: Get record from database
                 var newProduct = _projectRepo.GetProject(user.UserId, project.ProjectId);
 
                 var json = new JavaScriptSerializer().Serialize(newProduct);
@@ -225,7 +238,7 @@ namespace Rated.Web.Controllers.api
                 _projectRepo.UpdateProjectDetailStatus(
                     userSession.GetUserSession().UserId, 
                     projectDetailId,
-                    Core.Shared.Enums.ProjectDetailStatus.OwnerHasCompletedTask);
+                    Core.Shared.Enums.ProjectDetailStatus.Done);
 
                 _projectRepo.ProjectCompletedByOwner(userSession.GetUserSession().UserId, projectId);
 
@@ -252,6 +265,31 @@ namespace Rated.Web.Controllers.api
                 var detailView = projectHelper.BuildProjectDetailView(projectDetailCore);
 
                 return Request.CreateResponse(HttpStatusCode.OK, detailView);
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = ex.Message
+                });
+            }
+        }
+
+        [Route("api/ProjectApi/ProjectDetail/{projectDetailId}/ReviewerAcceptsProjectDetail")]
+        [HttpPut]
+        public HttpResponseMessage ReviewerAcceptsProjectDetail(Guid projectDetailId)
+        {
+            try
+            {
+                var userSession = new UserSession();
+                var timeStamp = DateTime.UtcNow;
+
+                var projectDetail = _projectRepo.GetProjectDetailById(projectDetailId);
+                projectDetail.MoveToNextStatus();
+                _projectRepo.UpdateProjectDetail(projectDetail);
+
+                return Request.CreateResponse(HttpStatusCode.OK);
             }
             catch (Exception ex)
             {

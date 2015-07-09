@@ -2,7 +2,7 @@
 @using Rated.Core.Shared;
 
 <h2>
-    @if (Model.ProjectStatus == Enums.ProjectStatus.WaitingApproverAcceptance)
+    @if (Model.ProjectStatus == Enums.ProjectStatus.ReviewerPendingAcceptance)
     {
         <span>Waiting for you to Accept</span>
     }
@@ -15,7 +15,7 @@
 <div class="alert alert-info">
     <b>Project Status:</b> @Rated.Core.Shared.EnumHelper.GetDescription(Model.ProjectStatus)
 
-    @if (Model.ProjectStatus == Enums.ProjectStatus.WaitingApproverAcceptance)
+    @if (Model.ProjectStatus == Enums.ProjectStatus.ReviewerPendingAcceptance)
     {
         <button class="btn btn-success" id="btnReviewerAcceptsRequest">
             <span class="glyphicon glyphicon-ok-sign"></span>
@@ -29,15 +29,15 @@
             Decline
         </button>
     }
-    else if (Model.ProjectStatus == Enums.ProjectStatus.InProgressProjectCompletedByOwner)
+    else if (Model.ProjectStatus == Enums.ProjectStatus.ReviewerInProgressReviewingProject)
     {
         <button class="btn btn-success" id="btnReviewerAcceptsRequest">
             <span class="glyphicon glyphicon-ok-sign"></span>
             Rate this Project
         </button>
-        
+
         <span>&nbsp;&nbsp;</span>
-        
+
         <button class="btn btn-danger" id="btnReviewerRatesProject">
             <span class="glyphicon glyphicon-ok-sign"></span>
             Decline
@@ -97,8 +97,8 @@
             <th width="45%">Detail</th>
             <th>Hours</th>
             <th>Modified</th>
-            <th>Reviewer</th>
             <th>Status</th>
+            <th></th>
         </tr>
     </thead>
     @{
@@ -126,32 +126,31 @@
                 <td width="100px">
                     @detail.ModifiedDate
                 </td>
-                <td>
-                    @switch (detail.ReviewerStatusId)
-                    {
-                        case (int)Enums.ProjectReviewerStatus.Accepted:
-                            <p>
-                                Approver: @detail.ReviewerFullName
-                            </p>
-                            break;
 
-                        case (int)Enums.ProjectReviewerStatus.Sent:
-                            <p>
-                                Waiting for Approver
-                                <br />
-                                @detail.ReviewerFullName
-                            </p>
-                            break;
-                        default:
-                            @Rated.Core.Shared.EnumHelper.GetDescription(Model.ProjectStatus)
-                            break;
+                <td>
+                    @Rated.Core.Shared.EnumHelper.GetDescription(@detail.DetailStatus)
+                </td>
+
+                <td>
+
+                    @if (@detail.DetailStatus == Enums.ProjectDetailStatus.ReviewerPendingAcceptance)
+                    {
+                        <button class="btn btn-success" onclick="Project.ReviewerAcceptsProjectDetail('@detail.ProjectDetailId')">
+                            <span class="glyphicon glyphicon-ok-sign"></span>
+                            Accept
+                        </button>
+
+                        <span>&nbsp;&nbsp;</span>
+
+                        <button class="btn btn-danger" onclick="Project.ReviewerDeclinesProjectDetail('@detail.ProjectDetailId')">
+                            <span class="glyphicon glyphicon-remove-sign"></span>
+                            Decline
+                        </button>
                     }
                 </td>
-                <td>
-                    @Rated.Core.Shared.EnumHelper.GetDescription(@detail.Status)
-                </td>
+
             </tr>
-            lineItemNo++;
+                    lineItemNo++;
         }
     }
 </table>
@@ -162,5 +161,6 @@
 @Html.Partial("_ModalReviewInstructions")
 
 @Html.HiddenFor(x => x.ProjectId)
+@Html.HiddenFor(x => x.ProjectStatus)
 <input type="hidden" id="DetailItemNumber" name="DetailItemNumber">
 <input type="hidden" id="ProjectDetailId" name="ProjectDetailId">
