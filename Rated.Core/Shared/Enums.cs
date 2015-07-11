@@ -52,7 +52,7 @@ namespace Rated.Core.Shared
             [Description("In Progress. Waiting for Reviewer to Finish Review.")]
             ReviewerInProgressReviewingProject = 1106,
 
-            [Description("Project is Done. Project Owner and Reviewer have Completed their tasks.")]
+            [Description("Project is Done. Project Owner and Reviewer have Completed their Tasks.")]
             Complete = 1100,
         }
 
@@ -87,16 +87,16 @@ namespace Rated.Core.Shared
             [Description("Draft")]
             Draft = 400,
 
-            [Description("Pending reviewer acceptance")]
+            [Description("Pending Reviewer Acceptance")]
             ReviewerPendingAcceptance = 403,
 
             [Description("In Progress. Waiting for Project Owner to Finish Project.")]
             OwnerInProgressWorkingOnProject = 405,
 
-            [Description("Owner is working on task. Reviewer is waiting until task is complete.")]
-            InReview = 401,
+            [Description("Reviewer is Reviewing Task")]
+            ReviewerInProgressReviewingDetail = 401,
 
-            [Description("Owner has completed task")]
+            [Description("Review Complete")]
             Done = 402,
        
         }

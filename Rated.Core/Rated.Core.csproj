@@ -45,7 +45,6 @@
     <Compile Include="Models\Project\ProjectCount.cs" />
     <Compile Include="Models\Project\ProjectReviewer.cs" />
     <Compile Include="Models\Project\ProjectDetailCoreModel.cs" />
-    <Compile Include="Models\Project\Service\ProjectStatus.cs" />
     <Compile Include="Models\User\ProfileCoreModel.cs" />
     <Compile Include="Models\Project\ProjectCoreModel.cs" />
     <Compile Include="Models\User\UserCoreService.cs" />
@@ -53,6 +52,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\EnumHelper.cs" />
     <Compile Include="Shared\Enums.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\Project\Service\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -8,6 +8,7 @@
             <th width="55%">Project</th>
             <th>Modified</th>
             <th>Status</th>
+            <th>Rating</th>
             <th width="80px"></th>
         </tr>
     </thead>
@@ -33,6 +34,9 @@
             </td>
             <td>
                 @Rated.Core.Shared.EnumHelper.GetDescription(project.ProjectStatus)
+            </td>
+            <td>
+                @project.ProjectRating
             </td>
             <td>
                 

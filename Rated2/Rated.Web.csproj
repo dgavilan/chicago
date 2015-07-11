@@ -201,7 +201,7 @@
     <Content Include="Views\Project\Draft.cshtml" />
     <Content Include="Views\Project\Pending.cshtml" />
     <Content Include="Views\Project\InProgress.cshtml" />
-    <Content Include="Views\Project\Completed.cshtml" />
+    <Content Include="Views\Project\Done.cshtml" />
     <Content Include="Views\Project\_Project.cshtml" />
     <Content Include="Views\Project\_EditProject.cshtml" />
     <Content Include="Views\Project\_ModalAddProject.cshtml" />
@@ -215,6 +215,7 @@
     <Content Include="Views\Project\Edit.cshtml" />
     <Content Include="Views\Project\_ModalCompleteDetail.cshtml" />
     <Content Include="Views\Review\_ModalReviewInstructions.cshtml" />
+    <Content Include="Views\Review\_ModalReviewComplete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

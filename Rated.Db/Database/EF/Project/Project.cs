@@ -34,6 +34,8 @@ namespace Rated.Infrastructure.Database.EF.Project
         [Required]
         public int StatusId { get; set; }
 
+        public decimal ProjectRating { get; set; }
+
         public virtual User User { get; set; }
         public virtual ICollection<ProjectDetail> ProjectDetails { get; set; }
     }

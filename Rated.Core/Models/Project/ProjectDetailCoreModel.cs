@@ -24,6 +24,7 @@ namespace Rated.Core.Models.Project
         public int ReviewerStatusId { get; set; }
         public int DetailItemNumber { get; set; }
         public bool HasReviewer { get; set; }
+        public decimal DetailRating { get; set; }
         
         //public int StatusId { get; set; }
         private int statusId;
@@ -46,12 +47,6 @@ namespace Rated.Core.Models.Project
 
         public void MoveToNextStatus()
         {
-            // TODO: set detailstatus to whatever is the statusId.
-            if (this.DetailStatus == 0)
-            { 
-            
-            }
-
             switch (this.DetailStatus)
             {
                 case Enums.ProjectDetailStatus.New:
@@ -67,10 +62,10 @@ namespace Rated.Core.Models.Project
                     this.StatusId = (int)Enums.ProjectDetailStatus.OwnerInProgressWorkingOnProject;
                     break;
                 case Enums.ProjectDetailStatus.OwnerInProgressWorkingOnProject:
-                    this.DetailStatus = Enums.ProjectDetailStatus.InReview;
-                    this.StatusId = (int)Enums.ProjectDetailStatus.InReview;
+                    this.DetailStatus = Enums.ProjectDetailStatus.ReviewerInProgressReviewingDetail;
+                    this.StatusId = (int)Enums.ProjectDetailStatus.ReviewerInProgressReviewingDetail;
                     break;
-                case Enums.ProjectDetailStatus.InReview:
+                case Enums.ProjectDetailStatus.ReviewerInProgressReviewingDetail:
                     this.DetailStatus = Enums.ProjectDetailStatus.Done;
                     this.StatusId = (int)Enums.ProjectDetailStatus.Done;
                     break;

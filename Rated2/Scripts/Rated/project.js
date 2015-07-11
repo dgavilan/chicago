@@ -183,8 +183,6 @@
     MarkProjectDetailAsComplete: function () {
         var projectId = $("#ProjectId").val();
         var projectDetailId = $("#ProjectDetailId").val();
-        alert(projectDetailId);
-        //var data = $(":input").serializeArray();
 
         var jqxhr = $.ajax({
             url: "/api/ProjectApi/Project/" + projectId + "/ProjectDetail/" + projectDetailId + "/Complete",
@@ -230,6 +228,27 @@
 
     ReviewerDeclinesProjectDetail: function (projectDetailId) {
 
+    },
+
+    DetailReviewComplete: function (projectDetailId) {
+        $("#ProjectDetailId").val(projectDetailId);
+        $("#modalReviewComplete").modal("show");
+    },
+
+    SubmitReview: function () {
+        var data = $(":input").serializeArray();
+        var jqxhr = $.ajax({
+            url: "/api/ProjectApi/ProjectDetail/SubmitReview",
+            type: "PUT",
+            data: data,
+        });
+
+        jqxhr.done(function () {
+            alert("Review complete");
+            window.location.reload(true);
+        })
+        jqxhr.fail(function (jqXHR, textStatus, errorThrown) { handleErrors(jqXHR) })
+        jqxhr.always(function () { });
     },
 };
 

@@ -29,6 +29,8 @@ namespace Rated2.Models.Project
         public string OwnerFirstName { get; set; }
         public string OwnerLastName { get; set; }
 
+        public decimal ProjectRating { get; set; }
+
         public List<ProjectDetailViewModel> ProjectDetails { get; set; }
     }
 }

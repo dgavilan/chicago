@@ -67,6 +67,7 @@ namespace Rated.Web.Shared
                     ProjectStatus = project.ProjectStatus,
                     OwnerFirstName = project.OwnerFirstName,
                     OwnerLastName = project.OwnerLastName,
+                    ProjectRating = project.ProjectRating,
                 });
             }
 

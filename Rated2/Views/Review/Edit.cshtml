@@ -94,10 +94,11 @@
     <thead>
         <tr>
             <th width="25px">Task</th>
-            <th width="45%">Detail</th>
+            <th width="35%">Detail</th>
             <th>Hours</th>
             <th>Modified</th>
             <th>Status</th>
+            <th>Rating</th>
             <th></th>
         </tr>
     </thead>
@@ -126,26 +127,43 @@
                 <td width="100px">
                     @detail.ModifiedDate
                 </td>
-
                 <td>
                     @Rated.Core.Shared.EnumHelper.GetDescription(@detail.DetailStatus)
                 </td>
-
                 <td>
-
-                    @if (@detail.DetailStatus == Enums.ProjectDetailStatus.ReviewerPendingAcceptance)
+                    @if (detail.DetailStatus == Enums.ProjectDetailStatus.Done)
                     {
-                        <button class="btn btn-success" onclick="Project.ReviewerAcceptsProjectDetail('@detail.ProjectDetailId')">
-                            <span class="glyphicon glyphicon-ok-sign"></span>
-                            Accept
+                        @detail.DetailRating
+                    }
+                </td>
+
+                <td nowrap>
+                    @switch (detail.DetailStatus)
+                    {
+                        case Enums.ProjectDetailStatus.ReviewerPendingAcceptance:
+                            <button class="btn btn-success" style="width:160px" onclick="Project.ReviewerAcceptsProjectDetail('@detail.ProjectDetailId')">
+                                <span class="glyphicon glyphicon-ok-sign"></span>
+                                Accept Request
+                            </button>
+
+                            <div style="height:7px">&nbsp;</div>
+
+                            <button class="btn btn-danger" style="width:160px" onclick="Project.ReviewerDeclinesProjectDetail('@detail.ProjectDetailId')">
+                                <span class="glyphicon glyphicon-remove-sign"></span>
+                                Decline Request
+                            </button>
+                            break;
+                        case Enums.ProjectDetailStatus.ReviewerInProgressReviewingDetail:
+                        <button class="btn btn-success" style="width:160px" onclick="Project.DetailReviewComplete('@detail.ProjectDetailId')">
+                            <span class="glyphicon glyphicon-ok-sign"></span> Review Complete
                         </button>
 
-                        <span>&nbsp;&nbsp;</span>
+                        <div style="height:7px">&nbsp;</div>
 
-                        <button class="btn btn-danger" onclick="Project.ReviewerDeclinesProjectDetail('@detail.ProjectDetailId')">
-                            <span class="glyphicon glyphicon-remove-sign"></span>
-                            Decline
+                        <button class="btn btn-danger" style="width:160px">
+                            <span class="glyphicon glyphicon-remove-sign"></span> Decline Review
                         </button>
+                            break;
                     }
                 </td>
 
@@ -157,10 +175,12 @@
 
 <script src="~/Scripts/Rated/project.js"></script>
 
+@Html.Partial("_ModalReviewComplete")
 @Html.Partial("_ModalConfirmReviewerAccept")
 @Html.Partial("_ModalReviewInstructions")
 
 @Html.HiddenFor(x => x.ProjectId)
 @Html.HiddenFor(x => x.ProjectStatus)
+
 <input type="hidden" id="DetailItemNumber" name="DetailItemNumber">
 <input type="hidden" id="ProjectDetailId" name="ProjectDetailId">

@@ -113,7 +113,7 @@
                     reviewPendingActive = "active";
                 }
                 else if (Request.Url.AbsoluteUri.IndexOf("/Review/InProgress") > 0
-                    || Request.Url.AbsoluteUri.IndexOf("psid=InProgressWaitingForOwnerToFinishProject") > 0)
+                    || Request.Url.AbsoluteUri.IndexOf("psid=InProgress") > 0)
                 {
                     reviewInProgressActive = "active";
                 }
@@ -141,7 +141,7 @@
                 {
                     projectInProgressActive = "active";
                 }
-                else if (Request.Url.AbsoluteUri.IndexOf("/Project/Completed") > 0)
+                else if (Request.Url.AbsoluteUri.IndexOf("/Project/Done") > 0)
                 {
                     projectCompletedActive = "active";
                 }
@@ -167,7 +167,7 @@
                 <li class="@projectInProgressActive"><a href="#" onclick="window.location = '/Project/InProgress'">In Progress<span class="badge">@projectCountInProgress</span></a></li>
 
                 //<li class="@projectCompletedActive">@Html.ActionLink("Completed Projects", "Completed", "Project")</li>
-                <li class="@projectCompletedActive"><a href="#" onclick="window.location = '/Project/Completed'">Complete<span class="badge">@projectCountComplete</span></a></li>
+                <li class="@projectCompletedActive"><a href="#" onclick="window.location = '/Project/Done'">Done<span class="badge">@projectCountComplete</span></a></li>
 
 
             }

@@ -125,7 +125,7 @@ namespace Rated.Infrastructure.Database.Repository
                     ProjectDescription = project.p.ProjectDescription,
                     ProjectId = project.p.ProjectId,
                     ProjectName = project.p.ProjectName,
-                    Score = 0,
+                    ProjectRating = 0,
                     UserId = project.p.UserId,
                     OwnerFirstName = project.OwnerFirstName,
                     OwnerLastName = project.OwnerLastName,
@@ -165,7 +165,7 @@ namespace Rated.Infrastructure.Database.Repository
                     ProjectDescription = project.p.ProjectDescription,
                     ProjectId = project.p.ProjectId,
                     ProjectName = project.p.ProjectName,
-                    Score = 0,
+                    ProjectRating = 0,
                     UserId = project.p.UserId,
                     OwnerFirstName = project.OwnerFirstName,
                     OwnerLastName = project.OwnerLastName,
@@ -231,14 +231,14 @@ namespace Rated.Infrastructure.Database.Repository
                     ProjectDescription = project.p.ProjectDescription,
                     ProjectId = project.p.ProjectId,
                     ProjectName = project.p.ProjectName,
-                    Score = 0,
                     UserId = project.p.UserId,
                     OwnerFirstName = project.OwnerFirstName,
                     OwnerLastName = project.OwnerLastName,
                     CreatedDate = project.p.CreatedDate,
                     ModifiedDate = project.p.ModifiedDate,
                     ProjectDetailsCount = project.p.ProjectDetails.Count(),
-                    ProjectStatus = (Enums.ProjectStatus)project.p.StatusId
+                    ProjectStatus = (Enums.ProjectStatus)project.p.StatusId,
+                    ProjectRating = (project.p.ProjectDetails.Sum(x=>x.DetailRating)),
                 });
             }
 
@@ -292,13 +292,14 @@ namespace Rated.Infrastructure.Database.Repository
                     ReviewInstructions = detail.pd.ReviewInstructions,
                     DetailStatus = (Enums.ProjectDetailStatus)detail.pd.StatusId,
                     ReviewerUserId = detail.pd.ReviewerUserId,
+                    DetailRating = detail.pd.DetailRating,
                 });
             }
 
             return projectDetails;
         }
 
-        public List<ProjectDetailCoreModel> GetProjectDetailsByProjectId(Guid projectId)
+        public List<ProjectDetailCoreModel> GetProjectDetailsByProjectId(Guid projectId, Guid userId)
         {
             var projectDetailsDb = (from pd in _projectContext.ProjectDetails
                                     join pr in _projectContext.ProjectReviewers on pd.ProjectDetailId equals pr.ProjectDetailId
@@ -308,6 +309,7 @@ namespace Rated.Infrastructure.Database.Repository
                                         into pru
                                     from u in pru.DefaultIfEmpty()
                                     where pd.ProjectId == projectId
+                                        && pd.ReviewerUserId == userId
                                     orderby pd.DetailNumber ascending
                                     select new
                                     {
@@ -342,6 +344,7 @@ namespace Rated.Infrastructure.Database.Repository
                     HasReviewer = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.OwnerIsWorkingOnTask) ? false : true,
                     StatusId = detail.pd.StatusId,
                     ReviewInstructions = detail.pd.ReviewInstructions,
+                    DetailRating = detail.pd.DetailRating,
                 });
             }
 
@@ -372,6 +375,7 @@ namespace Rated.Infrastructure.Database.Repository
                 HoursToComplete = detail.HoursToComplete,
                 StatusId = detail.StatusId,
                 ReviewInstructions = detail.ReviewInstructions,
+                DetailRating = detail.DetailRating,
             };
         }
 
@@ -390,6 +394,7 @@ namespace Rated.Infrastructure.Database.Repository
             projectDetailDb.HoursToComplete = projectDetail.HoursToComplete;
             projectDetailDb.ReviewInstructions = projectDetail.ReviewInstructions;
             projectDetailDb.StatusId = projectDetail.StatusId;
+            projectDetailDb.DetailRating = projectDetail.DetailRating;
 
             _projectContext.Entry(projectDetailDb).State = EntityState.Modified;
             _projectContext.SaveChanges();
@@ -588,7 +593,7 @@ namespace Rated.Infrastructure.Database.Repository
         {
             var hasTasksInReview = (from d in _projectContext.ProjectDetails
                                     where d.ProjectId == projectId
-                                    && d.StatusId == (int)Enums.ProjectDetailStatus.InReview
+                                    && d.StatusId == (int)Enums.ProjectDetailStatus.ReviewerInProgressReviewingDetail
                                     select d.ProjectDetailId).Any();
 
             if (!hasTasksInReview)
@@ -630,7 +635,7 @@ namespace Rated.Infrastructure.Database.Repository
                 //ProjectInProgress = projectsDb.Where(x => pendingStatuses.Contains(x.StatusId)).Count(),
                 ProjectInProgress = projectsDb.Where(x => x.StatusId == (int)Enums.ProjectStatus.InProgress).Count(),
                 //ProjectPending = projectsDb.Where(x => x.StatusId == (int)Enums.ProjectStatus.ReviewerPendingAcceptance).Count(),
-                ProjectComplete = projectsDb.Where(x => x.StatusId == (int)Enums.ProjectStatus.Complete).Count(),
+                ProjectComplete = projectsDb.Where(x => x.StatusId == (int)Enums.ProjectStatus.Done).Count(),
             };
         }
 
@@ -647,6 +652,26 @@ namespace Rated.Infrastructure.Database.Repository
             _projectContext.SaveChanges();
         }
 
+        public void SetProjectToDone(Guid projectId)
+        { 
+            var projectHasUnreviewedDetails = (from pd in _projectContext.ProjectDetails
+                                                where pd.ProjectId == projectId
+                                                    && pd.StatusId != (int)Enums.ProjectDetailStatus.Done
+                                                select pd.ProjectDetailId).Any();
 
+            if (!projectHasUnreviewedDetails)
+            { 
+                // NOTE: All details have been reviewed. Set project status to done.
+                var projectDb = (from p in _projectContext.Projects
+                                     where p.ProjectId == projectId
+                                     select p).SingleOrDefault();
+
+                projectDb.StatusId = (int)Enums.ProjectStatus.Done;
+                projectDb.ModifiedDate = DateTime.UtcNow;
+
+                _projectContext.Entry(projectDb).State = EntityState.Modified;
+                _projectContext.SaveChanges();
+            }
+        }
     }
 }

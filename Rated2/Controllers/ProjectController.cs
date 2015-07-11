@@ -66,9 +66,10 @@ namespace Rated2.Controllers
             return View(projectHelper.GetProjectsByStatus(Enums.ProjectStatus.InProgress));
         }
 
-        public ActionResult Completed()
+        public ActionResult Done()
         {
-            return View();
+            var projectHelper = new ProjectHelper();
+            return View(projectHelper.GetProjectsByStatus(Enums.ProjectStatus.Done));
         }
 
         [HttpGet]
@@ -141,7 +142,7 @@ namespace Rated2.Controllers
                     StatusId = detail.StatusId,
                     DetailStatus = detail.DetailStatus,
                     ReviewInstructions = detail.ReviewInstructions,
-
+                    DetailRating = detail.DetailRating,
                 });
             }
 

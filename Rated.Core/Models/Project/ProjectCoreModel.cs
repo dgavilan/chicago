@@ -15,7 +15,7 @@ namespace Rated.Core.Models.Project
         public string OwnerLastName { get; set; }
         public string ProjectName { get; set; }
         public string ProjectDescription { get; set; }
-        public decimal Score { get; set; }
+        public decimal ProjectRating { get; set; }
         public int ProjectDetailsCount { get; set; }
         public Enums.ProjectStatus ProjectStatus { get; set; }
         public List<ProjectDetailCoreModel> ProjectDetails { get; set; }

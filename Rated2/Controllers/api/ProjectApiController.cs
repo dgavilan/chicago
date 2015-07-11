@@ -235,12 +235,16 @@ namespace Rated.Web.Controllers.api
                 var userSession = new UserSession();
                 var timeStamp = DateTime.UtcNow;
 
-                _projectRepo.UpdateProjectDetailStatus(
-                    userSession.GetUserSession().UserId, 
-                    projectDetailId,
-                    Core.Shared.Enums.ProjectDetailStatus.Done);
+                //_projectRepo.UpdateProjectDetailStatus(
+                //    userSession.GetUserSession().UserId, 
+                //    projectDetailId,
+                //    Core.Shared.Enums.ProjectDetailStatus.Done);
 
-                _projectRepo.ProjectCompletedByOwner(userSession.GetUserSession().UserId, projectId);
+                //_projectRepo.ProjectCompletedByOwner(userSession.GetUserSession().UserId, projectId);
+
+                var projectDetail = _projectRepo.GetProjectDetailById(projectDetailId);
+                projectDetail.MoveToNextStatus();
+                _projectRepo.UpdateProjectDetail(projectDetail);
 
                 return Request.CreateResponse(HttpStatusCode.OK);
             }
@@ -288,6 +292,34 @@ namespace Rated.Web.Controllers.api
                 var projectDetail = _projectRepo.GetProjectDetailById(projectDetailId);
                 projectDetail.MoveToNextStatus();
                 _projectRepo.UpdateProjectDetail(projectDetail);
+
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(new HttpResponseMessage(HttpStatusCode.BadRequest)
+                {
+                    Content = new StringContent(ex.Message),
+                    ReasonPhrase = ex.Message
+                });
+            }
+        }
+
+        [Route("api/ProjectApi/ProjectDetail/SubmitReview")]
+        [HttpPut]
+        public HttpResponseMessage SubmitReview(ProjectDetailCoreModel projectDetail)
+        {
+            try
+            {
+                var userSession = new UserSession();
+                var timeStamp = DateTime.UtcNow;
+
+                var projectDetailToUpdate = _projectRepo.GetProjectDetailById(projectDetail.ProjectDetailId);
+                projectDetailToUpdate.DetailRating = projectDetail.DetailRating;
+                projectDetailToUpdate.MoveToNextStatus();
+
+                _projectRepo.UpdateProjectDetail(projectDetailToUpdate);
+                _projectRepo.SetProjectToDone(projectDetail.ProjectId);
 
                 return Request.CreateResponse(HttpStatusCode.OK);
             }

@@ -33,5 +33,7 @@ namespace Rated.Core.Contracts
 
         void ReviewerAccepted(ProjectCoreModel projectCore);
         void MoveToNextProjectStatus(ProjectCoreModel projectCore);
+
+        void SetProjectToDone(Guid projectId);
     }
 }
