@@ -35,5 +35,7 @@ namespace Rated.Core.Contracts
         void MoveToNextProjectStatus(ProjectCoreModel projectCore);
 
         void SetProjectToDone(Guid projectId);
+
+        List<ProjectCoreModel> GetReviewerProjectsDone(Guid reviewerUserId);
     }
 }

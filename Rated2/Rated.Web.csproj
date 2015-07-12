@@ -197,7 +197,7 @@
     <Content Include="Views\Review\Index.cshtml" />
     <Content Include="Views\Review\Pending.cshtml" />
     <Content Include="Views\Review\InProgress.cshtml" />
-    <Content Include="Views\Review\Completed.cshtml" />
+    <Content Include="Views\Review\Done.cshtml" />
     <Content Include="Views\Project\Draft.cshtml" />
     <Content Include="Views\Project\Pending.cshtml" />
     <Content Include="Views\Project\InProgress.cshtml" />

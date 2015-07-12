@@ -18,6 +18,7 @@ namespace Rated.Core.Models.Project
         public decimal ProjectRating { get; set; }
         public int ProjectDetailsCount { get; set; }
         public Enums.ProjectStatus ProjectStatus { get; set; }
+        public Enums.ReviewerProjectStatus ReviewerProjectStatus { get; set; }
         public List<ProjectDetailCoreModel> ProjectDetails { get; set; }
         public Guid CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

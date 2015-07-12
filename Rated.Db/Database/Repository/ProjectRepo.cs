@@ -40,7 +40,7 @@ namespace Rated.Infrastructure.Database.Repository
             _projectContext.SaveChanges();
         }
 
-        public ProjectCoreModel GetProjectByProjectId(Guid projectId)
+        public ProjectCoreModel GetProjectByProjectId(Guid projectId, Guid reviewerUserId)
         {
             var projectDb = (from p in _projectContext.Projects
 
@@ -61,6 +61,11 @@ namespace Rated.Infrastructure.Database.Repository
                 ModifiedDate = projectDb.p.ModifiedDate,
                 OwnerFirstName = projectDb.u.FirstName,
                 OwnerLastName = projectDb.u.LastName,
+                ReviewerProjectStatus = (
+                    (projectDb.p.ProjectDetails.Where(
+                        x => x.ReviewerUserId == reviewerUserId
+                        && x.StatusId != (int)Enums.ProjectDetailStatus.Done
+                    ).Any()) ? Enums.ReviewerProjectStatus.InProgress : Enums.ReviewerProjectStatus.Done)
             };
         }
 
@@ -141,9 +146,14 @@ namespace Rated.Infrastructure.Database.Repository
 
         public List<ProjectCoreModel> GetReviewerProjectsInProgress(Guid reviewerUserId)
         {
-            var pendingStatuses = new int[] { 
-                (int)Enums.ProjectStatus.OwnerInProgressWorkingOnProject, 
-                (int)Enums.ProjectStatus.ReviewerInProgressReviewingProject
+            //var pendingStatuses = new int[] { 
+            //    (int)Enums.ProjectStatus.OwnerInProgressWorkingOnProject, 
+            //    (int)Enums.ProjectStatus.ReviewerInProgressReviewingProject
+            //};
+
+            var detailInProgress = new int[] { 
+                (int)Enums.ProjectDetailStatus.ReviewerInProgressReviewingDetail, 
+                (int)Enums.ProjectDetailStatus.ReviewerPendingAcceptance
             };
 
             var projectsDb = (from p in _projectContext.Projects
@@ -153,6 +163,8 @@ namespace Rated.Infrastructure.Database.Repository
                               //where pr.UserId == reviewerUserId
                                 //&& pendingStatuses.Contains((int)p.StatusId)
                                 where p.StatusId == (int)Enums.ProjectStatus.InProgress
+                                    && detailInProgress.Contains(pd.StatusId)
+                                    && pd.ReviewerUserId == reviewerUserId
                               orderby p.CreatedDate descending
                               select new { p, OwnerFirstName = u.FirstName, OwnerLastName = u.LastName }).Distinct().ToList();
 
@@ -256,7 +268,7 @@ namespace Rated.Infrastructure.Database.Repository
                                     from u in pru.DefaultIfEmpty()
                                     where pd.UserId == userId
                                         && pd.ProjectId == projectId
-                                    orderby pd.DetailNumber ascending
+                                    orderby pd.CreatedDate ascending
                                     select new
                                     {
                                         pd,
@@ -317,9 +329,9 @@ namespace Rated.Infrastructure.Database.Repository
                                         ReviewerFirstName = u.FirstName,
                                         ReviewerLastName = u.LastName,
                                         ReviewerEmail = u.Email,
-                                        ReviewerStatusId = (pr != null)
-                                            ? pr.StatusId
-                                            : (int)Enums.ProjectReviewerStatus.NewTaskNeedsReviewer,
+                                        //ReviewerStatusId = (pr != null)
+                                        //    ? pr.StatusId
+                                        //    : (int)Enums.ProjectReviewerStatus.NewTaskNeedsReviewer,
                                     }).ToList();
 
             var projectDetails = new List<ProjectDetailCoreModel>();
@@ -340,8 +352,8 @@ namespace Rated.Infrastructure.Database.Repository
                     ReviewerFirstName = detail.ReviewerFirstName,
                     ReviewerLastName = detail.ReviewerLastName,
                     ReviewerEmail = detail.ReviewerEmail,
-                    ReviewerStatusId = detail.ReviewerStatusId,
-                    HasReviewer = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.OwnerIsWorkingOnTask) ? false : true,
+                    //ReviewerStatusId = detail.ReviewerStatusId,
+                    //HasReviewer = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.OwnerIsWorkingOnTask) ? false : true,
                     StatusId = detail.pd.StatusId,
                     ReviewInstructions = detail.pd.ReviewInstructions,
                     DetailRating = detail.pd.DetailRating,
@@ -673,5 +685,41 @@ namespace Rated.Infrastructure.Database.Repository
                 _projectContext.SaveChanges();
             }
         }
+
+        public List<ProjectCoreModel> GetReviewerProjectsDone(Guid reviewerUserId)
+        {
+            var projectsDb = (from p in _projectContext.Projects
+                              join u in _projectContext.Users on p.UserId equals u.UserId
+                              join pd in _projectContext.ProjectDetails on p.ProjectId equals pd.ProjectId
+                              where p.StatusId == (int)Enums.ProjectStatus.InProgress
+                                  && pd.StatusId == (int)Enums.ProjectDetailStatus.Done
+                                  && pd.ReviewerUserId == reviewerUserId
+                              orderby p.CreatedDate descending
+                              select new { p, OwnerFirstName = u.FirstName, OwnerLastName = u.LastName }).Distinct().ToList();
+
+            var projects = new List<ProjectCoreModel>();
+
+            foreach (var project in projectsDb)
+            {
+                projects.Add(new ProjectCoreModel()
+                {
+                    ProjectDescription = project.p.ProjectDescription,
+                    ProjectId = project.p.ProjectId,
+                    ProjectName = project.p.ProjectName,
+                    ProjectRating = 0,
+                    UserId = project.p.UserId,
+                    OwnerFirstName = project.OwnerFirstName,
+                    OwnerLastName = project.OwnerLastName,
+                    CreatedDate = project.p.CreatedDate,
+                    ModifiedDate = project.p.ModifiedDate,
+                    ProjectDetailsCount = project.p.ProjectDetails.Count(),
+                    ProjectStatus = (Enums.ProjectStatus)project.p.StatusId
+                });
+            }
+
+            return projects;
+        }
+
+
     }
 }

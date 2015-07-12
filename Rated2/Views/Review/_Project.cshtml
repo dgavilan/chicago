@@ -1,5 +1,7 @@
 ﻿@model List<Rated2.Models.Project.ProjectViewModel>
 
+
+
 <br />
 
 @using Rated.Core.Shared
@@ -7,7 +9,7 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th width="70px"></th>
+            @*<th width="70px"></th>*@
             <th width="55%">Project</th>
             <th>Owner</th>
             <th>Modified</th>
@@ -17,16 +19,32 @@
 
     @foreach (var project in Model)
     {
-        var statusId = (int)project.ProjectStatus;
+        var statusId = project.ProjectStatus;
+
+        //if (ViewBag.ReviewerProjectStatus != null)
+        //{
+        //    statusId = ViewBag.ReviewerProjectStatus;
+        //}
+
         <tr>
+            @*<td>
+                    <button class="btn btn-link" onclick="window.location='/Review/Edit/@project.ProjectId?psid=@project.ProjectStatus'">
+                        <span class="glyphicon glyphicon-list"></span>
+                        View
+                    </button>
+                </td>*@
             <td>
-                <button class="btn btn-link" onclick="window.location='/Review/Edit/@project.ProjectId?psid=@project.ProjectStatus'">
-                    <span class="glyphicon glyphicon-list"></span>
-                    View
-                </button>
-            </td>
-            <td>
-                <b>@project.ProjectName</b>
+                <b>
+                    @*<a href="#" onclick="window.location='/Review/Edit/@project.ProjectId?psid=@project.ProjectStatus'">
+                        @project.ProjectName
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>*@
+
+                    <a href="#" onclick="window.location='/Review/Edit/@project.ProjectId?psid=@ViewBag.ReviewerProjectStatus'">
+                        @project.ProjectName
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                </b>
                 <br />
                 @project.ProjectDescription
             </td>
@@ -42,5 +60,9 @@
         </tr>
     }
 </table>
+
+
+
+
 
 <script src="~/Scripts/Rated/project.js"></script>

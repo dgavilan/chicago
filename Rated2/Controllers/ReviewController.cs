@@ -34,12 +34,21 @@ namespace Rated.Web.Controllers
             var userSession = new UserSession();
             var reviewerUserId = userSession.GetUserSession().UserId;
             var projectHelper = new ProjectHelper();
+
+            ViewBag.ReviewerProjectStatus = Enums.ReviewerProjectStatus.InProgress;
+
             return View(projectHelper.GetReviewerProjectsInProgress(reviewerUserId));
         }
 
-        public ActionResult Completed()
+        public ActionResult Done()
         {
-            return View();
+            var userSession = new UserSession();
+            var reviewerUserId = userSession.GetUserSession().UserId;
+            var projectHelper = new ProjectHelper();
+
+            ViewBag.ReviewerProjectStatus = Enums.ReviewerProjectStatus.Done;
+
+            return View(projectHelper.GetReviewerProjectsDone(reviewerUserId));
         }
 
         [HttpGet]
@@ -48,14 +57,14 @@ namespace Rated.Web.Controllers
             var userSession = new UserSession();
             var user = userSession.GetUserSession();
             var projectRepo = new ProjectRepo();
-            var projectCore = projectRepo.GetProjectByProjectId(id);
+            var projectCore = projectRepo.GetProjectByProjectId(id, user.UserId);
             var projectDetailsCore = projectRepo.GetProjectDetailsByProjectId(id, user.UserId);
             var projectView = MapToProjectView(projectCore, projectDetailsCore);
 
             return View("Edit", projectView);
         }
 
-        private object MapToProjectView(ProjectCoreModel projectCore, List<ProjectDetailCoreModel> projectDetailsCore)
+        private ProjectViewModel MapToProjectView(ProjectCoreModel projectCore, List<ProjectDetailCoreModel> projectDetailsCore)
         {
             var detailView = new List<ProjectDetailViewModel>();
 
@@ -77,9 +86,10 @@ namespace Rated.Web.Controllers
                     ReviewerLastName = detail.ReviewerLastName,
                     ReviewerEmail = detail.ReviewerEmail,
                     ReviewerStatusId = detail.ReviewerStatusId,
-                    ReviewerFullName = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.WaitingForReviewerToAccept)
-                        ? detail.ReviewerEmail
-                        : detail.ReviewerFirstName + " " + detail.ReviewerLastName,
+                    //ReviewerFullName = (detail.ReviewerStatusId == (int)Enums.ProjectReviewerStatus.WaitingForReviewerToAccept)
+                    //    ? detail.ReviewerEmail
+                    //    : detail.ReviewerFirstName + " " + detail.ReviewerLastName,
+                    ReviewerFullName = detail.ReviewerFirstName + " " + detail.ReviewerLastName,
                     HasReviewer = detail.HasReviewer,
                     DetailStatus = (Enums.ProjectDetailStatus)detail.StatusId,
                     StatusId = detail.StatusId,
@@ -103,6 +113,7 @@ namespace Rated.Web.Controllers
                 ReviewerEmail = "",
                 OwnerFirstName = projectCore.OwnerFirstName,
                 OwnerLastName = projectCore.OwnerLastName,
+                ReviewerProjectStatus = projectCore.ReviewerProjectStatus,
             };
 
             return projectView;

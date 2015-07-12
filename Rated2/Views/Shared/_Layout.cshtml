@@ -105,7 +105,7 @@
             @{
                 var reviewPendingActive = "";
                 var reviewInProgressActive = "";
-                var reviewCompletedActive = "";
+                var reviewDoneActive = "";
 
                 if (Request.Url.AbsoluteUri.IndexOf("/Review/Pending") > 0
                     || Request.Url.AbsoluteUri.IndexOf("psid=WaitingApproverAcceptance") > 0)
@@ -117,9 +117,10 @@
                 {
                     reviewInProgressActive = "active";
                 }
-                else if (Request.Url.AbsoluteUri.IndexOf("/Review/Completed") > 0)
+                else if (Request.Url.AbsoluteUri.IndexOf("/Review/Done") > 0
+                    || Request.Url.AbsoluteUri.IndexOf("psid=Done") > 0)
                 {
-                    reviewCompletedActive = "active";
+                    reviewDoneActive = "active";
                 }
 
                 var projectDraftActive = "";
@@ -151,9 +152,9 @@
                 || Request.Url.AbsoluteUri.IndexOf("/ViewReview") > 0)
             {
                 @*<li class="@reviewPendingActive">@Html.ActionLink("Pending Requests", "Pending", "Review")</li>*@
-                <li class="@reviewPendingActive"><a href="#" onclick="window.location = '/Review/Pending'">Pending Requests<span class="badge">1</span></a></li>
+                @*<li class="@reviewPendingActive"><a href="#" onclick="window.location = '/Review/Pending'">Pending Requests<span class="badge">1</span></a></li>*@
                 <li class="@reviewInProgressActive">@Html.ActionLink("In Progress", "InProgress", "Review")</li>
-                <li class="@reviewCompletedActive">@Html.ActionLink("Completed Reviews", "Completed", "Review")</li>
+                <li class="@reviewDoneActive">@Html.ActionLink("Done", "Done", "Review")</li>
             }
             else if (Request.Url.AbsoluteUri.IndexOf("/Project") > 0)
             {

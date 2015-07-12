@@ -9,6 +9,15 @@ namespace Rated.Core.Shared
 {
     public static class Enums
     {
+        public enum ReviewerProjectStatus
+        {
+            [Description("Review In Progress")]
+            InProgress = 500,
+
+            [Description("Review Done")]
+            Done = 501
+        }
+
         public enum ProjectStatus
         {
             //[Description("New")]
@@ -56,20 +65,20 @@ namespace Rated.Core.Shared
             Complete = 1100,
         }
 
-        public enum ProjectReviewerStatus
-        {
-            [Description("Needs Reviewer")]
-            NewTaskNeedsReviewer = 200,
+        //public enum ProjectReviewerStatus
+        //{
+        //    [Description("Needs Reviewer")]
+        //    NewTaskNeedsReviewer = 200,
 
-            [Description("Waiting for Reviewer to Accept Request")]
-            WaitingForReviewerToAccept = 201,
+        //    [Description("Waiting for Reviewer to Accept Request")]
+        //    WaitingForReviewerToAccept = 201,
 
-            [Description("Reviewer Accepted Review Request")]
-            OwnerIsWorkingOnTask = 202,
+        //    [Description("Reviewer Accepted Review Request")]
+        //    OwnerIsWorkingOnTask = 202,
             
-            [Description("Reviewer Declined Review Request")]
-            ReviewerDeclinedNeedsReviewer = 203
-        }
+        //    [Description("Reviewer Declined Review Request")]
+        //    ReviewerDeclinedNeedsReviewer = 203
+        //}
 
         public enum UserStatus
         {

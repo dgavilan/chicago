@@ -4,7 +4,7 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th width="70px"></th>
+            @*<th width="70px"></th>*@
             <th width="55%">Project</th>
             <th>Modified</th>
             <th>Status</th>
@@ -17,15 +17,20 @@
     {
         var statusId = (int)project.ProjectStatus;
         <tr>
-            <td>
+            @*<td>
                 <button class="btn btn-link" onclick="window.location='/Project/Edit/@project.ProjectId/?ProjectStatusId=@statusId'">
                     <span class="glyphicon glyphicon-edit">
                     </span> Edit
                 </button>
                 
-            </td>
+            </td>*@
             <td>
-                <b>@project.ProjectName</b>
+                <b>
+                    <a href="#" onclick="window.location='/Project/Edit/@project.ProjectId/?ProjectStatusId=@statusId'">
+                        @project.ProjectName
+                        <span class="glyphicon glyphicon-edit"></span>
+                    </a>
+                </b>
                 <br />
                 @project.ProjectDescription
             </td>

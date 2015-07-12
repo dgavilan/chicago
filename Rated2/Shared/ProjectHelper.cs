@@ -92,12 +92,20 @@ namespace Rated.Web.Shared
                 ReviewerFirstName = projectDetailCore.ReviewerFirstName,
                 //ReviewerFullName
                 ReviewerLastName = projectDetailCore.ReviewerLastName,
-                ReviewerStatus = (Enums.ProjectReviewerStatus)projectDetailCore.ReviewerStatusId,
+                //ReviewerStatus = (Enums.ProjectReviewerStatus)projectDetailCore.ReviewerStatusId,
                 ReviewerStatusId = projectDetailCore.ReviewerStatusId,
                 ReviewInstructions = projectDetailCore.ReviewInstructions,
                 DetailStatus = (Enums.ProjectDetailStatus)projectDetailCore.StatusId,
                 StatusId = projectDetailCore.StatusId,
             };
+        }
+
+        public List<ProjectViewModel> GetReviewerProjectsDone(Guid reviewerUserId)
+        {
+            IProjectRepo projectRepo = new ProjectRepo();
+            var projectsCore = projectRepo.GetReviewerProjectsDone(reviewerUserId);
+            var projectsView = BuildProjectView(projectsCore);
+            return projectsView;
         }
     }
 }

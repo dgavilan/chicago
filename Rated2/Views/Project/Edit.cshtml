@@ -88,12 +88,11 @@
     <h4>
         Project Tasks (<span id="spanItemDetailCount">@Model.ProjectDetails.Count()</span>)
         <br />
-        <button class="btn btn-link" onclick="Project.ShowAddDetail()">
+        <button class="btn btn-default" onclick="Project.ShowAddDetail()">
             <span class="glyphicon glyphicon-plus"></span> Add Task
         </button>
-        <span>|</span>
-        <button class="btn btn-link" id="btnAssignReviewer">
-            <span class=" glyphicon glyphicon-plus">
+        <button class="btn btn-default" id="btnAssignReviewer">
+            <span class=" glyphicon glyphicon-user">
             </span> Assign One Reviewer to all Tasks
         </button>
     </h4>
@@ -159,14 +158,14 @@
                     @switch (detail.DetailStatus)
                     {
                         case Enums.ProjectDetailStatus.Draft:
-                            <button class="btn btn-btn" onclick="Project.AssignDetailReviewer('@detail.ProjectDetailId')">
-                                <span class="glyphicon glyphicon-plus"></span> Assign Reviewer
+                            <button class="btn btn-default" onclick="Project.AssignDetailReviewer('@detail.ProjectDetailId')">
+                                <span class="glyphicon glyphicon-user"></span> Assign Reviewer
                             </button>
                             break;
                         case Enums.ProjectDetailStatus.ReviewerPendingAcceptance:
                             <button class="btn btn-default">
                                 <span class="glyphicon glyphicon-remove"></span>
-                                Remove Pending Reviewer: <br /> @detail.ReviewerFullName
+                                Cancel Review Request for: <br /> @detail.ReviewerFullName
                             </button>
                             break;
                         case Enums.ProjectDetailStatus.OwnerInProgressWorkingOnProject:

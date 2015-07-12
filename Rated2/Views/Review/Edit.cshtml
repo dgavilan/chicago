@@ -2,18 +2,11 @@
 @using Rated.Core.Shared;
 
 <h2>
-    @if (Model.ProjectStatus == Enums.ProjectStatus.ReviewerPendingAcceptance)
-    {
-        <span>Waiting for you to Accept</span>
-    }
-    else
-    {
-        <span>In Review</span>
-    }
+    <span>In Review</span>
 </h2>
 
 <div class="alert alert-info">
-    <b>Project Status:</b> @Rated.Core.Shared.EnumHelper.GetDescription(Model.ProjectStatus)
+    <b>Status:</b> @Rated.Core.Shared.EnumHelper.GetDescription(Model.ReviewerProjectStatus)
 
     @if (Model.ProjectStatus == Enums.ProjectStatus.ReviewerPendingAcceptance)
     {
