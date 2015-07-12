@@ -12,10 +12,10 @@ namespace Rated.Core.Models.Project
         public int ProjectDraft { get; set; }
         public int ProjectPending { get; set; }
         public int ProjectInProgress { get; set; }
-        public int ProjectComplete { get; set; }
+        public int ProjectDone { get; set; }
 
         public int ReviewPending { get; set; }
         public int ReviewInProgress { get; set; }
-        public int ReviewComplete { get; set; }
+        public int ReviewDone { get; set; }
     }
 }

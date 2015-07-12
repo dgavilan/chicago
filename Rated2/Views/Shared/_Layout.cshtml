@@ -20,10 +20,14 @@
     @{
         var userSession = new Rated.Web.Shared.UserSession();
         var userFullName = "";
-        var projectCountDraft = 0;
-        var projectCountInProgress = 0;
-        var projectCountPending = 0;
-        var projectCountComplete = 0;
+        
+        var projectDraftCount = 0;
+        var projectInProgressCount = 0;
+        //var projectCountPending = 0;
+        var projectCompleteCount = 0;
+
+        var reviewInProgressCount = 0;
+        var reviewDoneCount = 0;
 
         if (userSession.IsLoggedIn())
         {
@@ -31,14 +35,16 @@
             userFullName = user.FirstName + " " + user.LastName;
 
             Rated.Core.Contracts.IProjectRepo projectRepo = new Rated.Infrastructure.Database.Repository.ProjectRepo();
+            
             var projectCount = projectRepo.GetProjectCounts(user.UserId);
-            projectCountDraft = projectCount.ProjectDraft;
-            projectCountInProgress = projectCount.ProjectInProgress;
-            projectCountPending = projectCount.ProjectPending;
-            projectCountComplete = projectCount.ProjectComplete;
+            projectDraftCount = projectCount.ProjectDraft;
+            projectInProgressCount = projectCount.ProjectInProgress;
+            //projectCountPending = projectCount.ProjectPending;
+            projectCompleteCount = projectCount.ProjectDone;
+
+            reviewInProgressCount = projectCount.ReviewInProgress;
+            reviewDoneCount = projectCount.ReviewDone;
         }
-
-
     }
 
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -153,22 +159,27 @@
             {
                 @*<li class="@reviewPendingActive">@Html.ActionLink("Pending Requests", "Pending", "Review")</li>*@
                 @*<li class="@reviewPendingActive"><a href="#" onclick="window.location = '/Review/Pending'">Pending Requests<span class="badge">1</span></a></li>*@
-                <li class="@reviewInProgressActive">@Html.ActionLink("In Progress", "InProgress", "Review")</li>
-                <li class="@reviewDoneActive">@Html.ActionLink("Done", "Done", "Review")</li>
+
+                @*<li class="@reviewInProgressActive">@Html.ActionLink("In Progress", "InProgress", "Review")</li>*@
+                <li class="@reviewInProgressActive"><a href="#" onclick="window.location = '/Review/InProgress'">In Progress<span class="badge">@reviewInProgressCount</span></a></li>
+
+
+                @*<li class="@reviewDoneActive">@Html.ActionLink("Done", "Done", "Review")</li>*@
+                <li class="@reviewDoneActive"><a href="#" onclick="window.location = '/Review/Done'">Done<span class="badge">@reviewDoneCount</span></a></li>
             }
             else if (Request.Url.AbsoluteUri.IndexOf("/Project") > 0)
             {
                 //<li class="@projectDraftActive">@Html.ActionLink("Drafts", "Draft", "Project")</li>
-                <li class="@projectDraftActive"><a href="#" onclick="window.location = '/Project/Draft'">Drafts<span class="badge">@projectCountDraft</span></a></li>
+                <li class="@projectDraftActive"><a href="#" onclick="window.location = '/Project/Draft'">Drafts<span class="badge">@projectDraftCount</span></a></li>
 
                 //<li class="@projectPendingActive">@Html.ActionLink("Pending Requests", "Pending", "Project")</li>
                 //<li class="@projectPendingActive"><a href="#" onclick="window.location = '/Project/Pending'">Pending<span class="badge">@projectCountPending</span></a></li>
 
                 //<li class="@projectInProgressActive">@Html.ActionLink("In Progress", "InProgress", "Project")</li>
-                <li class="@projectInProgressActive"><a href="#" onclick="window.location = '/Project/InProgress'">In Progress<span class="badge">@projectCountInProgress</span></a></li>
+                <li class="@projectInProgressActive"><a href="#" onclick="window.location = '/Project/InProgress'">In Progress<span class="badge">@projectInProgressCount</span></a></li>
 
                 //<li class="@projectCompletedActive">@Html.ActionLink("Completed Projects", "Completed", "Project")</li>
-                <li class="@projectCompletedActive"><a href="#" onclick="window.location = '/Project/Done'">Done<span class="badge">@projectCountComplete</span></a></li>
+                <li class="@projectCompletedActive"><a href="#" onclick="window.location = '/Project/Done'">Done<span class="badge">@projectCompleteCount</span></a></li>
 
 
             }

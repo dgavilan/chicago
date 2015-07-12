@@ -633,21 +633,34 @@ namespace Rated.Infrastructure.Database.Repository
 
         public ProjectCount GetProjectCounts(Guid userId)
         {
-            var pendingStatuses = new int[] { 
-                (int)Enums.ProjectStatus.OwnerInProgressWorkingOnProject, 
-                (int)Enums.ProjectStatus.ReviewerInProgressReviewingProject
+            //var pendingStatuses = new int[] { 
+            //    (int)Enums.ProjectStatus.OwnerInProgressWorkingOnProject, 
+            //    (int)Enums.ProjectStatus.ReviewerInProgressReviewingProject
+            //};
+
+            var reviewInProgress = new int[] { 
+                (int)Enums.ProjectDetailStatus.ReviewerInProgressReviewingDetail, 
+                (int)Enums.ProjectDetailStatus.ReviewerPendingAcceptance
             };
 
             var projectsDb = (from p in _projectContext.Projects
                                   where p.UserId == userId
                                   select p).ToList();
 
+            var projectsReviewDb = (from p in _projectContext.Projects
+                                        join pd in _projectContext.ProjectDetails on p.ProjectId equals pd.ProjectId
+                                        where pd.ReviewerUserId == userId
+                                        select pd).ToList();
+
             return new ProjectCount() {
                 ProjectDraft = projectsDb.Where(x => x.StatusId == (int)Enums.ProjectStatus.Draft).Count(),
                 //ProjectInProgress = projectsDb.Where(x => pendingStatuses.Contains(x.StatusId)).Count(),
                 ProjectInProgress = projectsDb.Where(x => x.StatusId == (int)Enums.ProjectStatus.InProgress).Count(),
                 //ProjectPending = projectsDb.Where(x => x.StatusId == (int)Enums.ProjectStatus.ReviewerPendingAcceptance).Count(),
-                ProjectComplete = projectsDb.Where(x => x.StatusId == (int)Enums.ProjectStatus.Done).Count(),
+                ProjectDone = projectsDb.Where(x => x.StatusId == (int)Enums.ProjectStatus.Done).Count(),
+
+                ReviewInProgress = projectsReviewDb.Where(x => reviewInProgress.Contains(x.StatusId)).Count(),
+                ReviewDone = projectsReviewDb.Where(x => x.StatusId == (int)Enums.ProjectDetailStatus.Done).Count(),
             };
         }
 
