@@ -5,12 +5,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace Rated2.Models.UserProfile
+namespace Rated.Models.UserProfile
 {
     public class ProfileViewModel
     {
         public Guid UserId { get; set; }
-        public decimal Score { get; set; }
+        public double Score { get; set; }
         public string FullName { get; set; }
         public string Bio { get; set; }
 

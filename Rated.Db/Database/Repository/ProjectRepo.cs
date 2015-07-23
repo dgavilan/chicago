@@ -648,9 +648,9 @@ namespace Rated.Infrastructure.Database.Repository
                                   select p).ToList();
 
             var projectsReviewDb = (from p in _projectContext.Projects
-                                        join pd in _projectContext.ProjectDetails on p.ProjectId equals pd.ProjectId
-                                        where pd.ReviewerUserId == userId
-                                        select pd).ToList();
+                                    join pd in _projectContext.ProjectDetails on p.ProjectId equals pd.ProjectId
+                                    where pd.ReviewerUserId == userId
+                                    select new { ProjectId = pd.ProjectId, ProjectStatusId = pd.StatusId }).Distinct().ToList();
 
             return new ProjectCount() {
                 ProjectDraft = projectsDb.Where(x => x.StatusId == (int)Enums.ProjectStatus.Draft).Count(),
@@ -659,8 +659,8 @@ namespace Rated.Infrastructure.Database.Repository
                 //ProjectPending = projectsDb.Where(x => x.StatusId == (int)Enums.ProjectStatus.ReviewerPendingAcceptance).Count(),
                 ProjectDone = projectsDb.Where(x => x.StatusId == (int)Enums.ProjectStatus.Done).Count(),
 
-                ReviewInProgress = projectsReviewDb.Where(x => reviewInProgress.Contains(x.StatusId)).Count(),
-                ReviewDone = projectsReviewDb.Where(x => x.StatusId == (int)Enums.ProjectDetailStatus.Done).Count(),
+                ReviewInProgress = projectsReviewDb.Where(x => reviewInProgress.Contains(x.ProjectStatusId)).Count(),
+                ReviewDone = projectsReviewDb.Where(x => x.ProjectStatusId == (int)Enums.ProjectDetailStatus.Done).Count(),
             };
         }
 
@@ -704,8 +704,7 @@ namespace Rated.Infrastructure.Database.Repository
             var projectsDb = (from p in _projectContext.Projects
                               join u in _projectContext.Users on p.UserId equals u.UserId
                               join pd in _projectContext.ProjectDetails on p.ProjectId equals pd.ProjectId
-                              where p.StatusId == (int)Enums.ProjectStatus.InProgress
-                                  && pd.StatusId == (int)Enums.ProjectDetailStatus.Done
+                              where pd.StatusId == (int)Enums.ProjectDetailStatus.Done
                                   && pd.ReviewerUserId == reviewerUserId
                               orderby p.CreatedDate descending
                               select new { p, OwnerFirstName = u.FirstName, OwnerLastName = u.LastName }).Distinct().ToList();
@@ -733,6 +732,53 @@ namespace Rated.Infrastructure.Database.Repository
             return projects;
         }
 
+        public decimal GetUserRating(Guid userId)
+        {
+            var projectsDb = (from p in _projectContext.Projects
+                                where p.UserId == userId
+                                && p.StatusId != (int)Enums.ProjectStatus.Draft
+                                select p).ToList();
 
+            var userRating = new List<decimal>();
+            foreach(var project in projectsDb)
+            {
+                var details = (project.ProjectDetails.Where(x => x.StatusId == (int)Enums.ProjectDetailStatus.Done)).ToList();
+                if (details.Count() > 0)
+                {
+                    userRating.Add(details.Average(x => x.DetailRating));
+                }
+            } // foreach
+
+            return (userRating.Count() == 0) ? 0 : userRating.Average(x => x);
+        }
+
+
+        public List<ProjectCoreModel> GetProjectsByUserId(Guid userId)
+        {
+            var projectsDb = (from p in _projectContext.Projects
+                                  join pd in _projectContext.ProjectDetails on p.ProjectId equals pd.ProjectId
+                                  where p.UserId == userId
+                                  select p).ToList();
+
+            var projects = new List<ProjectCoreModel>();
+            foreach (var project in projectsDb)
+            {
+                projects.Add(new ProjectCoreModel() {
+                    ProjectDescription = project.ProjectDescription,
+                    ProjectId = project.ProjectId,
+                    ProjectName = project.ProjectName,
+                    ProjectRating = 0,
+                    UserId = project.UserId,
+                    //OwnerFirstName = project.OwnerFirstName,
+                    //OwnerLastName = project.OwnerLastName,
+                    CreatedDate = project.CreatedDate,
+                    ModifiedDate = project.ModifiedDate,
+                    ProjectDetailsCount = project.ProjectDetails.Count(),
+                    ProjectStatus = (Enums.ProjectStatus)project.StatusId
+                });
+            }
+
+            return projects;
+        }
     }
 }

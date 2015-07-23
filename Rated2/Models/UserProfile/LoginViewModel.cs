@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
-namespace Rated2.Models.UserProfile
+namespace Rated.Models.UserProfile
 {
     public class LoginViewModel
     {

@@ -1,16 +1,17 @@
-﻿using Rated.Core.Infrastructure;
+﻿using Rated.Core.Contracts;
+using Rated.Core.Infrastructure;
 using Rated.Core.Models.User;
 using Rated.Infrastructure.Database.Repository;
 using Rated.Web.Shared;
-using Rated2.Models;
-using Rated2.Models.UserProfile;
+using Rated.Models;
+using Rated.Models.UserProfile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Rated2.Controllers
+namespace Rated.Controllers
 {
     public class HomeController : Controller
     {
@@ -29,10 +30,13 @@ namespace Rated2.Controllers
             //var userId = Guid.NewGuid();
             //var profile = profileRepo.GetUserProfileByUserId(userId);
 
+            IProjectRepo projectRepo = new ProjectRepo();
+            var userRating = projectRepo.GetUserRating(user.UserId);
+
             var model = new UserProfileViewModel();
             model.Profile = new ProfileViewModel() {
                 UserId = user.UserId,
-                Score = 5, //user.Score,
+                Score = Convert.ToDouble(Math.Round(userRating, 2)),
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 FullName = user.FirstName + " " + user.LastName,
@@ -40,36 +44,9 @@ namespace Rated2.Controllers
                 Bio = user.Bio
             };
 
-            model.Projects = new List<ProjectViewModel>() {
-                new ProjectViewModel(){
-                    Name = "PSC 5 Stars of Excellence",
-                    Description = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur.",
-                    Score = 2.2M,
-                    ProjectId = Guid.NewGuid()
-                },
-                new ProjectViewModel(){
-                    Name = "Medstar Windows Phone 8 Application",
-                    Description = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur.",
-                    Score = 3.2M,
-                    ProjectId = Guid.NewGuid()
-                }
-            };
-
             return View(model);
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
+        
     }
 }

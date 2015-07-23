@@ -21,6 +21,26 @@ namespace Rated.Infrastructure.Database.Repository
             _userContext = new UserContext();
         }
 
+        public List<UserCoreModel> GetUsers()
+        { 
+            var usersDb = (from u in _userContext.Users
+                               select u).ToList();
+
+            // Map to DB to core object
+            var users = new List<UserCoreModel>();
+            foreach (var user in usersDb)
+            {
+                users.Add(new UserCoreModel() { 
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    UserId = user.UserId,
+                });
+            }
+
+            return users;
+        }
+
         public UserCoreModel Login(string email, string password)
         {
             using (var userContext = _userContext)
@@ -126,5 +146,7 @@ namespace Rated.Infrastructure.Database.Repository
         // TODO:
         // 2. Encrypt password
         // 3. Modify profile
+
+        
     }
 }

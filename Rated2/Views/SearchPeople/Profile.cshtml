@@ -1,0 +1,9 @@
+﻿@model List<Rated.Models.Project.ProjectViewModel>
+
+<h2>GetProjectsByUserId</h2>
+
+@foreach (var project in Model)
+{ 
+    <span>@project.ProjectName</span>
+    <br />
+}

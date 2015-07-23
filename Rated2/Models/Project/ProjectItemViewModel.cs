@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
-namespace Rated2.Models.Project
+namespace Rated.Models.Project
 {
     public class ProjectItemViewModel
     {

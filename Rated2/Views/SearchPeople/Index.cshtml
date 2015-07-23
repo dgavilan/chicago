@@ -1,0 +1,49 @@
+﻿@model List<Rated.Models.UserProfile.ProfileViewModel>
+
+<h3>
+    Search for People
+</h3>
+
+@using(Html.BeginForm("Index", "SearchPeople", FormMethod.Post, null))
+{
+<div class="editor-field">
+    <label>First Name</label>
+    <input type="text" id="txtFirstName" class="form-control" />
+</div>
+
+<div class="editor-field">
+    <label>Last Name</label>
+    <input type="text" id="txtLastName" class="form-control" />
+</div>
+
+<div class="editor-field">
+    <label>Email</label>
+    <input type="text" id="txtEmail" class="form-control" />
+</div>
+
+<br />
+
+<intput typeof="submit" class="btn btn-default">Search</intput> 
+}
+
+
+<hr />
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+
+    @foreach (var profile in Model)
+    {
+        <tr>
+            <td>
+                <button class="btn btn-link" onclick="javascript:(window.location = 'SearchPeople/ProfileView?userId=@profile.UserId')">@profile.FirstName @profile.LastName</button>
+            </td>
+            <td>@profile.Email</td>
+        </tr>
+    }
+</table>

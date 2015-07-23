@@ -2,7 +2,7 @@
 using Rated.Core.Models.Project;
 using Rated.Core.Shared;
 using Rated.Infrastructure.Database.Repository;
-using Rated2.Models.Project;
+using Rated.Models.Project;
 using System;
 using System.Collections.Generic;
 using System.Linq;

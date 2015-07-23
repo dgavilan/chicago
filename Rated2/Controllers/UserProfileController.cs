@@ -2,14 +2,14 @@
 using Rated.Core.Shared;
 using Rated.Infrastructure.Database.Repository;
 using Rated.Web.Shared;
-using Rated2.Models.UserProfile;
+using Rated.Models.UserProfile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace Rated2.Controllers
+namespace Rated.Controllers
 {
     public class UserProfileController : Controller
     {
@@ -120,5 +120,7 @@ namespace Rated2.Controllers
 
             return View(userView);
         }
+
+        
     }
 }

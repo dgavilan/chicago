@@ -1,10 +1,10 @@
-﻿@model Rated2.Models.UserProfileViewModel
+﻿@model Rated.Models.UserProfileViewModel
 
 @{
     ViewBag.Title = "Home Page";
 }
 
-<div style="padding-top:20px">
+<div style="padding-top:5px">
     <span style="font-size:25px;">@Html.ValueFor(x => x.Profile.FullName)</span>
 
     <button class="btn btn-link" onclick="window.location = 'UserProfile/EditAccount'">
@@ -14,8 +14,6 @@
 
 
 
-@Html.LabelFor(x => x.Profile.Score):
-@Html.ValueFor(x => x.Profile.Score)
+Rating: @Model.Profile.Score
 <br />
-
-@Html.ValueFor(x => x.Profile.Bio) 
+@Model.Profile.Bio

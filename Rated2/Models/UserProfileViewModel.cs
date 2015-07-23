@@ -1,10 +1,10 @@
-﻿using Rated2.Models.UserProfile;
+﻿using Rated.Models.UserProfile;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Rated2.Models
+namespace Rated.Models
 {
     public class UserProfileViewModel
     {

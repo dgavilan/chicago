@@ -37,5 +37,7 @@ namespace Rated.Core.Contracts
         void SetProjectToDone(Guid projectId);
 
         List<ProjectCoreModel> GetReviewerProjectsDone(Guid reviewerUserId);
+
+        decimal GetUserRating(Guid userId);
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
-namespace Rated2
+namespace Rated
 {
     public class BundleConfig
     {

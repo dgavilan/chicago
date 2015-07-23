@@ -8,7 +8,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.SessionState;
 
-namespace Rated2
+namespace Rated
 {
     public class MvcApplication : System.Web.HttpApplication
     {
