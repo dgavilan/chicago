@@ -25,6 +25,7 @@ namespace Rated.Core.Models.Project
         public int DetailItemNumber { get; set; }
         public bool HasReviewer { get; set; }
         public decimal DetailRating { get; set; }
+        public string ReviewerComments { get; set; }
         
         //public int StatusId { get; set; }
         private int statusId;

@@ -21,6 +21,21 @@ namespace Rated.Infrastructure.Database.Repository
             _userContext = new UserContext();
         }
 
+        public UserCoreModel GetUserByUserId(Guid userId)
+        {
+            var usersDb = (from u in _userContext.Users
+                           where u.UserId == userId
+                           select u).SingleOrDefault();
+
+            return new UserCoreModel()
+            {
+                FirstName = usersDb.FirstName,
+                LastName = usersDb.LastName,
+                Email = usersDb.Email,
+                UserId = usersDb.UserId,
+            };
+        }
+
         public List<UserCoreModel> GetUsers()
         { 
             var usersDb = (from u in _userContext.Users

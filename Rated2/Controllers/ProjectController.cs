@@ -90,8 +90,8 @@ namespace Rated.Controllers
             var userSession = new UserSession();
             var user = userSession.GetUserSession();
             var projectRepo = new ProjectRepo();
-            var projectCore = projectRepo.GetProject(user.UserId, id);
-            var projectDetailsCore = projectRepo.GetProjectDetail(user.UserId, id);
+            var projectCore = projectRepo.GetProjectByProjectId(id);
+            var projectDetailsCore = projectRepo.GetProjectDetailsByProjectId(id);
             var projectView = MapToProjectView(projectCore, projectDetailsCore);
 
             ViewBag.OpenAddProjectModal = 0;

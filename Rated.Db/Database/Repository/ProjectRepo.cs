@@ -40,7 +40,7 @@ namespace Rated.Infrastructure.Database.Repository
             _projectContext.SaveChanges();
         }
 
-        public ProjectCoreModel GetProjectByProjectId(Guid projectId, Guid reviewerUserId)
+        public ProjectCoreModel GetProjectForReviewerByProjectId(Guid projectId, Guid reviewerUserId)
         {
             var projectDb = (from p in _projectContext.Projects
 
@@ -69,11 +69,20 @@ namespace Rated.Infrastructure.Database.Repository
             };
         }
 
-        public ProjectCoreModel GetProject(Guid userId, Guid projectId)
+        public ProjectCoreModel GetProjectWithDetailsByProjectId(Guid projectId)
+        {
+            var project = GetProjectByProjectId(projectId);
+
+            project.ProjectDetails = GetProjectDetailsByProjectId(projectId);
+
+            return project;
+        }
+
+        public ProjectCoreModel GetProjectByProjectId(Guid projectId)
         {
             var projectDb = (from p in _projectContext.Projects
-                             where p.UserId == userId
-                             && p.ProjectId == projectId
+                             //where p.UserId == userId
+                             where p.ProjectId == projectId
                              select p).SingleOrDefault();
 
             return new ProjectCoreModel()
@@ -257,7 +266,7 @@ namespace Rated.Infrastructure.Database.Repository
             return projects;
         }
 
-        public List<ProjectDetailCoreModel> GetProjectDetail(Guid userId, Guid projectId)
+        public List<ProjectDetailCoreModel> GetProjectDetailsByProjectId(Guid projectId)
         {
             var projectDetailsDb = (from pd in _projectContext.ProjectDetails
                                     //join pr in _projectContext.ProjectReviewers on pd.ProjectDetailId equals pr.ProjectDetailId
@@ -266,8 +275,7 @@ namespace Rated.Infrastructure.Database.Repository
                                     join u in _projectContext.Users on pd.ReviewerUserId equals u.UserId
                                         into pru
                                     from u in pru.DefaultIfEmpty()
-                                    where pd.UserId == userId
-                                        && pd.ProjectId == projectId
+                                    where pd.ProjectId == projectId
                                     orderby pd.CreatedDate ascending
                                     select new
                                     {
@@ -305,6 +313,7 @@ namespace Rated.Infrastructure.Database.Repository
                     DetailStatus = (Enums.ProjectDetailStatus)detail.pd.StatusId,
                     ReviewerUserId = detail.pd.ReviewerUserId,
                     DetailRating = detail.pd.DetailRating,
+                    ReviewerComments = detail.pd.ReviewerComments,
                 });
             }
 
@@ -758,7 +767,8 @@ namespace Rated.Infrastructure.Database.Repository
             var projectsDb = (from p in _projectContext.Projects
                                   join pd in _projectContext.ProjectDetails on p.ProjectId equals pd.ProjectId
                                   where p.UserId == userId
-                                  select p).ToList();
+                                  && pd.StatusId == (int)Enums.ProjectDetailStatus.Done
+                                  select p).Distinct().ToList();
 
             var projects = new List<ProjectCoreModel>();
             foreach (var project in projectsDb)

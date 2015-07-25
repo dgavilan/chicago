@@ -1,0 +1,29 @@
+﻿@model Rated.Models.Project.ProjectViewModel
+
+<h2>Project Details</h2>
+
+@Model.OwnerFirstName @Model.OwnerLastName
+
+<br />
+<br />
+
+@Model.ProjectName
+<br />
+@Model.ProjectDescription
+
+<br />
+<br />
+
+@foreach (var detail in Model.ProjectDetails)
+{ 
+    @detail.DetailName
+    <br />
+    @detail.DetailDescription
+    <br />
+    @detail.ReviewerFirstName @detail.ReviewerLastName
+    <br />
+    @detail.ReviewerComments
+
+    <br />
+    <br />
+}

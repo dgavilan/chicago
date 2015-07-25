@@ -57,7 +57,7 @@ namespace Rated.Web.Controllers
             var userSession = new UserSession();
             var user = userSession.GetUserSession();
             var projectRepo = new ProjectRepo();
-            var projectCore = projectRepo.GetProjectByProjectId(id, user.UserId);
+            var projectCore = projectRepo.GetProjectForReviewerByProjectId(id, user.UserId);
             var projectDetailsCore = projectRepo.GetProjectDetailsByProjectId(id, user.UserId);
             var projectView = MapToProjectView(projectCore, projectDetailsCore);
 

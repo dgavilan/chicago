@@ -217,6 +217,7 @@
     <Content Include="Views\Review\_ModalReviewComplete.cshtml" />
     <Content Include="Views\SearchPeople\Index.cshtml" />
     <Content Include="Views\SearchPeople\Profile.cshtml" />
+    <Content Include="Views\SearchPeople\ProjectDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

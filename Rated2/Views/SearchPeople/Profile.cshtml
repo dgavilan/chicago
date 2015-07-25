@@ -1,9 +1,32 @@
 ﻿@model List<Rated.Models.Project.ProjectViewModel>
 
-<h2>GetProjectsByUserId</h2>
+<h3>
+    Profile: xxx
+</h3>
 
-@foreach (var project in Model)
-{ 
-    <span>@project.ProjectName</span>
-    <br />
-}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Project</th>
+            <th>Date</th>
+            <th>Rating</th>
+        </tr>
+    </thead>
+
+    @foreach (var project in Model)
+    {
+        <tr>
+            <td>
+                <a href="ProjectDetails?projectId=@project.ProjectId">@project.ProjectName</a>
+                <br />
+                @project.ProjectDescription
+            </td>
+            <td>
+                @project.ModifiedDate
+            </td>
+            <td>
+                @project.ProjectRating
+            </td>
+        </tr>
+    }
+</table>

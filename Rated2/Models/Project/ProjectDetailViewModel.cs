@@ -26,6 +26,7 @@ namespace Rated.Models.Project
         public Enums.ProjectDetailStatus DetailStatus { get; set; }
         public string ReviewInstructions { get; set; }
         public decimal DetailRating { get; set; }
+        public string ReviewerComments { get; set; }
 
         public Guid CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

@@ -11,7 +11,7 @@ namespace Rated.Core.Contracts
 {
     public interface IProjectRepo
     {
-        ProjectCoreModel GetProject(Guid userId, Guid projectId);
+        ProjectCoreModel GetProjectByProjectId(Guid projectId);
 
         void AddProject(ProjectCoreModel project);
         void AddProjectDetail(ProjectDetailCoreModel projectDetail);

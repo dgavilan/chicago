@@ -27,7 +27,7 @@ namespace Rated.Web.Shared
         {
             IProjectRepo projectRepo = new ProjectRepo();
             var projectsCore = projectRepo.GetProjectsForReviewerByStatus(reviewerUserId, projectStatusId);
-            var projectsView = BuildProjectView(projectsCore);
+            var projectsView = BuildProjectsView(projectsCore);
             return projectsView;
         }
 
@@ -35,7 +35,7 @@ namespace Rated.Web.Shared
         {
             IProjectRepo projectRepo = new ProjectRepo();
             var projectsCore = projectRepo.GetReviewerProjectsInProgress(reviewerUserId);
-            var projectsView = BuildProjectView(projectsCore);
+            var projectsView = BuildProjectsView(projectsCore);
             return projectsView;
         }
 
@@ -45,18 +45,26 @@ namespace Rated.Web.Shared
             var userSession = new UserSession();
             var userId = userSession.GetUserSession().UserId;
             var projectsCore = projectRepo.GetProjectsByStatus(userId, projectStatus);
-            var projectsView = BuildProjectView(projectsCore);
+            var projectsView = BuildProjectsView(projectsCore);
 
             return projectsView;
         }
 
-        public List<ProjectViewModel> BuildProjectView(List<ProjectCoreModel> projectsCore)
+        public List<ProjectViewModel> BuildProjectsView(List<ProjectCoreModel> projectsCore)
         {
             var projectsView = new List<ProjectViewModel>();
 
             foreach (var project in projectsCore)
             {
-                projectsView.Add(new ProjectViewModel()
+                projectsView.Add(BuildProjectView(project));
+            }
+
+            return projectsView;
+        }
+
+        public ProjectViewModel BuildProjectView(ProjectCoreModel project)
+        {
+            return new ProjectViewModel()
                 {
                     ProjectDescription = project.ProjectDescription,
                     ProjectId = project.ProjectId,
@@ -68,11 +76,36 @@ namespace Rated.Web.Shared
                     OwnerFirstName = project.OwnerFirstName,
                     OwnerLastName = project.OwnerLastName,
                     ProjectRating = project.ProjectRating,
-                });
-            }
-
-            return projectsView;
+                };
         }
+
+        //public ProjectDetailViewModel BuildProjectDetailView(ProjectDetailCoreModel detail)
+        //{
+        //    return new ProjectDetailViewModel()
+        //    {
+        //        CreatedBy = detail.CreatedBy,
+        //        CreatedDate = detail.CreatedDate,
+        //        DetailCount = 0,
+        //        DetailDescription = detail.ProjectDetailDescription,
+        //        DetailName = detail.ProjectDetailName,
+        //        DetailRating = detail.DetailRating,
+        //        DetailStatus = detail.DetailStatus,
+        //        HasReviewer = detail.HasReviewer,
+        //        HoursToComplete = detail.HoursToComplete,
+        //        ModifiedBy = detail.ModifiedBy,
+        //        ModifiedDate = detail.ModifiedDate,
+        //        ProjectDetailId = detail.ProjectDetailId,
+        //        ProjectId = detail.ProjectId,
+        //        ReviewerEmail = detail.ReviewerEmail,
+        //        ReviewerFirstName = detail.ReviewerFirstName,
+        //        ReviewerFullName = "",
+        //        ReviewerLastName = detail.ReviewerLastName,
+        //        ReviewerStatusId = detail.ReviewerStatusId,
+        //        ReviewInstructions = detail.ReviewInstructions,
+        //        StatusId = detail.StatusId,
+        //    };
+        //}
+
 
         public ProjectDetailViewModel BuildProjectDetailView(ProjectDetailCoreModel projectDetailCore)
         {
@@ -97,6 +130,7 @@ namespace Rated.Web.Shared
                 ReviewInstructions = projectDetailCore.ReviewInstructions,
                 DetailStatus = (Enums.ProjectDetailStatus)projectDetailCore.StatusId,
                 StatusId = projectDetailCore.StatusId,
+                ReviewerComments = projectDetailCore.ReviewerComments,
             };
         }
 
@@ -104,7 +138,7 @@ namespace Rated.Web.Shared
         {
             IProjectRepo projectRepo = new ProjectRepo();
             var projectsCore = projectRepo.GetReviewerProjectsDone(reviewerUserId);
-            var projectsView = BuildProjectView(projectsCore);
+            var projectsView = BuildProjectsView(projectsCore);
             return projectsView;
         }
     }

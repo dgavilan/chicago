@@ -211,7 +211,7 @@ namespace Rated.Web.Controllers.api
                 project.MoveToNextStatus();
                 _projectRepo.AddProject(project);
 
-                var newProduct = _projectRepo.GetProject(user.UserId, project.ProjectId);
+                var newProduct = _projectRepo.GetProjectByProjectId(project.ProjectId);
 
                 var json = new JavaScriptSerializer().Serialize(newProduct);
                 return json;
