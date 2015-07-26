@@ -2,12 +2,19 @@
 
 <h2>Project Details</h2>
 
-@Model.OwnerFirstName @Model.OwnerLastName
-
-<br />
 <br />
 
-@Model.ProjectName
+<a href="#" class="btn btn-default" onclick="window.location='ProfileView?userId=@Request.QueryString["userId"]'">
+    <span class="glyphicon glyphicon-arrow-left"></span>
+    &nbsp;
+    Back to @Model.OwnerFirstName @Model.OwnerLastName projects
+</a>
+
+<h3>@Model.OwnerFirstName @Model.OwnerLastName</h3>
+
+<span style="font-weight:bold;font-size:23px">
+    @Model.ProjectName (@Model.ProjectRating)
+</span>
 <br />
 @Model.ProjectDescription
 
@@ -16,11 +23,14 @@
 
 @foreach (var detail in Model.ProjectDetails)
 { 
-    @detail.DetailName
+    <b>@detail.DetailName</b>
     <br />
     @detail.DetailDescription
     <br />
+<br />
+    <span>Reviewed By:</span> 
     @detail.ReviewerFirstName @detail.ReviewerLastName
+    <br />
     <br />
     @detail.ReviewerComments
 

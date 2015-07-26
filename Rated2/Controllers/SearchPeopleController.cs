@@ -38,8 +38,19 @@ namespace Rated.Web.Controllers
         public ActionResult ProfileView(Guid userId)
         {
             var projectRepo = new ProjectRepo();
+            var userRepo = new UserRepo();
+
+            var userProfile = userRepo.GetUserByUserId(userId);
+            userProfile.UserRating = projectRepo.GetUserRating(userId);
+
+            ViewBag.UserProfile = userProfile;
 
             var projects = projectRepo.GetProjectsByUserId(userId);
+
+            foreach (var project in projects)
+            {
+                project.ProjectRating = projectRepo.GetProjectRating(project.ProjectId);
+            }
 
             var projectHelper = new ProjectHelper();
 
@@ -56,6 +67,7 @@ namespace Rated.Web.Controllers
            
             project.OwnerFirstName = user.FirstName;
             project.OwnerLastName = user.LastName;
+            project.ProjectRating = projectRepo.GetProjectRating(projectId);
 
             var projectHelper = new ProjectHelper();
             var projectView = projectHelper.BuildProjectView(project);

@@ -758,7 +758,19 @@ namespace Rated.Infrastructure.Database.Repository
                 }
             } // foreach
 
-            return (userRating.Count() == 0) ? 0 : userRating.Average(x => x);
+            var rating = Math.Round((userRating.Count() == 0) ? 0 : userRating.Average(x => x),2);
+            return rating;
+        }
+
+        public decimal GetProjectRating(Guid projectId)
+        {
+            var projectDb = (from p in _projectContext.Projects
+                              where p.StatusId != (int)Enums.ProjectStatus.Draft
+                                && p.ProjectId == projectId
+                              select p).SingleOrDefault();
+
+            var details = (projectDb.ProjectDetails.Where(x => x.StatusId == (int)Enums.ProjectDetailStatus.Done)).ToList();
+            return details.Average(x => x.DetailRating);
         }
 
 

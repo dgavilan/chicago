@@ -1,7 +1,17 @@
 ﻿@model List<Rated.Models.Project.ProjectViewModel>
 
+@{ 
+    var userProfile = (Rated.Core.Models.User.UserCoreModel)ViewBag.UserProfile;
+}
+
+<a href="#" class="btn btn-default" onclick="window.location='/SearchPeople'">
+    <span class="glyphicon glyphicon-arrow-left"></span>
+    &nbsp;
+    Back to search
+</a>
+
 <h3>
-    Profile: xxx
+    @userProfile.FirstName @userProfile.LastName (@userProfile.UserRating)
 </h3>
 
 <table class="table table-striped">
@@ -17,7 +27,7 @@
     {
         <tr>
             <td>
-                <a href="ProjectDetails?projectId=@project.ProjectId">@project.ProjectName</a>
+                <a href="ProjectDetails?projectId=@project.ProjectId&userId=@Request.QueryString["userId"]">@project.ProjectName</a>
                 <br />
                 @project.ProjectDescription
             </td>
