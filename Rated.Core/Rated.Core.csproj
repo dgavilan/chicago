@@ -40,13 +40,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\IProjectRepo.cs" />
+    <Compile Include="Contracts\ICompanyRepo.cs" />
     <Compile Include="Contracts\IUserRepo.cs" />
     <Compile Include="Infrastructure\ProfileRepo.cs" />
+    <Compile Include="Models\Project\CompanyCoreModel.cs" />
     <Compile Include="Models\Project\ProjectCount.cs" />
     <Compile Include="Models\Project\ProjectReviewer.cs" />
-    <Compile Include="Models\Project\ProjectDetailCoreModel.cs" />
+    <Compile Include="Models\Project\TaskCoreModel.cs" />
     <Compile Include="Models\User\ProfileCoreModel.cs" />
     <Compile Include="Models\Project\ProjectCoreModel.cs" />
+    <Compile Include="Models\User\UserSearchCoreModel.cs" />
     <Compile Include="Models\User\UserCoreService.cs" />
     <Compile Include="Models\User\UserCoreModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

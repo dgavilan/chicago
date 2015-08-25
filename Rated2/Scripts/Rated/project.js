@@ -1,5 +1,29 @@
 ﻿var Project = {
-    SaveProject: function () {
+    AddNewCompany: function () {
+        var data = $(":input").serializeArray();
+        var jqxhr = $.ajax({
+            url: "/api/ProjectApi/AddCompany",
+            type: "POST",
+            data: data,
+        });
+
+        jqxhr.done(function (data) {
+            var newCompanyName = $("#Name").val();
+
+            // DG: TODO: Add new company created to company drop down and select it
+            $("#CompanyId").append($("<option></option>")
+                           .attr("value", data)
+                           .text(newCompanyName));
+
+            $("#CompanyId").val(data);
+
+            $("#modalAddCompany").modal('hide');
+        })
+        jqxhr.fail(function (jqXHR, textStatus, errorThrown) { handleErrors(jqXHR) })
+        jqxhr.always(function () { });
+    },
+
+    AddNewProject: function () {
         var data = $(":input").serializeArray();
         var jqxhr = $.ajax({
             url: "/api/ProjectApi/AddProject",
@@ -312,5 +336,9 @@ $(document).ready(function () {
     $("#btnOpenEditProject").click(function () {
         $("#modalEditProject").modal("show");
     });
-        
+
+    $("#btnAddNewComapany").click(function () {
+        $("#modalAddCompany").modal("show");
+    });
+    
 });

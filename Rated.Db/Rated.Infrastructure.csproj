@@ -48,14 +48,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\EF\Project\Company.cs" />
     <Compile Include="Database\EF\Project\ProjectReviewer.cs" />
-    <Compile Include="Database\EF\Project\ProjectDetail.cs" />
+    <Compile Include="Database\EF\Project\Task.cs" />
     <Compile Include="Database\EF\Project\Project.cs" />
     <Compile Include="Database\EF\Project\ProjectContext.cs" />
     <Compile Include="Database\EF\Project\User.cs" />
     <Compile Include="Database\EF\User\User.cs" />
     <Compile Include="Database\EF\User\UserContext.cs" />
     <Compile Include="Database\Repository\ProjectRepo.cs" />
+    <Compile Include="Database\Repository\CompanyRepo.cs" />
     <Compile Include="Database\Repository\UserRepo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

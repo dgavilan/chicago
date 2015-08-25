@@ -88,7 +88,7 @@ namespace Rated.Core.Shared
             PendingReviewerAcceptance = 301
         }
 
-        public enum ProjectDetailStatus
+        public enum TaskStatus
         {
             [Description("New")]
             New = 404,

@@ -57,29 +57,29 @@ namespace Rated.Web.Controllers
             var userSession = new UserSession();
             var user = userSession.GetUserSession();
             var projectRepo = new ProjectRepo();
-            var projectCore = projectRepo.GetProjectForReviewerByProjectId(id, user.UserId);
-            var projectDetailsCore = projectRepo.GetProjectDetailsByProjectId(id, user.UserId);
+            var projectCore = projectRepo.GetProjectForReviewerByProjectIdByUserId(id, user.UserId);
+            var projectDetailsCore = projectRepo.GetProjectDetailsByProjectIdByUserId(id, user.UserId);
             var projectView = MapToProjectView(projectCore, projectDetailsCore);
 
             return View("Edit", projectView);
         }
 
-        private ProjectViewModel MapToProjectView(ProjectCoreModel projectCore, List<ProjectDetailCoreModel> projectDetailsCore)
+        private ProjectViewModel MapToProjectView(ProjectCoreModel projectCore, List<TaskCoreModel> projectDetailsCore)
         {
-            var detailView = new List<ProjectDetailViewModel>();
+            var detailView = new List<TaskViewModel>();
 
             foreach (var detail in projectDetailsCore)
             {
-                detailView.Add(new ProjectDetailViewModel()
+                detailView.Add(new TaskViewModel()
                 {
                     CreatedBy = detail.CreatedBy,
                     CreatedDate = detail.CreatedDate,
-                    DetailCount = 0,
-                    DetailDescription = detail.ProjectDetailDescription,
-                    DetailName = detail.ProjectDetailName,
+                    TaskCount = 0,
+                    Description = detail.Description,
+                    Name = detail.Name,
                     ModifiedBy = detail.ModifiedBy,
                     ModifiedDate = detail.ModifiedDate,
-                    ProjectDetailId = detail.ProjectDetailId,
+                    TaskId = detail.TaskId,
                     ProjectId = detail.ProjectId,
                     HoursToComplete = detail.HoursToComplete,
                     ReviewerFirstName = detail.ReviewerFirstName,
@@ -91,10 +91,10 @@ namespace Rated.Web.Controllers
                     //    : detail.ReviewerFirstName + " " + detail.ReviewerLastName,
                     ReviewerFullName = detail.ReviewerFirstName + " " + detail.ReviewerLastName,
                     HasReviewer = detail.HasReviewer,
-                    DetailStatus = (Enums.ProjectDetailStatus)detail.StatusId,
+                    DetailStatus = (Enums.TaskStatus)detail.StatusId,
                     StatusId = detail.StatusId,
                     ReviewInstructions = detail.ReviewInstructions,
-                    DetailRating = detail.DetailRating,
+                    Rating = detail.Rating,
                 });
             }
 
@@ -107,7 +107,7 @@ namespace Rated.Web.Controllers
                 ProjectDescription = projectCore.ProjectDescription,
                 ProjectDetailsCount = projectCore.ProjectDetailsCount,
                 ProjectId = projectCore.ProjectId,
-                ProjectDetails = detailView,
+                Tasks = detailView,
                 ProjectName = projectCore.ProjectName,
                 ProjectStatus = projectCore.ProjectStatus,
                 ReviewerEmail = "",

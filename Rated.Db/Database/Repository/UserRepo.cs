@@ -33,6 +33,7 @@ namespace Rated.Infrastructure.Database.Repository
                 LastName = usersDb.LastName,
                 Email = usersDb.Email,
                 UserId = usersDb.UserId,
+                Bio = usersDb.Bio,
             };
         }
 
@@ -46,6 +47,38 @@ namespace Rated.Infrastructure.Database.Repository
             foreach (var user in usersDb)
             {
                 users.Add(new UserCoreModel() { 
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    UserId = user.UserId,
+                });
+            }
+
+            return users;
+        }
+
+        public List<UserCoreModel> SearchUsers(UserSearchCoreModel userSearch)
+        {
+            var usersDb = (from u in _userContext.Users
+
+                           // First Name
+                           where u.FirstName.Contains(
+                               (String.IsNullOrEmpty(userSearch.FirstName) 
+                               ? u.FirstName : userSearch.FirstName))
+
+                           // Last Name
+                           && u.LastName.Contains(
+                           (String.IsNullOrEmpty(userSearch.LastName)
+                           ? u.LastName : userSearch.LastName))
+
+                           select u).ToList();
+
+            // Map to DB to core object
+            var users = new List<UserCoreModel>();
+            foreach (var user in usersDb)
+            {
+                users.Add(new UserCoreModel()
+                {
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Email = user.Email,

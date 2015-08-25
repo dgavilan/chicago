@@ -23,7 +23,7 @@
 
                 <div class="editor-field">
                     @Html.LabelFor(x => x.UserPassword)
-                    @Html.TextBoxFor(x => x.UserPassword, new { @class = "form-control", @name = "userPassword" })
+                    @Html.PasswordFor(x => x.UserPassword, new { @class = "form-control", @name = "userPassword" })
                     @Html.ValidationMessageFor(m => m.UserPassword, "", new { @class = "text-danger" })
                 </div>
 

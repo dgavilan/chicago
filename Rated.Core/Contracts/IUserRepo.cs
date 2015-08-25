@@ -16,5 +16,6 @@ namespace Rated.Core.Contracts
         void EditAccount(UserCoreModel user);
 
         List<UserCoreModel> GetUsers();
+        List<UserCoreModel> SearchUsers(UserSearchCoreModel userSearch);
     }
 }

@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -132,6 +133,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\api\CompanyApiController.cs" />
     <Compile Include="Controllers\api\ProjectApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProjectController.cs" />
@@ -141,7 +143,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Project\ProjectDetailViewModel.cs" />
+    <Compile Include="Models\Project\TaskViewModel.cs" />
+    <Compile Include="Models\Project\CompanyViewModel.cs" />
+    <Compile Include="Models\Project\ReviewerViewModel.cs" />
+    <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\UserProfile\ProfileViewModel.cs" />
     <Compile Include="Models\ProjectViewModel.cs" />
     <Compile Include="Models\Project\ProjectItemViewModel.cs" />
@@ -159,6 +164,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\Profile\AbrahamLincolnPic.jpg" />
+    <Content Include="Images\Profile\dgphotoabtg.jpg" />
+    <Content Include="Images\Star\StarRatingRed.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -171,6 +179,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\jquery.validate.extension.js" />
+    <Content Include="Scripts\Rated\modal.js" />
+    <Content Include="Scripts\Rated\company.js" />
     <Content Include="Scripts\Rated\project.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -216,8 +226,11 @@
     <Content Include="Views\Review\_ModalReviewInstructions.cshtml" />
     <Content Include="Views\Review\_ModalReviewComplete.cshtml" />
     <Content Include="Views\SearchPeople\Index.cshtml" />
-    <Content Include="Views\SearchPeople\Profile.cshtml" />
-    <Content Include="Views\SearchPeople\ProjectDetails.cshtml" />
+    <Content Include="Views\SearchPeople\ProjSummary.cshtml" />
+    <Content Include="Views\SearchPeople\ProjDetails.cshtml" />
+    <Content Include="Views\SearchPeople\_Task.cshtml" />
+    <Content Include="Views\SearchPeople\_Review.cshtml" />
+    <Content Include="Views\Project\_ModalAddCompany.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

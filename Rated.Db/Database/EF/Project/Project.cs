@@ -16,6 +16,9 @@ namespace Rated.Infrastructure.Database.EF.Project
         public Guid UserId { get; set; }
 
         [Required]
+        public Guid CompanyId { get; set; }
+
+        [Required]
         [StringLength(200)]
         public string ProjectName { get; set; }
 
@@ -37,6 +40,7 @@ namespace Rated.Infrastructure.Database.EF.Project
         public decimal ProjectRating { get; set; }
 
         public virtual User User { get; set; }
-        public virtual ICollection<ProjectDetail> ProjectDetails { get; set; }
+        public virtual ICollection<Task> Tasks { get; set; }
+        public virtual Company Company { get; set; }
     }
 }

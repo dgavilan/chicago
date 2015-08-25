@@ -65,18 +65,31 @@ namespace Rated.Web.Shared
         public ProjectViewModel BuildProjectView(ProjectCoreModel project)
         {
             return new ProjectViewModel()
+            {
+                ProjectDescription = project.ProjectDescription,
+                ProjectId = project.ProjectId,
+                ProjectName = project.ProjectName,
+                CreatedDate = project.CreatedDate,
+                ModifiedDate = project.ModifiedDate,
+                ProjectDetailsCount = project.ProjectDetailsCount,
+                ProjectStatus = project.ProjectStatus,
+                OwnerFirstName = project.OwnerFirstName,
+                OwnerLastName = project.OwnerLastName,
+                ProjectRating = project.ProjectRating,
+                Company = new CompanyViewModel()
                 {
-                    ProjectDescription = project.ProjectDescription,
-                    ProjectId = project.ProjectId,
-                    ProjectName = project.ProjectName,
-                    CreatedDate = project.CreatedDate,
-                    ModifiedDate = project.ModifiedDate,
-                    ProjectDetailsCount = project.ProjectDetailsCount,
-                    ProjectStatus = project.ProjectStatus,
-                    OwnerFirstName = project.OwnerFirstName,
-                    OwnerLastName = project.OwnerLastName,
-                    ProjectRating = project.ProjectRating,
-                };
+                    Address1 = project.Company.Address1,
+                    Address2 = project.Company.Address2,
+                    City = project.Company.City,
+                    CompanyDescription = project.Company.Description,
+                    CompanyId = project.Company.CompanyId,
+                    CompanyName = project.Company.Name,
+                    CreatedDate = project.Company.CreatedDate,
+                    ModifiedDate = project.Company.ModifiedDate,
+                    State = project.Company.State,
+                    Zip = project.Company.Zip,
+                },
+            };
         }
 
         //public ProjectDetailViewModel BuildProjectDetailView(ProjectDetailCoreModel detail)
@@ -107,19 +120,20 @@ namespace Rated.Web.Shared
         //}
 
 
-        public ProjectDetailViewModel BuildProjectDetailView(ProjectDetailCoreModel projectDetailCore)
+        public TaskViewModel BuildProjectDetailView(TaskCoreModel projectDetailCore)
         {
-            return new ProjectDetailViewModel(){
+            return new TaskViewModel()
+            {
                 CreatedBy = projectDetailCore.CreatedBy,
                 CreatedDate = projectDetailCore.CreatedDate,
                 //DetailCount
-                DetailDescription = projectDetailCore.ProjectDetailDescription,
-                DetailName = projectDetailCore.ProjectDetailName,
+                Description = projectDetailCore.Description,
+                Name = projectDetailCore.Name,
                 //HasReviewer
                 HoursToComplete = projectDetailCore.HoursToComplete,
                 ModifiedBy = projectDetailCore.ModifiedBy,
                 ModifiedDate = projectDetailCore.ModifiedDate,
-                ProjectDetailId = projectDetailCore.ProjectDetailId,
+                TaskId = projectDetailCore.TaskId,
                 ProjectId = projectDetailCore.ProjectId,
                 ReviewerEmail = projectDetailCore.ReviewerEmail,
                 ReviewerFirstName = projectDetailCore.ReviewerFirstName,
@@ -128,9 +142,10 @@ namespace Rated.Web.Shared
                 //ReviewerStatus = (Enums.ProjectReviewerStatus)projectDetailCore.ReviewerStatusId,
                 ReviewerStatusId = projectDetailCore.ReviewerStatusId,
                 ReviewInstructions = projectDetailCore.ReviewInstructions,
-                DetailStatus = (Enums.ProjectDetailStatus)projectDetailCore.StatusId,
+                DetailStatus = (Enums.TaskStatus)projectDetailCore.StatusId,
                 StatusId = projectDetailCore.StatusId,
                 ReviewerComments = projectDetailCore.ReviewerComments,
+                Rating = projectDetailCore.Rating,
             };
         }
 

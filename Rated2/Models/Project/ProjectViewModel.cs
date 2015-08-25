@@ -29,9 +29,11 @@ namespace Rated.Models.Project
         public Enums.ReviewerProjectStatus ReviewerProjectStatus { get; set; }
         public string OwnerFirstName { get; set; }
         public string OwnerLastName { get; set; }
-
         public decimal ProjectRating { get; set; }
 
-        public List<ProjectDetailViewModel> ProjectDetails { get; set; }
+        public CompanyViewModel Company { get; set; }
+
+        public List<TaskViewModel> Tasks { get; set; }
+
     }
 }

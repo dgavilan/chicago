@@ -1,6 +1,14 @@
 ﻿@model List<Rated.Models.Project.ProjectViewModel>
 @using Rated.Core.Shared
 
+<style>
+    .custom-class {
+        width: 70%; /* either % (e.g. 60%) or px (400px) */
+    }
+
+}
+</style>
+
 <h2>Projects</h2>
 
 <button class="btn btn-primary" id="btnOpenModalStartProject">
@@ -11,9 +19,11 @@
 
 
 @Html.Partial("_ModalAddProject")
-
+@Html.Partial("_ModalAddCompany")
 
 <script src="~/Scripts/Rated/project.js"></script>
+<script src="~/Scripts/Rated/company.js"></script>
+<script src="~/Scripts/Rated/modal.js"></script>
 
 
 

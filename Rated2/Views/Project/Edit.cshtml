@@ -20,17 +20,11 @@
 
     @switch (Model.ProjectStatus)
     {
-        @*case Enums.ProjectStatus.Draft:
-            <button class="btn btn-success" id="btnOpenStartProjectModal">
-                <span class="glyphicon glyphicon-ok-sign"></span>
-                Start Project
-            </button>
-            break;*@
         case Enums.ProjectStatus.ReviewerPendingAcceptance:
-        <button class="btn btn-danger">
-            <span class="glyphicon glyphicon-trash"></span>
-            Cancel Project
-        </button>
+            <button class="btn btn-danger">
+                <span class="glyphicon glyphicon-trash"></span>
+                Cancel Project
+            </button>
             break;
     }
 </div>
@@ -56,8 +50,6 @@
             }
         </td>
         <td>
-
-
             <div id="divProjectName">
                 <b>@Html.DisplayFor(x => x.ProjectName)</b>
             </div>
@@ -86,8 +78,8 @@
 @if (Model.ProjectStatus != Enums.ProjectStatus.Done)
 {
     <h4>
-        Project Tasks (<span id="spanItemDetailCount">@Model.ProjectDetails.Count()</span>)
-        <br />
+        Tasks (<span id="spanItemDetailCount">@Model.Tasks.Count()</span>)
+    </h4>
         <button class="btn btn-default" onclick="Project.ShowAddDetail()">
             <span class="glyphicon glyphicon-plus"></span> Add Task
         </button>
@@ -95,7 +87,7 @@
             <span class=" glyphicon glyphicon-user">
             </span> Assign One Reviewer to all Tasks
         </button>
-    </h4>
+    
 }
 
 <table class="table table-striped">
@@ -113,18 +105,18 @@
     </thead>
     @{
         var lineItemNo = 1;
-        foreach (var detail in Model.ProjectDetails)
+        foreach (var task in Model.Tasks)
         {
             <tr>
                 <td>
                     @lineItemNo
                 </td>
                 <td>
-                    @if (detail.DetailStatus == Enums.ProjectDetailStatus.Draft)
+                    @if (task.DetailStatus == Enums.TaskStatus.Draft)
                     {
                         <b>
-                            <a href="#" onclick="Project.ShowEditDetail('@detail.ProjectDetailId', '@detail.DetailName', '@detail.DetailDescription', '@detail.HoursToComplete', '@detail.ReviewInstructions')">
-                                @detail.DetailName
+                            <a href="#" onclick="Project.ShowEditDetail('@task.TaskId', '@task.Name', '@task.Description', '@task.HoursToComplete', '@task.ReviewInstructions')">
+                                @task.Name
                                 <span class="glyphicon glyphicon-edit"></span>
                             </a>
 
@@ -133,91 +125,60 @@
                     else
                     {
                         <b>
-                            @detail.DetailName
+                            @task.Name
                         </b>
                     }
 
                     <br />
-                    @detail.DetailDescription
+                    @task.Description
                 </td>
-
-
-
-
-
                 <td>
-                    @Convert.ToDouble(detail.HoursToComplete)
+                    @Convert.ToDouble(task.HoursToComplete)
                 </td>
                 <td width="100px">
-                    @detail.ModifiedDate
+                    @task.ModifiedDate
                 </td>
                 <td>
-                    @Rated.Core.Shared.EnumHelper.GetDescription(detail.DetailStatus)
+                    @Rated.Core.Shared.EnumHelper.GetDescription(task.DetailStatus)
                 </td>
                 <td>
-                    @switch (detail.DetailStatus)
+                    @switch (task.DetailStatus)
                     {
-                        case Enums.ProjectDetailStatus.Draft:
-                            <button class="btn btn-default" onclick="Project.AssignDetailReviewer('@detail.ProjectDetailId')">
+                        case Enums.TaskStatus.Draft:
+                            <button class="btn btn-default" onclick="Project.AssignDetailReviewer('@task.TaskId')">
                                 <span class="glyphicon glyphicon-user"></span> Assign Reviewer
                             </button>
                             break;
-                        case Enums.ProjectDetailStatus.ReviewerPendingAcceptance:
+                        case Enums.TaskStatus.ReviewerPendingAcceptance:
                             <button class="btn btn-default">
                                 <span class="glyphicon glyphicon-remove"></span>
-                                Cancel Review Request for: <br /> @detail.ReviewerFullName
+                                Cancel Review Request for: <br /> @task.ReviewerFullName
                             </button>
                             break;
-                        case Enums.ProjectDetailStatus.OwnerInProgressWorkingOnProject:
-                        case Enums.ProjectDetailStatus.ReviewerInProgressReviewingDetail:
-                        case Enums.ProjectDetailStatus.Done:
+                        case Enums.TaskStatus.OwnerInProgressWorkingOnProject:
+                        case Enums.TaskStatus.ReviewerInProgressReviewingDetail:
+                        case Enums.TaskStatus.Done:
                             <span>
-                                @detail.ReviewerFullName
+                                @task.ReviewerFullName
                             </span>
                             break;
                     }
 
-                    @*@switch (detail.ReviewerStatusId)
-                        {
-                            case (int)Enums.ProjectReviewerStatus.OwnerIsWorkingOnTask:
-                                <p>
-                                    Approver: @detail.ReviewerFullName
-                                </p>
-                                break;
-                            case (int)Enums.ProjectReviewerStatus.WaitingForReviewerToAccept:
-                            <p>
-                                @Rated.Core.Shared.EnumHelper.GetDescription((Enums.ProjectReviewerStatus)detail.ReviewerStatusId)
-                                <br />
-                                Approver: @detail.ReviewerFullName
-                                <br />
-                                <a href="#" class="btn btn-link">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                    Remove Approver
-                                </a>
-                            </p>
-                                break;
-                            case (int)Enums.ProjectReviewerStatus.NewTaskNeedsReviewer:
-                            <button class="btn btn-btn" onclick="Project.AssignDetailReviewer('@detail.ProjectDetailId')">
-                                <span class="glyphicon glyphicon-plus"></span> Assign Reviewer
-                            </button>
-                                break;
-                            case (int)Enums.ProjectReviewerStatus.ReviewerDeclinedNeedsReviewer:
-                                break;
-                        }*@
+
 
                 </td>
                 <td>
-                    @if (detail.DetailStatus == Enums.ProjectDetailStatus.Done)
+                    @if (task.DetailStatus == Enums.TaskStatus.Done)
                     {
-                        @detail.DetailRating
+                        @task.Rating
                     }
                 </td>
 
                 <td>
-                    @switch (detail.DetailStatus)
+                    @switch (task.DetailStatus)
                     {
-                        case Enums.ProjectDetailStatus.OwnerInProgressWorkingOnProject:
-                            <button class="btn btn-success" style="width:160px" onclick="Project.ConfirmProjectDetailComplete('@detail.ProjectDetailId')">
+                        case Enums.TaskStatus.OwnerInProgressWorkingOnProject:
+                            <button class="btn btn-success" style="width:160px" onclick="Project.ConfirmProjectDetailComplete('@task.TaskId')">
                                 <span class="glyphicon glyphicon-ok-sign"></span> Task is Complete
                             </button>
 
@@ -230,9 +191,9 @@
                     }
 
 
-                    @if (detail.DetailStatus == Enums.ProjectDetailStatus.Draft)
+                    @if (task.DetailStatus == Enums.TaskStatus.Draft)
                     {
-                        <button class="btn btn-link" onclick="Project.DeleteDetail('@detail.ProjectId', '@detail.ProjectDetailId')">
+                        <button class="btn btn-link" onclick="Project.DeleteDetail('@task.ProjectId', '@task.TaskId')">
                             <span class="glyphicon glyphicon-trash"></span> Delete
                         </button>
                     }
@@ -240,7 +201,7 @@
                 </td>
 
             </tr>
-                    lineItemNo++;
+            lineItemNo++;
         }
     }
 </table>

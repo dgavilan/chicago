@@ -19,11 +19,23 @@ namespace Rated.Core.Models.Project
         public int ProjectDetailsCount { get; set; }
         public Enums.ProjectStatus ProjectStatus { get; set; }
         public Enums.ReviewerProjectStatus ReviewerProjectStatus { get; set; }
-        public List<ProjectDetailCoreModel> ProjectDetails { get; set; }
+        public List<TaskCoreModel> ProjectDetails { get; set; }
         public Guid CreatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public Guid ModifiedBy { get; set; }
         public DateTime ModifiedDate { get; set; }
+        public CompanyCoreModel Company { get; set; }
+
+        // Company info
+        public Guid CompanyId { get; set; }
+        public string Name { get; set; }
+        public string Address1 { get; set; }
+        public string Address2 { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
+        public string Description { get; set; }
+        public string WebsiteUrl { get; set; }
 
         public void MoveToNextStatus()
         {

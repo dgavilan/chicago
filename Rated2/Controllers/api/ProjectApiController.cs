@@ -19,10 +19,12 @@ namespace Rated.Web.Controllers.api
     public class ProjectApiController : ApiController
     {
         IProjectRepo _projectRepo;
+        ICompanyRepo _companyRepo;
 
         public ProjectApiController()
         {
             _projectRepo = new ProjectRepo();
+            _companyRepo = new CompanyRepo();
         }
 
         [Route("api/ProjectApi/Project/ReviewerAccepted")]
@@ -92,7 +94,7 @@ namespace Rated.Web.Controllers.api
 
         [Route("api/ProjectApi/Project/Reviewer")]
         [HttpPost]
-        public HttpResponseMessage AddReviewer(ProjectDetailCoreModel projectDetail)
+        public HttpResponseMessage AddReviewer(TaskCoreModel projectDetail)
         {
             try
             {
@@ -119,23 +121,23 @@ namespace Rated.Web.Controllers.api
 
         [Route("api/ProjectApi/AddDetail")]
         [HttpPost]
-        public HttpResponseMessage AddDetail(ProjectDetailCoreModel projectDetail)
+        public HttpResponseMessage AddDetail(TaskCoreModel projectDetail)
         {
             try
             {
                 var userSession = new UserSession();
                 var timeStamp = DateTime.UtcNow;
 
-                projectDetail.ProjectDetailId = Guid.NewGuid();
+                projectDetail.TaskId = Guid.NewGuid();
                 projectDetail.UserId = userSession.GetUserSession().UserId;
                 projectDetail.CreatedBy = userSession.GetUserSession().UserId;
                 projectDetail.CreatedDate = timeStamp;
                 projectDetail.ModifiedBy = userSession.GetUserSession().UserId;
                 projectDetail.ModifiedDate = timeStamp;
-                projectDetail.DetailStatus = Enums.ProjectDetailStatus.New;
+                projectDetail.Status = Enums.TaskStatus.New;
                 projectDetail.MoveToNextStatus();
 
-                _projectRepo.AddProjectDetail(projectDetail);
+                _projectRepo.AddTask(projectDetail);
 
                 var javaScriptSerializer = new JavaScriptSerializer();
 
@@ -153,7 +155,7 @@ namespace Rated.Web.Controllers.api
 
         [Route("api/ProjectApi/UpdateDetail")]
         [HttpPut]
-        public HttpResponseMessage UpdateDetail(ProjectDetailCoreModel projectDetail)
+        public HttpResponseMessage UpdateDetail(TaskCoreModel projectDetail)
         {
             try
             {
@@ -194,6 +196,35 @@ namespace Rated.Web.Controllers.api
             }
         }
 
+        [Route("api/ProjectApi/AddCompany")]
+        [HttpPost]
+        public string AddCompany(ProjectCoreModel project)
+        {
+            var userSession = new UserSession();
+            var user = userSession.GetUserSession();
+            var timeStamp = DateTime.UtcNow;
+
+            project.CompanyId = Guid.NewGuid();
+
+            _companyRepo.AddNewCompany(new CompanyCoreModel()
+            {
+                Address1 = project.Address1,
+                Address2 = project.Address2,
+                City = project.City,
+                CompanyId = project.CompanyId,
+                CreatedDate = timeStamp,
+                Description = project.Description,
+                ModifiedDate = timeStamp,
+                Name = project.Name,
+                State = project.State,
+                WebsiteUrl = project.WebsiteUrl,
+                Zip = project.Zip,
+                UserId = user.UserId,
+            });
+
+            return project.CompanyId.ToString();
+        }
+
         [Route("api/ProjectApi/AddProject")]
         [HttpPost]
         public string AddProject(ProjectCoreModel project)
@@ -204,12 +235,36 @@ namespace Rated.Web.Controllers.api
                 var user = userSession.GetUserSession();
                 var newProjectId = Guid.NewGuid();
 
+                // Add company
+                //if (project.CompanyId == Guid.Empty)
+                //{
+                //    var timeStamp = DateTime.UtcNow;
+                //    project.CompanyId = Guid.NewGuid();
+
+                //    _companyRepo.AddNewCompany(new CompanyCoreModel() {
+                //        Address1 = project.Address1,
+                //        Address2 = project.Address2,
+                //        City = project.City,
+                //        CompanyId = project.CompanyId,
+                //        CreatedDate = timeStamp,
+                //        Description = project.Description,
+                //        ModifiedDate = timeStamp,
+                //        Name = project.Name,
+                //        State = project.State,
+                //        WebsiteUrl = project.WebsiteUrl,
+                //        Zip = project.Zip,
+                //        UserId = user.UserId,
+                //    });
+                //}
+
                 // Save project
                 project.ProjectId = newProjectId;
                 project.UserId = user.UserId;
                 project.ProjectStatus = Enums.ProjectStatus.New;
                 project.MoveToNextStatus();
                 _projectRepo.AddProject(project);
+
+                
 
                 var newProduct = _projectRepo.GetProjectByProjectId(project.ProjectId);
 
@@ -307,15 +362,16 @@ namespace Rated.Web.Controllers.api
 
         [Route("api/ProjectApi/ProjectDetail/SubmitReview")]
         [HttpPut]
-        public HttpResponseMessage SubmitReview(ProjectDetailCoreModel projectDetail)
+        public HttpResponseMessage SubmitReview(TaskCoreModel projectDetail)
         {
             try
             {
                 var userSession = new UserSession();
                 var timeStamp = DateTime.UtcNow;
 
-                var projectDetailToUpdate = _projectRepo.GetProjectDetailById(projectDetail.ProjectDetailId);
-                projectDetailToUpdate.DetailRating = projectDetail.DetailRating;
+                var projectDetailToUpdate = _projectRepo.GetProjectDetailById(projectDetail.TaskId);
+                projectDetailToUpdate.Rating = projectDetail.Rating;
+                projectDetailToUpdate.ReviewerComments = projectDetail.ReviewerComments;
                 projectDetailToUpdate.MoveToNextStatus();
 
                 _projectRepo.UpdateProjectDetail(projectDetailToUpdate);

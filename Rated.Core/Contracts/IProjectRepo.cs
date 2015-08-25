@@ -14,21 +14,21 @@ namespace Rated.Core.Contracts
         ProjectCoreModel GetProjectByProjectId(Guid projectId);
 
         void AddProject(ProjectCoreModel project);
-        void AddProjectDetail(ProjectDetailCoreModel projectDetail);
-        void UpdateProjectDetail(ProjectDetailCoreModel projectDetail);
+        void AddTask(TaskCoreModel projectDetail);
+        void UpdateProjectDetail(TaskCoreModel projectDetail);
         void DeleteProjectDetail(Guid guid, Guid projectId, Guid detailId);
-        void AddProjectReviewer(ProjectDetailCoreModel projectDetail);
+        void AddProjectReviewer(TaskCoreModel projectDetail);
         void StartTheProject(Guid guid, ProjectCoreModel projectCore);
 
 
         //List<ProjectCoreModel> GetProjectsPendingReviewerAcceptance(Guid reviewerUserId);
         List<ProjectCoreModel> GetProjectsForReviewerByStatus(Guid reviewerUserId, Enums.ProjectStatus projectStatusId);
 
-        void UpdateProjectDetailStatus(Guid guid, Guid projectDetailId, Enums.ProjectDetailStatus detailStatus);
+        void UpdateProjectDetailStatus(Guid guid, Guid projectDetailId, Enums.TaskStatus detailStatus);
         void ProjectCompletedByOwner(Guid userId, Guid projectId);
         List<ProjectCoreModel> GetReviewerProjectsInProgress(Guid reviewerUserId);
 
-        ProjectDetailCoreModel GetProjectDetailById(Guid projectDetailId);
+        TaskCoreModel GetProjectDetailById(Guid projectDetailId);
         ProjectCount GetProjectCounts(Guid userId);
 
         void ReviewerAccepted(ProjectCoreModel projectCore);

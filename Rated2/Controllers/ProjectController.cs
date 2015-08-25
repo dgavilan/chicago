@@ -77,7 +77,7 @@ namespace Rated.Controllers
         {
             var projectView = new ProjectViewModel()
             {
-                ProjectDetails = new List<ProjectDetailViewModel>()
+                Tasks = new List<TaskViewModel>()
             };
 
             ViewBag.OpenAddProjectModal = 1;
@@ -112,22 +112,22 @@ namespace Rated.Controllers
         //    return View("Edit", projectView);
         //}
 
-        private object MapToProjectView(ProjectCoreModel projectCore, List<ProjectDetailCoreModel> projectDetailsCore)
+        private object MapToProjectView(ProjectCoreModel projectCore, List<TaskCoreModel> projectDetailsCore)
         {
-            var detailView = new List<ProjectDetailViewModel>();
+            var detailView = new List<TaskViewModel>();
 
             foreach (var detail in projectDetailsCore)
             {
-                detailView.Add(new ProjectDetailViewModel()
+                detailView.Add(new TaskViewModel()
                 {
                     CreatedBy = detail.CreatedBy,
                     CreatedDate = detail.CreatedDate,
-                    DetailCount = 0,
-                    DetailDescription = detail.ProjectDetailDescription,
-                    DetailName = detail.ProjectDetailName,
+                    TaskCount = 0,
+                    Description = detail.Description,
+                    Name = detail.Name,
                     ModifiedBy = detail.ModifiedBy,
                     ModifiedDate = detail.ModifiedDate,
-                    ProjectDetailId = detail.ProjectDetailId,
+                    TaskId = detail.TaskId,
                     ProjectId = detail.ProjectId,
                     HoursToComplete = detail.HoursToComplete,
                     ReviewerFirstName = detail.ReviewerFirstName,
@@ -141,9 +141,9 @@ namespace Rated.Controllers
                     ReviewerFullName = detail.ReviewerFirstName + " " + detail.ReviewerLastName,
                     HasReviewer = detail.HasReviewer,
                     StatusId = detail.StatusId,
-                    DetailStatus = detail.DetailStatus,
+                    DetailStatus = detail.Status,
                     ReviewInstructions = detail.ReviewInstructions,
-                    DetailRating = detail.DetailRating,
+                    Rating = detail.Rating,
                 });
             }
 
@@ -156,7 +156,7 @@ namespace Rated.Controllers
                 ProjectDescription = projectCore.ProjectDescription,
                 ProjectDetailsCount = projectCore.ProjectDetailsCount,
                 ProjectId = projectCore.ProjectId,
-                ProjectDetails = detailView,
+                Tasks = detailView,
                 ProjectName = projectCore.ProjectName,
                 ProjectStatus = projectCore.ProjectStatus,
                 ReviewerEmail = ""

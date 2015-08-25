@@ -6,11 +6,11 @@ namespace Rated.Infrastructure.Database.EF.Project
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("ProjectDetail")]
-    public partial class ProjectDetail
+    [Table("Task")]
+    public partial class Task
     {
         [Key]
-        public Guid ProjectDetailId { get; set; }
+        public Guid TaskId { get; set; }
         public Guid ProjectId { get; set; }
         public Guid UserId { get; set; }
         public Guid ReviewerUserId { get; set; }
