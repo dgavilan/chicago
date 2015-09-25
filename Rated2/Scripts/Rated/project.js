@@ -62,14 +62,14 @@
         jqxhr.done(function (data) {
             var newDetail = JSON.parse(data);
 
-            var html = "<tr id='tr_" + newDetail.ProjectDetailId + "'>"
+            var html = "<tr id='tr_" + newDetail.TaskId + "'>"
                 + "<td style='background-color:#f9f9f9;width:5px'>" + newDetail.DetailItemNumber + "</td>"
                 + "<td valign='top'>"
-                + "<span id='span_projectDetailName_" + newDetail.ProjectDetailId + "' style='font-size:17px; font-weight:bold'>" + newDetail.ProjectDetailName + "</span>"
+                + "<span id='span_projectDetailName_" + newDetail.TaskId + "' style='font-size:17px; font-weight:bold'>" + newDetail.Name + "</span>"
                 + "<br />"
-                + "<span id='span_projectDetailDescription_" + newDetail.ProjectDetailId + "'>" + newDetail.ProjectDetailDescription + "</span>"
+                + "<span id='span_projectDetailDescription_" + newDetail.TaskId + "'>" + newDetail.Description + "</span>"
                 + "<br />"
-                + "<span id='span_hoursToComplete_" + newDetail.ProjectDetailId + "'>" + newDetail.HoursToComplete + " hours to complete</span>"
+                + "<span id='span_hoursToComplete_" + newDetail.TaskId + "'>" + newDetail.HoursToComplete + " hours to complete</span>"
                 + "<br />"
                 + "<br />"
                 + "Created: " + newDetail.CreatedDate
@@ -127,9 +127,9 @@
     ShowEditDetail: function (projectDetailId, detailName, detailDescription, hoursToComplete, reviewInstructions) {
         Project.ClearDetailModal();
 
-        $("#ProjectDetailId").val(projectDetailId);
-        $("#ProjectDetailName").val(detailName);
-        $("#ProjectDetailDescription").val(detailDescription);
+        $("#TaskId").val(projectDetailId);
+        $("#Name").val(detailName);
+        $("#Description").val(detailDescription);
         $("#HoursToComplete").val(hoursToComplete);
         $("#ReviewInstructions").val(reviewInstructions);
 
@@ -139,9 +139,9 @@
     },
 
     ClearDetailModal: function () {
-        $("#ProjectDetailId").val("");
-        $("#ProjectDetailName").val("");
-        $("#ProjectDetailDescription").val("");
+        $("#TaskId").val("");
+        $("#Name").val("");
+        $("#Description").val("");
         $("#HoursToComplete").val("");
         $("#ReviewInstructions").val("");
     },
@@ -162,7 +162,7 @@
     },
 
     AssignDetailReviewer: function (projectDetailId) {
-        $("#ProjectDetailId").val(projectDetailId);
+        $("#TaskId").val(projectDetailId);
         $("#modalAssignReviewer").modal('show');
     },
 
@@ -201,12 +201,12 @@
     },
 
     ConfirmProjectDetailComplete: function (projectDetailId) {
-        var projectDetailId = $("#ProjectDetailId").val(projectDetailId);
+        var projectDetailId = $("#TaskId").val(projectDetailId);
         $("#modalProjectDetail").modal("show");
     },
     MarkProjectDetailAsComplete: function () {
         var projectId = $("#ProjectId").val();
-        var projectDetailId = $("#ProjectDetailId").val();
+        var projectDetailId = $("#TaskId").val();
 
         var jqxhr = $.ajax({
             url: "/api/ProjectApi/Project/" + projectId + "/ProjectDetail/" + projectDetailId + "/Complete",
@@ -255,7 +255,7 @@
     },
 
     DetailReviewComplete: function (projectDetailId) {
-        $("#ProjectDetailId").val(projectDetailId);
+        $("#TaskId").val(projectDetailId);
         $("#modalReviewComplete").modal("show");
     },
 
@@ -315,9 +315,9 @@ $(document).ready(function () {
 
     $("#btnAddToProject").click(function () {
 
-        var projectDetailId = $("#ProjectDetailId").val();
-        var itemName = $("#ProjectDetailName").val();
-        var itemDescription = $("#ProjectDetailDescription").val();
+        var projectDetailId = $("#TaskId").val();
+        var itemName = $("#Name").val();
+        var itemDescription = $("#Description").val();
         var itemTimeToComplete = $("#HoursToComplete").val();
 
         if (projectDetailId === "") {

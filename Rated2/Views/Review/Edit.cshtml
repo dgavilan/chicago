@@ -97,22 +97,22 @@
     </thead>
     @{
         var lineItemNo = 1;
-        foreach (var detail in Model.ProjectDetails)
+        foreach (var detail in Model.Tasks)
         {
             <tr>
                 <td>
                     @lineItemNo
                 </td>
                 <td>
-                    <b>@detail.DetailName</b>
+                    <b>@detail.Name</b>
                     &nbsp;
-                    <a href="#" onclick="Project.ShowReviewInstructions('@detail.ProjectDetailId')">
+                    <a href="#" onclick="Project.ShowReviewInstructions('@detail.TaskId')">
                         <span class="glyphicon glyphicon-file"></span>
                         Review Instructions
                     </a>
 
                     <br />
-                    @detail.DetailDescription
+                    @detail.Description
                 </td>
                 <td>
                     @Convert.ToDouble(detail.HoursToComplete)
@@ -124,30 +124,30 @@
                     @Rated.Core.Shared.EnumHelper.GetDescription(@detail.DetailStatus)
                 </td>
                 <td>
-                    @if (detail.DetailStatus == Enums.ProjectDetailStatus.Done)
+                    @if (detail.DetailStatus == Enums.TaskStatus.Done)
                     {
-                        @detail.DetailRating
+                        @detail.Rating
                     }
                 </td>
 
                 <td nowrap>
                     @switch (detail.DetailStatus)
                     {
-                        case Enums.ProjectDetailStatus.ReviewerPendingAcceptance:
-                            <button class="btn btn-success" style="width:160px" onclick="Project.ReviewerAcceptsProjectDetail('@detail.ProjectDetailId')">
+                        case Enums.TaskStatus.ReviewerPendingAcceptance:
+                            <button class="btn btn-success" style="width:160px" onclick="Project.ReviewerAcceptsProjectDetail('@detail.TaskId')">
                                 <span class="glyphicon glyphicon-ok-sign"></span>
                                 Accept Request
                             </button>
 
                             <div style="height:7px">&nbsp;</div>
 
-                            <button class="btn btn-danger" style="width:160px" onclick="Project.ReviewerDeclinesProjectDetail('@detail.ProjectDetailId')">
+                            <button class="btn btn-danger" style="width:160px" onclick="Project.ReviewerDeclinesProjectDetail('@detail.TaskId')">
                                 <span class="glyphicon glyphicon-remove-sign"></span>
                                 Decline Request
                             </button>
                             break;
-                        case Enums.ProjectDetailStatus.ReviewerInProgressReviewingDetail:
-                        <button class="btn btn-success" style="width:160px" onclick="Project.DetailReviewComplete('@detail.ProjectDetailId')">
+                        case Enums.TaskStatus.ReviewerInProgressReviewingDetail:
+                        <button class="btn btn-success" style="width:160px" onclick="Project.DetailReviewComplete('@detail.TaskId')">
                             <span class="glyphicon glyphicon-ok-sign"></span> Review Complete
                         </button>
 
@@ -176,4 +176,5 @@
 @Html.HiddenFor(x => x.ProjectStatus)
 
 <input type="hidden" id="DetailItemNumber" name="DetailItemNumber">
-<input type="hidden" id="ProjectDetailId" name="ProjectDetailId">
+<input type="hidden" id="TaskId" name="TaskId">
+@*<input type="hidden" id="ProjectDetailId" name="ProjectDetailId">*@

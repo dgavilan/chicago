@@ -198,7 +198,8 @@ namespace Rated.Web.Controllers.api
 
         [Route("api/ProjectApi/AddCompany")]
         [HttpPost]
-        public string AddCompany(ProjectCoreModel project)
+        //public string AddCompany(ProjectCoreModel project)
+        public string AddCompany(CompanyViewModel project)
         {
             var userSession = new UserSession();
             var user = userSession.GetUserSession();
@@ -213,9 +214,9 @@ namespace Rated.Web.Controllers.api
                 City = project.City,
                 CompanyId = project.CompanyId,
                 CreatedDate = timeStamp,
-                Description = project.Description,
+                Description = project.CompanyDescription,
                 ModifiedDate = timeStamp,
-                Name = project.Name,
+                Name = project.CompanyName,
                 State = project.State,
                 WebsiteUrl = project.WebsiteUrl,
                 Zip = project.Zip,

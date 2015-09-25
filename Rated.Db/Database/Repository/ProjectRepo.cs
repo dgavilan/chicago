@@ -188,7 +188,9 @@ namespace Rated.Infrastructure.Database.Repository
                     CreatedDate = project.p.CreatedDate,
                     ModifiedDate = project.p.ModifiedDate,
                     ProjectDetailsCount = project.p.Tasks.Count(),
-                    ProjectStatus = (Enums.ProjectStatus)project.p.StatusId
+                    ProjectStatus = (Enums.ProjectStatus)project.p.StatusId,
+
+                    Company = new CompanyCoreModel(),
                 });
             }
 

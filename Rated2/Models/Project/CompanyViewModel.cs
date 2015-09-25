@@ -17,6 +17,7 @@ namespace Rated.Models.Project
         public string State { get; set; }
         public string Zip { get; set; }
         public string CompanyDescription { get; set; }
+        public string WebsiteUrl { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
     }
